@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SPOBAND – 관리자</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* 관리자 전용 보조 스타일 */
+    .admin-wrap { display:grid; gap:16px; }
+    .summary { display:grid; gap:14px; }
+    .summary .card { padding:14px 16px; }
+    @media (min-width: 769px){ .summary { grid-template-columns: repeat(3, minmax(0,1fr)); } }
+
+    .tabs { display:flex; gap:8px; flex-wrap:wrap; }
+    .tab-btn { padding:10px 12px; border-radius:10px; border:1px solid var(--border); background:#fff; cursor:pointer; font-weight:700; }
+    .tab-btn.active { background:var(--brand); color:#fff; border-color:var(--brand); }
+    .hidden { display:none; }
+
+    table { width:100%; border-collapse: collapse; }
+    th, td { border-bottom:1px solid var(--border); text-align:left; padding:10px; font-size:14px; }
+    th { background:#fafafa; }
+    .actions .btn { padding:6px 10px; font-weight:700; }
+    .small { font-size:12px; color:var(--muted); }
+
+    .login { max-width:420px; margin:40px auto; }
+  </style>
+</head>
+<body>
+
+  <!-- 상단 네비 -->
+  <div class="nav">
+    <div class="nav-inner">
+      <a class="logo" href="index.html">SPOBAND</a>
+      <div>
+        <a class="link" href="index.html">메인</a>
+        <a class="link" href="personal.html">개인</a>
+        <a class="link" href="group.html">단체</a>
+        <a class="link" href="shop.html">쇼핑</a>
+        <a class="link" href="videos.html">영상</a>
+        <a class="link" href="contact.html">문의</a>
+        <a class="link" href="admin.html"><b>관리</b></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 로그인(간이 보호) -->
+  <div id="loginBox" class="wrap login">
+    <div class="hero">
+      <h1>관리자 로그인</h1>
+      <p class="lead">간단 비밀번호로 보호됩니다. (학습/테스트용 · 실제 보안 아님)</p>
+      <input type="password" id="pass" placeholder="비밀번호 입력 (기본: spoband123)">
+      <div style="margin-top:12px;">
+        <button class="btn primary" onclick="login()">로그인</button>
+        <button class="btn" onclick="document.getElementById('pass').value=''">지우기</button>
+      </div>
+      <p class="small" style="margin-top:10px;">※ 실제 서비스에선 서버 인증을 꼭 사용하세요.</p>
+    </div>
+  </div>
+
+  <!-- 관리자 본문 -->
+  <div id="adminBox" class="wrap hidden">
+    <div class="hero">
+      <h1>관리자 대시보드</h1>
+      <p class="lead">상품/영상/메모를 간단히 관리합니다. 모든 데이터는 <b>이 브라우저의 localStorage</b>에 저장됩니다.</p>
+      <div>
+        <button class="btn" onclick="exportData()">백업(내보내기)</button>
+        <label class="btn" for="importFile" style="cursor:pointer;">복원(가져오기)</label>
+        <input id="importFile" type="file" accept="application/json" style="display:none" onchange="importData(event)">
+        <button class="btn" onclick="clearAll()">모두 초기화</button>
+      </div>
+    </div>
+
+    <!-- 요약 카드 -->
+    <div class="summary">
+      <div class="card"><h3>상품</h3><p id="sumProducts" class="note">0개</p></div>
+      <div class="card"><h3>영상</h3><p id="sumVideos" class="note">0개</p></div>
+      <div class="card"><h3>메모</h3><p id="sumNotes" class="note">0개</p></div>
+    </div>
+
+    <!-- 탭 -->
+    <div class="card">
+      <div class="tabs" style="margin-bottom:10px;">
+        <button class="tab-btn active" data-tab="tab-products">상품 관리</button>
+        <button class="tab-btn" data-tab="tab-videos">영상 관리</button>
+        <button class="tab-btn" data-tab="tab-notes">메모 관리</button>
+      </div>
+
+      <!-- 상품 관리 -->
+      <div id="tab-products">
+        <h3>상품 추가</h3>
+        <div class="grid col3" style="margin-bottom:10px;">
+          <input id="pTitle" placeholder="상품명 (예: 스타터 키트)">
+          <input id="pPrice" type="number" placeholder="가격 (예: 19900)">
+          <input id="pLink" placeholder="구매 링크(스마트스토어 등)">
+        </div>
+        <textarea id="pDesc" placeholder="설명" style="min-height:80px;"></textarea>
+        <div style="margin-top:8px;">
+          <button class="btn primary" onclick="addProduct()">상품 추가</button>
+          <button class="btn" onclick="resetProductForm()">입력 지우기</button>
+        </div>
+
+        <h3 style="margin-top:16px;">상품 목록</h3>
+        <div class="small">※ 이 목록은 데모입니다. 실제 쇼핑 페이지(shop.html)는 수동으로 수정하거나, 추후 빌드스크립트로 자동 생성하도록 확장할 수 있어요.</div>
+        <table style="margin-top:8px;">
+          <thead><tr><th>상품명</th><th>가격</th><th>링크</th><th>설명</th><th>관리</th></tr></thead>
+          <tbody id="pTable"></tbody>
+        </table>
+      </div>
+
+      <!-- 영상 관리 -->
+      <div id="tab-videos" class="hidden">
+        <h3>영상 추가</h3>
+        <div class="grid col3" style="margin-bottom:10px;">
+          <input id="vTitle" placeholder="제목 (예: 전신 워밍업)">
+          <input id="vCategory" placeholder="카테고리 (초보/다이어트/재활 등)">
+          <input id="vUrl" placeholder="YouTube 임베드 URL (https://www.youtube.com/embed/...)">
+        </div>
+        <textarea id="vDesc" placeholder="설명" style="min-height:80px;"></textarea>
+        <div style="margin-top:8px;">
+          <button class="btn primary" onclick="addVideo()">영상 추가</button>
+          <button class="btn" onclick="resetVideoForm()">입력 지우기</button>
+        </div>
+
+        <h3 style="margin-top:16px;">영상 목록</h3>
+        <div class="small">※ videos.html은 현재 수동 구성입니다. 향후 자동 생성하도록 확장 가능합니다.</div>
+        <table style="margin-top:8px;">
+          <thead><tr><th>제목</th><th>카테고리</th><th>URL</th><th>설명</th><th>관리</th></tr></thead>
+          <tbody id="vTable"></tbody>
+        </table>
+      </div>
+
+      <!-- 메모(문의 관리 대용) -->
+      <div id="tab-notes" class="hidden">
+        <h3>메모 추가</h3>
+        <div class="grid col2" style="margin-bottom:10px;">
+          <input id="nTitle" placeholder="제목 (예: 8/24 문의 – OO센터)">
+          <input id="nTag" placeholder="태그 (예: 견적, 단체, 재활)">
+        </div>
+        <textarea id="nBody" placeholder="내용" style="min-height:100px;"></textarea>
+        <div style="margin-top:8px;">
+          <button class="btn primary" onclick="addNote()">메모 추가</button>
+          <button class="btn" onclick="resetNoteForm()">입력 지우기</button>
+        </div>
+
+        <h3 style="margin-top:16px;">메모 목록</h3>
+        <table style="margin-top:8px;">
+          <thead><tr><th>제목</th><th>태그</th><th>내용</th><th>관리</th></tr></thead>
+          <tbody id="nTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">© SPOBAND</div>
+
+  <script>
+    /* ===== 간이 로그인 (데모) ===== */
+    const ADMIN_PASS = "spoband123"; // ← 여기서 변경 가능
+
+    function login(){
+      const ok = document.getElementById('pass').value === ADMIN_PASS;
+      if(ok){
+        document.getElementById('loginBox').classList.add('hidden');
+        document.getElementById('adminBox').classList.remove('hidden');
+        renderAll();
+      }else{
+        alert('비밀번호가 틀렸습니다.');
+      }
+    }
+
+    /* ===== LocalStorage 헬퍼 ===== */
+    const store = {
+      get(key, def){ try{ return JSON.parse(localStorage.getItem(key)) ?? def; }catch(e){ return def; } },
+      set(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
+    };
+
+    /* ===== 데이터 키 ===== */
+    const K_PRODUCTS = 'spb_products';
+    const K_VIDEOS   = 'spb_videos';
+    const K_NOTES    = 'spb_notes';
+
+    /* ===== 렌더 요약 ===== */
+    function renderSummary(){
+      const p = store.get(K_PRODUCTS, []);
+      const v = store.get(K_VIDEOS, []);
+      const n = store.get(K_NOTES, []);
+      document.getElementById('sumProducts').textContent = p.length + '개';
+      document.getElementById('sumVideos').textContent   = v.length + '개';
+      document.getElementById('sumNotes').textContent    = n.length + '개';
+    }
+
+    /* ===== 상품 ===== */
+    function addProduct(){
+      const title = document.getElementById('pTitle').value.trim();
+      const price = Number(document.getElementById('pPrice').value || 0);
+      const link  = document.getElementById('pLink').value.trim();
+      const desc  = document.getElementById('pDesc').value.trim();
+      if(!title){ alert('상품명을 입력하세요.'); return; }
+      const list = store.get(K_PRODUCTS, []);
+      list.push({ id: Date.now(), title, price, link, desc });
+      store.set(K_PRODUCTS, list);
+      resetProductForm(); renderProducts(); renderSummary();
+    }
+    function resetProductForm(){ ['pTitle','pPrice','pLink','pDesc'].forEach(id=>document.getElementById(id).value=''); }
+    function renderProducts(){
+      const tbody = document.getElementById('pTable'); tbody.innerHTML='';
+      const list = store.get(K_PRODUCTS, []);
+      list.forEach(it=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${escapeHtml(it.title)}</td>
+          <td>${it.price.toLocaleString()}원</td>
+          <td><a href="${escapeAttr(it.link)}" target="_blank">열기</a></td>
+          <td>${escapeHtml(it.desc || '')}</td>
+          <td class="actions">
+            <button class="btn" onclick="editProduct(${it.id})">수정</button>
+            <button class="btn" onclick="delProduct(${it.id})">삭제</button>
+          </td>`;
+        tbody.appendChild(tr);
+      });
+    }
+    function editProduct(id){
+      const list = store.get(K_PRODUCTS, []);
+      const it = list.find(x=>x.id===id); if(!it) return;
+      const title = prompt('상품명', it.title); if(title===null) return;
+      const price = Number(prompt('가격(숫자)', it.price)); if(isNaN(price)) return;
+      const link  = prompt('링크', it.link) ?? it.link;
+      const desc  = prompt('설명', it.desc ?? '') ?? it.desc;
+      Object.assign(it, {title, price, link, desc});
+      store.set(K_PRODUCTS, list); renderProducts(); renderSummary();
+    }
+    function delProduct(id){
+      if(!confirm('삭제할까요?')) return;
+      const list = store.get(K_PRODUCTS, []).filter(x=>x.id!==id);
+      store.set(K_PRODUCTS, list); renderProducts(); renderSummary();
+    }
+
+    /* ===== 영상 ===== */
+    function addVideo(){
+      const title = document.getElementById('vTitle').value.trim();
+      const category = document.getElementById('vCategory').value.trim();
+      const url = document.getElementById('vUrl').value.trim();
+      const desc = document.getElementById('vDesc').value.trim();
+      if(!title || !url){ alert('제목과 URL을 입력하세요.'); return; }
+      const list = store.get(K_VIDEOS, []);
+      list.push({ id: Date.now(), title, category, url, desc });
+      store.set(K_VIDEOS, list);
+      resetVideoForm(); renderVideos(); renderSummary();
+    }
+    function resetVideoForm(){ ['vTitle','vCategory','vUrl','vDesc'].forEach(id=>document.getElementById(id).value=''); }
+    function renderVideos(){
+      const tbody = document.getElementById('vTable'); tbody.innerHTML='';
+      const list = store.get(K_VIDEOS, []);
+      list.forEach(it=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${escapeHtml(it.title)}</td>
+          <td>${escapeHtml(it.category || '')}</td>
+          <td><a href="${escapeAttr(it.url)}" target="_blank">열기</a></td>
+          <td>${escapeHtml(it.desc || '')}</td>
+          <td class="actions">
+            <button class="btn" onclick="editVideo(${it.id})">수정</button>
+            <button class="btn" onclick="delVideo(${it.id})">삭제</button>
+          </td>`;
+        tbody.appendChild(tr);
+      });
+    }
+    function editVideo(id){
+      const list = store.get(K_VIDEOS, []);
+      const it = list.find(x=>x.id===id); if(!it) return;
+      const title = prompt('제목', it.title); if(title===null) return;
+      const category = prompt('카테고리', it.category ?? '') ?? it.category;
+      const url = prompt('URL', it.url) ?? it.url;
+      const desc = prompt('설명', it.desc ?? '') ?? it.desc;
+      Object.assign(it, {title, category, url, desc});
+      store.set(K_VIDEOS, list); renderVideos(); renderSummary();
+    }
+    function delVideo(id){
+      if(!confirm('삭제할까요?')) return;
+      const list = store.get(K_VIDEOS, []).filter(x=>x.id!==id);
+      store.set(K_VIDEOS, list); renderVideos(); renderSummary();
+    }
+
+    /* ===== 메모 ===== */
+    function addNote(){
+      const title = document.getElementById('nTitle').value.trim();
+      const tag = document.getElementById('nTag').value.trim();
+      const body = document.getElementById('nBody').value.trim();
+      if(!title){ alert('제목을 입력하세요.'); return; }
+      const list = store.get(K_NOTES, []);
+      list.push({ id: Date.now(), title, tag, body });
+      store.set(K_NOTES, list);
+      resetNoteForm(); renderNotes(); renderSummary();
+    }
+    function resetNoteForm(){ ['nTitle','nTag','nBody'].forEach(id=>document.getElementById(id).value=''); }
+    function renderNotes(){
+      const tbody = document.getElementById('nTable'); tbody.innerHTML='';
+      const list = store.get(K_NOTES, []);
+      list.forEach(it=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${escapeHtml(it.title)}</td>
+          <td>${escapeHtml(it.tag || '')}</td>
+          <td>${escapeHtml(it.body || '')}</td>
+          <td class="actions">
+            <button class="btn" onclick="editNote(${it.id})">수정</button>
+            <button class="btn" onclick="delNote(${it.id})">삭제</button>
+          </td>`;
+        tbody.appendChild(tr);
+      });
+    }
+    function editNote(id){
+      const list = store.get(K_NOTES, []);
+      const it = list.find(x=>x.id===id); if(!it) return;
+      const title = prompt('제목', it.title); if(title===null) return;
+      const tag = prompt('태그', it.tag ?? '') ?? it.tag;
+      const body = prompt('내용', it.body ?? '') ?? it.body;
+      Object.assign(it, {title, tag, body});
+      store.set(K_NOTES, list); renderNotes(); renderSummary();
+    }
+    function delNote(id){
+      if(!confirm('삭제할까요?')) return;
+      const list = store.get(K_NOTES, []).filter(x=>x.id!==id);
+      store.set(K_NOTES, list); renderNotes(); renderSummary();
+    }
+
+    /* ===== 탭 전환 ===== */
+    document.addEventListener('click', (e)=>{
+      if(e.target.classList.contains('tab-btn')){
+        document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+        e.target.classList.add('active');
+        const id = e.target.dataset.tab;
+        ['tab-products','tab-videos','tab-notes'].forEach(x=>{
+          document.getElementById(x).classList.toggle('hidden', x!==id);
+        });
+      }
+    });
+
+    /* ===== 백업/복원/초기화 ===== */
+    function exportData(){
+      const data = {
+        products: store.get(K_PRODUCTS, []),
+        videos:   store.get(K_VIDEOS, []),
+        notes:    store.get(K_NOTES, [])
+      };
+      const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'spoband_backup.json'; a.click();
+      URL.revokeObjectURL(url);
+    }
+    function importData(evt){
+      const file = evt.target.files[0]; if(!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try{
+          const data = JSON.parse(reader.result);
+          if(data.products) store.set(K_PRODUCTS, data.products);
+          if(data.videos)   store.set(K_VIDEOS, data.videos);
+          if(data.notes)    store.set(K_NOTES, data.notes);
+          renderAll(); alert('복원이 완료되었습니다!');
+        }catch(e){ alert('JSON 파일을 확인해주세요.'); }
+      };
+      reader.readAsText(file, 'utf-8');
+    }
+    function clearAll(){
+      if(!confirm('모든 데이터를 초기화할까요? (되돌릴 수 없음)')) return;
+      store.set(K_PRODUCTS, []); store.set(K_VIDEOS, []); store.set(K_NOTES, []);
+      renderAll();
+    }
+
+    /* ===== 렌더 전체 ===== */
+    function renderAll(){ renderSummary(); renderProducts(); renderVideos(); renderNotes(); }
+
+    /* ===== XSS 최소 방지용 ===== */
+    function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
+    function escapeAttr(s){ return String(s).replace(/"/g, '&quot;'); }
+  </script>
+</body>
+</html>

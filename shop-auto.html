@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SPOBAND – 쇼핑(자동)</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .price { font-weight:800; }
+    .empty { text-align:center; padding:24px; border:1px dashed var(--border); border-radius:12px; background:#fff; color:var(--muted); }
+  </style>
+</head>
+<body>
+  <!-- 상단 네비 -->
+  <div class="nav">
+    <div class="nav-inner">
+      <a class="logo" href="index.html">SPOBAND</a>
+      <div>
+        <a class="link" href="index.html">메인</a>
+        <a class="link" href="personal.html">개인</a>
+        <a class="link" href="group.html">단체</a>
+        <a class="link" href="shop.html">쇼핑(수동)</a>
+        <a class="link" href="shop-auto.html"><b>쇼핑(자동)</b></a>
+        <a class="link" href="videos.html">영상</a>
+        <a class="link" href="admin.html">관리</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 본문 -->
+  <div class="wrap">
+    <div class="hero">
+      <h1>쇼핑 (자동 생성)</h1>
+      <p class="lead">관리자에서 입력한 상품 데이터를 자동으로 불러옵니다. 현재는 같은 브라우저의 localStorage 기준입니다.</p>
+      <a href="admin.html" class="btn primary">관리자에서 상품 추가하기</a>
+      <a href="#" class="btn" id="refreshBtn">새로고침</a>
+    </div>
+
+    <h2 style="margin:22px 0 12px;">상품 목록</h2>
+    <div id="shopList" class="grid col3">
+      <!-- 상품 카드 자동 생성 -->
+    </div>
+  </div>
+
+  <div class="footer">© SPOBAND</div>
+
+  <script>
+    const K_PRODUCTS = 'spb_products';
+    const store = { get(k, d){ try{ return JSON.parse(localStorage.getItem(k)) ?? d; }catch(e){ return d; } } };
+
+    function formatPrice(n){ const v=Number(n||0); return isNaN(v)?'-':v.toLocaleString()+'원'; }
+    function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
+    function escapeAttr(s){ return String(s||'').replace(/"/g,'&quot;'); }
+
+    function renderShop(){
+      const wrap=document.getElementById('shopList'); wrap.innerHTML='';
+      const list=store.get(K_PRODUCTS,[]);
+      if(list.length===0){ wrap.outerHTML='<div id="shopList" class="empty">아직 상품이 없습니다. 관리자에서 추가하세요.</div>'; return; }
+      list.forEach(it=>{
+        const card=document.createElement('div');
+        card.className='card';
+        card.innerHTML=`
+          <h3>${escapeHtml(it.title)}</h3>
+          <p>${escapeHtml(it.desc||'')}</p>
+          <p class="price">${formatPrice(it.price)}</p>
+          ${it.link? `<a class="btn primary" href="${escapeAttr(it.link)}" target="_blank">구매하기</a>` : '<span class="note">링크 없음</span>'}
+        `;
+        wrap.appendChild(card);
+      });
+    }
+
+    document.getElementById('refreshBtn').addEventListener('click', e=>{ e.preventDefault(); renderShop(); });
+    renderShop();
+  </script>
+</body>
+</html>

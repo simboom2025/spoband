@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SPOBAND – 문의/상담</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    form { display:grid; gap:12px; }
+    label { font-weight:600; }
+    input, textarea {
+      width:100%; padding:10px; border:1px solid var(--border);
+      border-radius:8px; font-size:14px;
+    }
+    textarea { min-height:120px; resize:vertical; }
+  </style>
+</head>
+<body>
+  <!-- 상단 네비 -->
+  <div class="nav">
+    <div class="nav-inner">
+      <a class="logo" href="index.html">SPOBAND</a>
+      <div>
+        <a class="link" href="index.html">메인</a>
+        <a class="link" href="personal.html">개인 고객용</a>
+        <a class="link" href="group.html">단체·기관용</a>
+        <a class="link" href="shop.html">쇼핑</a>
+        <a class="link" href="videos.html">영상</a>
+        <a class="link" href="contact.html">문의</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 본문 -->
+  <div class="wrap">
+    <div class="hero">
+      <h1>문의 / 상담</h1>
+      <p class="lead">궁금한 점이나 단체 도입 상담을 원하시면 아래 양식으로 보내주세요.<br>
+      현재는 메일 전송 방식(mailto)으로 연결됩니다.</p>
+    </div>
+
+    <!-- 폼 -->
+    <form action="mailto:contact@spoband.example" method="post" enctype="text/plain">
+      <div>
+        <label for="name">이름</label>
+        <input type="text" id="name" name="이름" required>
+      </div>
+      <div>
+        <label for="email">이메일</label>
+        <input type="email" id="email" name="이메일" required>
+      </div>
+      <div>
+        <label for="message">메시지</label>
+        <textarea id="message" name="메시지" required></textarea>
+      </div>
+      <button type="submit" class="btn primary">메일 보내기</button>
+      <button type="reset" class="btn">다시 쓰기</button>
+    </form>
+
+    <!-- 추가 안내 -->
+    <div class="card" style="margin-top:20px;">
+      <p>• “메일 보내기”를 누르면 PC의 메일 프로그램(아웃룩 등)이 실행됩니다.<br>
+         • 직접 메일로 보내시려면: <b>contact@spoband.example</b><br>
+         • 나중에는 Google Form이나 백엔드 서버를 붙여서 자동 수신 가능!</p>
+    </div>
+  </div>
+
+  <div class="footer">© SPOBAND</div>
+</body>
+</html>
