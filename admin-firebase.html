@@ -1,83 +1,23 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SPOBAND – 관리자(Firebase, 초간단)</title>
+  <meta charset="UTF-8" />
+  <title>관리자 대시보드</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
   <style>
-    body{font-family:system-ui,Arial,sans-serif;margin:24px;background:#f7f7f8}
-    h1{margin:0 0 16px;color:#0b5}
-    .card{background:#fff;border:1px solid #e6e6ea;border-radius:12px;padding:16px;margin:14px 0;box-shadow:0 2px 6px rgba(0,0,0,.04)}
-    input,textarea{width:100%;padding:10px;border:1px solid #e0e0e6;border-radius:10px;margin:6px 0}
-    button{padding:10px 14px;border:0;border-radius:10px;background:#0b5;color:#fff;font-weight:700;cursor:pointer}
-    button.sec{background:#ddd;color:#222}
-    table{width:100%;border-collapse:collapse;margin-top:10px}
-    th,td{border-bottom:1px solid #eee;text-align:left;padding:8px}
-    th{background:#fafafa}
-    .row{display:grid;gap:10px}
-    @media(min-width:720px){.row{grid-template-columns:repeat(3,minmax(0,1fr))}}
-    .muted{color:#888;font-size:13px}
+    body { max-width: 980px; }
+    iframe { max-width: 100%; border-radius: 12px; }
   </style>
-</head>
-<body>
-  <h1>관리자 대시보드 (초간단)</h1>
 
-  <!-- 로그인 -->
-  <div class="card">
-    <h2>로그인</h2>
-    <div class="row">
-      <input id="email" type="email" placeholder="관리자 이메일" />
-      <input id="password" type="password" placeholder="비밀번호" />
-      <div>
-        <button id="btnLogin">로그인</button>
-        <button id="btnLogout" class="sec">로그아웃</button>
-      </div>
-    </div>
-    <div class="muted" id="who">로그인 상태: 없음</div>
-  </div>
-
-  <!-- 상품 -->
-  <div class="card">
-    <h2>상품 관리</h2>
-    <div class="row">
-      <input id="pName" placeholder="상품명" />
-      <input id="pPrice" placeholder="가격(숫자)" />
-      <input id="pLink" placeholder="구매 링크(URL)" />
-    </div>
-    <textarea id="pDesc" placeholder="설명"></textarea>
-    <button id="addProduct">상품 추가</button>
-    <table>
-      <thead><tr><th>상품명</th><th>가격</th><th>링크</th><th>설명</th><th>삭제</th></tr></thead>
-      <tbody id="pTable"></tbody>
-    </table>
-  </div>
-
-  <!-- 영상 -->
-  <div class="card">
-    <h2>영상 관리</h2>
-    <div class="row">
-      <input id="vTitle" placeholder="영상 제목" />
-      <input id="vCategory" placeholder="카테고리(예: 초보/다이어트/재활)" />
-      <input id="vUrl" placeholder="YouTube 임베드 URL(https://www.youtube.com/embed/...)" />
-    </div>
-    <textarea id="vDesc" placeholder="설명"></textarea>
-    <button id="addVideo">영상 추가</button>
-    <table>
-      <thead><tr><th>제목</th><th>카테고리</th><th>URL</th><th>설명</th><th>삭제</th></tr></thead>
-      <tbody id="vTable"></tbody>
-    </table>
-  </div>
-
-  <!-- Firebase + 로직 -->
   <script type="module">
-    // 1) 브라우저용 Firebase 모듈
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
-      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot }
-      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    // 1) Firebase SDK
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import {
+      getFirestore, collection, addDoc, getDocs, deleteDoc, doc
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    // 2) 네 프로젝트 설정(이미 입력해둠)
+    // 2) 네 프로젝트 설정 (spoband-e41fe)
     const firebaseConfig = {
       apiKey: "AIzaSyAcSrJ6wyjk1lNraj0uZY6JofoSpAo1hrQ",
       authDomain: "spoband-e41fe.firebaseapp.com",
@@ -90,78 +30,157 @@
     // 3) 초기화
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const db   = getFirestore(app);
-    const $ = (s)=>document.querySelector(s);
+    const db = getFirestore(app);
 
-    // ========== 로그인 ==========
-    $("#btnLogin").onclick = async ()=>{
-      try{
-        await signInWithEmailAndPassword(auth, $("#email").value, $("#password").value);
-        alert("로그인 성공!");
-      }catch(e){ alert("로그인 실패: "+e.message); }
-    };
-    $("#btnLogout").onclick = ()=> signOut(auth);
-    onAuthStateChanged(auth, (u)=> $("#who").textContent = u ? `로그인됨: ${u.email}` : "로그인 상태: 없음");
+    // 유튜브 URL 자동 변환 (watch → embed)
+    function toEmbedUrl(url) {
+      if (!url) return "";
+      // https://youtu.be/abcd → embed
+      url = url.replace("youtu.be/", "www.youtube.com/watch?v=");
+      // https://www.youtube.com/watch?v=abcd → embed
+      return url.replace("watch?v=", "embed/");
+    }
 
-    // ========== 상품 ==========
-    const colProducts = collection(db, "products");
-    const pTable = $("#pTable");
-    $("#addProduct").onclick = async ()=>{
-      const name  = $("#pName").value.trim();
-      const price = Number($("#pPrice").value||0);
-      const link  = $("#pLink").value.trim();
-      const desc  = $("#pDesc").value.trim();
-      if(!name){ alert("상품명을 입력하세요!"); return; }
-      try{
-        await addDoc(colProducts, { name, price, link, desc, ts:Date.now() });
-        ["#pName","#pPrice","#pLink","#pDesc"].forEach(id=>$(id).value="");
-      }catch(e){ alert("상품 추가 실패: "+e.message); }
-    };
-    onSnapshot(colProducts, (snap)=>{
-      pTable.innerHTML="";
-      snap.forEach(d=>{
-        const x=d.data();
-        const tr=document.createElement("tr");
-        tr.innerHTML=`
-          <td>${x.name||""}</td>
-          <td>${isNaN(x.price)? "-" : x.price.toLocaleString()+"원"}</td>
-          <td>${x.link? `<a href="${x.link}" target="_blank">열기</a>`:"-"}</td>
-          <td>${x.desc||""}</td>
-          <td><button data-id="${d.id}" class="delP">삭제</button></td>`;
-        pTable.appendChild(tr);
+    document.addEventListener("DOMContentLoaded", async () => {
+      const $ = (sel) => document.querySelector(sel);
+      const loginStatus = $("#loginStatus");
+
+      // 로그인/로그아웃
+      $("#loginBtn").addEventListener("click", async () => {
+        const email = $("#email").value.trim();
+        const pw = $("#password").value.trim();
+        try {
+          await signInWithEmailAndPassword(auth, email, pw);
+          loginStatus.textContent = "관리자 로그인: " + email;
+        } catch (e) {
+          alert("로그인 실패: " + e.message);
+        }
       });
-      document.querySelectorAll(".delP").forEach(b=> b.onclick=()=> deleteDoc(doc(db,"products",b.dataset.id)));
-    });
 
-    // ========== 영상 ==========
-    const colVideos = collection(db, "videos");
-    const vTable = $("#vTable");
-    $("#addVideo").onclick = async ()=>{
-      const title = $("#vTitle").value.trim();
-      const category = $("#vCategory").value.trim();
-      const url = $("#vUrl").value.trim();
-      const desc = $("#vDesc").value.trim();
-      if(!title || !url){ alert("제목과 URL은 필수!"); return; }
-      try{
-        await addDoc(colVideos, { title, category, url, desc, ts:Date.now() });
-        ["#vTitle","#vCategory","#vUrl","#vDesc"].forEach(id=>$(id).value="");
-      }catch(e){ alert("영상 추가 실패: "+e.message); }
-    };
-    onSnapshot(colVideos, (snap)=>{
-      vTable.innerHTML="";
-      snap.forEach(d=>{
-        const x=d.data();
-        const tr=document.createElement("tr");
-        tr.innerHTML=`
-          <td>${x.title||""}</td>
-          <td>${x.category||""}</td>
-          <td><a href="${x.url}" target="_blank">열기</a></td>
-          <td>${x.desc||""}</td>
-          <td><button data-id="${d.id}" class="delV">삭제</button></td>`;
-        vTable.appendChild(tr);
+      $("#logoutBtn").addEventListener("click", async () => {
+        await signOut(auth);
+        loginStatus.textContent = "로그인 상태: 없음";
       });
-      document.querySelectorAll(".delV").forEach(b=> b.onclick=()=> deleteDoc(doc(db,"videos",b.dataset.id)));
+
+      // 상품 추가
+      $("#addProductBtn").addEventListener("click", async () => {
+        const name = $("#pname").value.trim();
+        const price = parseInt($("#pprice").value.trim() || "0", 10);
+        const link = $("#plink").value.trim();
+        const desc = $("#pdesc").value.trim();
+        if (!name) return alert("상품명을 입력하세요.");
+        await addDoc(collection(db, "products"), { name, price, link, desc });
+        alert("상품 추가 완료!");
+        location.reload();
+      });
+
+      // 영상 추가 (URL 자동 변환)
+      $("#addVideoBtn").addEventListener("click", async () => {
+        const title = $("#vtitle").value.trim();
+        const category = $("#vcategory").value.trim();
+        let url = $("#vurl").value.trim();
+        const desc = $("#vdesc").value.trim();
+        if (!title) return alert("영상 제목을 입력하세요.");
+        url = toEmbedUrl(url);
+        await addDoc(collection(db, "videos"), { title, category, url, desc });
+        alert("영상 추가 완료!");
+        location.reload();
+      });
+
+      // 상품 목록 로드
+      const pTbody = $("#productTable");
+      const pSnap = await getDocs(collection(db, "products"));
+      pSnap.forEach((d) => {
+        const x = d.data();
+        pTbody.insertAdjacentHTML("beforeend", `
+          <tr>
+            <td>${x.name || ""}</td>
+            <td>${(x.price || 0).toLocaleString()}원</td>
+            <td>${x.link ? `<a href="${x.link}" target="_blank" class="btn btn-sm btn-outline-primary">열기</a>` : ""}</td>
+            <td>${x.desc || ""}</td>
+            <td><button class="btn btn-sm btn-danger" onclick="__delP('${d.id}')">삭제</button></td>
+          </tr>
+        `);
+      });
+
+      // 영상 목록 로드
+      const vTbody = $("#videoTable");
+      const vSnap = await getDocs(collection(db, "videos"));
+      vSnap.forEach((d) => {
+        const x = d.data();
+        vTbody.insertAdjacentHTML("beforeend", `
+          <tr>
+            <td>${x.title || ""}</td>
+            <td>${x.category || ""}</td>
+            <td>${x.url ? `<a href="${x.url}" target="_blank" class="btn btn-sm btn-outline-primary">열기</a>` : ""}</td>
+            <td>${x.desc || ""}</td>
+            <td><button class="btn btn-sm btn-danger" onclick="__delV('${d.id}')">삭제</button></td>
+          </tr>
+        `);
+      });
+
+      // 전역 삭제 함수
+      window.__delP = async (id) => {
+        await deleteDoc(doc(db, "products", id));
+        alert("삭제 완료");
+        location.reload();
+      };
+      window.__delV = async (id) => {
+        await deleteDoc(doc(db, "videos", id));
+        alert("삭제 완료");
+        location.reload();
+      };
     });
   </script>
+</head>
+
+<body class="container my-4">
+  <h2 class="mb-3">관리자 대시보드</h2>
+
+  <div class="card p-3 mb-4">
+    <div class="row g-2">
+      <div class="col-sm">
+        <input id="email" class="form-control" placeholder="관리자 이메일" />
+      </div>
+      <div class="col-sm">
+        <input id="password" type="password" class="form-control" placeholder="비밀번호" />
+      </div>
+      <div class="col-auto d-flex gap-2">
+        <button id="loginBtn" class="btn btn-primary">로그인</button>
+        <button id="logoutBtn" class="btn btn-secondary">로그아웃</button>
+      </div>
+    </div>
+    <div class="text-muted mt-2" id="loginStatus">로그인 상태: 없음</div>
+  </div>
+
+  <h4 class="mt-4">상품 관리</h4>
+  <div class="input-group mb-3">
+    <input id="pname" class="form-control" placeholder="상품명" />
+    <input id="pprice" type="number" class="form-control" placeholder="가격(숫자)" />
+    <input id="plink" class="form-control" placeholder="구매 링크(URL)" />
+    <input id="pdesc" class="form-control" placeholder="설명" />
+    <button id="addProductBtn" class="btn btn-success">상품 추가</button>
+  </div>
+  <table class="table table-bordered">
+    <thead class="table-light">
+      <tr><th>상품명</th><th>가격</th><th>링크</th><th>설명</th><th>삭제</th></tr>
+    </thead>
+    <tbody id="productTable"></tbody>
+  </table>
+
+  <h4 class="mt-5">영상 관리</h4>
+  <div class="input-group mb-3">
+    <input id="vtitle" class="form-control" placeholder="영상 제목" />
+    <input id="vcategory" class="form-control" placeholder="카테고리(예: 초보/다이어트/재활)" />
+    <input id="vurl" class="form-control" placeholder="YouTube URL(자동 embed 변환)" />
+    <input id="vdesc" class="form-control" placeholder="설명" />
+    <button id="addVideoBtn" class="btn btn-success">영상 추가</button>
+  </div>
+  <table class="table table-bordered">
+    <thead class="table-light">
+      <tr><th>제목</th><th>카테고리</th><th>URL</th><th>설명</th><th>삭제</th></tr>
+    </thead>
+    <tbody id="videoTable"></tbody>
+  </table>
 </body>
 </html>
