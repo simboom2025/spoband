@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>관장님께 드리는 제안 | 스포밴드</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- SUIT 폰트 -->
+  <link href="https://cdn.jsdelivr.net/gh/sunn-us/SUIT/fonts/static/woff2/SUIT.css" rel="stylesheet">
+
+  <style>
+    body { font-family: 'SUIT', system-ui, -apple-system, Segoe UI, Roboto, 'Noto Sans KR', Arial, sans-serif; }
+    .container-narrow { max-width: 1280px; } /* 컨테이너 폭 넓히기 */
+    .bg-hero {
+      background:
+        radial-gradient(1000px 600px at 10% 10%, rgba(56,189,248,.10), transparent 60%),
+        radial-gradient(900px 500px at 95% 5%, rgba(59,130,246,.15), transparent 60%),
+        linear-gradient(180deg, rgba(2,6,23,1) 0%, rgba(2,6,23,.95) 100%);
+    }
+    .card { border: 1px solid rgba(100,116,139,.35); background: rgba(15,23,42,.45); }
+  </style>
+</head>
+
+<body class="bg-slate-900 text-white text-lg md:text-xl leading-relaxed">
+  <!-- 상단 네비게이션 -->
+  <header class="bg-slate-950/95 border-b border-slate-800 sticky top-0 z-20">
+    <div class="mx-auto container-narrow px-6 py-4 flex items-center justify-between">
+
+<div class="flex items-center gap-3">
+  <a href="/spoband/taekwondo-special.html#apply"
+     class="text-2xl font-extrabold text-sky-400 hover:text-sky-300 focus:outline-none focus:ring-2 focus:ring-sky-500 rounded">
+    SPOBAND <span class="text-sky-300">Pro</span>
+  </a>
+</div>
+
+      <nav class="hidden md:flex items-center gap-6 text-slate-200">
+        <a href="#letter" class="hover:text-sky-400">관장님께 드립니다</a>
+        <a href="#effect" class="hover:text-sky-400">운동효과</a>
+        <a href="#kids" class="hover:text-sky-400">아이들이 좋아하는 이유</a>
+        <a href="#biz" class="hover:text-sky-400">운영·매출 설계</a>
+        <a href="#faq" class="hover:text-sky-400">참고영상 등</a>
+      </nav>
+
+      <!-- ✅ 루트(/spoband) 기준: 신청 페이지도 루트에 있다고 가정 -->
+      <a href="/spoband/taekwondo-special.html#apply"
+         class="bg-sky-500 hover:bg-sky-600 px-4 py-2 rounded-lg text-white font-semibold">
+        관장님 전용 신청
+      </a>
+    </div>
+  </header>
+
+  <!-- Hero 섹션 -->
+  <section id="letter" class="bg-hero">
+ <div class="mx-auto container-narrow px-6 py-24">
+  <!-- ✅ 좌/우 2컬럼 그리드 -->
+  <div class="grid md:grid-cols-2 gap-12 items-start">
+    
+    <!-- ✅ 왼쪽: 제목/설명/배지/불릿/CTA 전부 -->
+    <div>
+      <h1 class="text-4xl md:text-5xl font-extrabold leading-[1.25] tracking-tight mb-4">
+        태권도 관장님을 위한 <span class="text-sky-300">10분 루틴</span>
+      </h1>
+
+      <p class="text-3xl md:text-4xl font-extrabold text-slate-50 mb-6">
+        안전한 탄성 저항으로 <span class="text-emerald-300">킥 속도·정확도·밸런스</span>가
+        <span class="text-indigo-300">눈에 보이게</span> 달라집니다.
+      </p>
+
+      <p class="text-slate-300 text-lg md:text-xl leading-loose max-w-[62ch] mb-8">
+        수업에 <span class="text-sky-300 font-semibold">10분만 추가</span>하면
+        <span class="text-emerald-300 font-semibold">2주 전·후 영상</span>으로 성장 확인.
+        관절 부담은 낮추고 <span class="text-sky-300">SSC</span>·<span class="text-sky-300">프로프리오셉션</span> 자극으로
+        <span class="text-emerald-300">가속·리듬</span>을 끌어올립니다.
+      </p>
+
+      <!-- 배지 3개 -->
+      <ul class="grid sm:grid-cols-3 gap-3 mb-8">
+        <li class="rounded-xl border border-sky-400/40 bg-slate-800/40 px-4 py-4 text-center">
+          <div class="text-sm text-slate-300">도입 포인트</div>
+          <div class="text-xl font-bold text-sky-300">10분 루틴</div>
+        </li>
+        <li class="rounded-xl border border-emerald-400/40 bg-slate-800/40 px-4 py-4 text-center">
+          <div class="text-sm text-slate-300">신뢰 확보</div>
+          <div class="text-xl font-bold text-emerald-300">2주 전·후 영상</div>
+        </li>
+        <li class="rounded-xl border border-indigo-400/40 bg-slate-800/40 px-4 py-4 text-center">
+          <div class="text-sm text-slate-300">운영/판매</div>
+          <div class="text-xl font-bold text-indigo-300">표준 3종 세트</div>
+        </li>
+      </ul>
+
+      <!-- 불릿 3줄 -->
+      <ul class="space-y-2 text-slate-200 text-base md:text-lg mb-8">
+        <li>• <span class="text-sky-300 font-semibold">수업 효율</span>↑ : 짧은 체감·빠른 적응 → 수업 몰입 상승</li>
+        <li>• <span class="text-sky-300 font-semibold">안전·회복성</span> : 말단부 가변 저항 → 부담 ↓ 지속 훈련</li>
+        <li>• <span class="text-sky-300 font-semibold">매출 선순환</span> : 체험 → 개인 구매 → 특강/캠프 확장</li>
+      </ul>
+
+      <!-- ✅ CTA 2개 -->
+      <div class="flex flex-wrap items-center gap-4">
+        <a href="/spoband/taekwondo-special.html#apply"
+           class="bg-sky-500 hover:bg-sky-600 px-6 py-3 rounded-lg text-white font-bold shadow-lg">
+           관장님 전용 키트 신청
+        </a>
+        <a href="#faq"
+           class="bg-slate-700/80 hover:bg-slate-600 px-6 py-3 rounded-lg text-white font-semibold">
+           2주 전·후 사례 영상 보기
+        </a>
+      </div>
+    </div>
+
+    <!-- ✅ 오른쪽: 이미지 단독 -->
+    <div class="flex justify-center md:justify-end">
+      <img src="/spoband/img/slow_masco.png" alt="스포밴드 마스코트"
+           class="rounded-2xl shadow-2xl max-w-xs md:max-w-sm w-full object-cover" />
+    </div>
+
+  </div>
+</div>
+
+  <!-- 눈에 보이는 성장 안내 배너 -->
+  <section class="py-10">
+    <div class="mx-auto container-narrow px-6">
+      <div class="card rounded-2xl px-6 md:px-8 py-6 text-slate-200">
+        <p class="text-xl md:text-2xl font-semibold">
+          탄성이 만드는 <span class="text-sky-300">‘눈에 보이는 성장’</span> —
+          안전한 힘, 빠른 가속, 흔들리지 않는 밸런스를 함께 키웁니다.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 운동생리학 효과 -->
+
+<section id="effect" class="py-24 bg-gradient-to-r from-indigo-900/60 to-sky-900/60">
+  <div class="mx-auto container-narrow px-6">
+    <h2 class="text-4xl md:text-5xl font-extrabold mb-10 text-center text-indigo-300">
+      왜 스포밴드인가 — 운동생리학 효과
+    </h2>
+
+    <div class="bg-slate-800/70 border border-indigo-400/40 rounded-2xl shadow-xl p-10">
+      <ul class="space-y-6 text-lg md:text-2xl leading-relaxed">
+        <li>
+          <span class="text-sky-300 font-bold text-2xl">🤸 유연성</span><br>
+          가동범위 확장 + 말단 힘 향상 → <span class="text-emerald-300">부드럽고 강한 킥 완성</span>
+        </li>
+
+        <li>
+          <span class="text-sky-300 font-bold text-2xl">⚡ 순발력</span><br>
+          SSC 반복 훈련 → <span class="text-emerald-300">빠른 리듬 & 폭발적 킥 가속</span>
+        </li>
+
+        <li>
+          <span class="text-sky-300 font-bold text-2xl">🎯 협응력</span><br>
+          코어 안정성 + 자세 유지력 강화 → <span class="text-emerald-300">정확하고 흔들림 없는 동작</span>
+        </li>
+
+        <li>
+          <span class="text-sky-300 font-bold text-2xl">🛡 안정성</span><br>
+          관절 부담 감소, 회복력 증가 → <span class="text-emerald-300">안전하게 오래 훈련</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+  <!-- 아이들이 좋아하는 이유 -->
+<section id="kids" class="py-24 relative overflow-hidden">
+  <!-- 🎈 배경 -->
+  <div class="absolute inset-0 -z-10"
+       style="
+        background:
+          radial-gradient(24px 24px at 20% 10%, rgba(56,189,248,0.18) 0 60%, transparent 61%),
+          radial-gradient(28px 28px at 80% 20%, rgba(99,102,241,0.18) 0 60%, transparent 61%),
+          radial-gradient(700px 400px at 50% 100%, rgba(14,165,233,0.12), transparent 60%),
+          linear-gradient(180deg, rgba(2,6,23,0.0) 0%, rgba(2,6,23,0.25) 100%);
+       ">
+  </div>
+
+  <div class="mx-auto container-narrow px-6">
+    <h2 class="text-4xl md:text-5xl font-extrabold mb-10 text-center">
+      <span class="bg-clip-text text-transparent bg-gradient-to-r from-sky-300 via-emerald-300 to-indigo-300">
+        아이들이 좋아하는 이유
+      </span>
+    </h2>
+
+    <!-- 카드 그리드: 텍스트만 1.5배 확대 + 중앙정렬 유지 -->
+<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+
+  <!-- 1. 휴대성 -->
+  <div class="rounded-2xl border border-sky-300/40 bg-sky-900/20 shadow-lg p-8 md:p-9 text-center
+              hover:shadow-2xl hover:-translate-y-1 hover:ring-2 hover:ring-sky-400/40 transition">
+    <div class="flex flex-col items-center gap-3 mb-4">
+      <span class="text-5xl">🎒</span>
+      <h3 class="text-2xl md:text-3xl font-extrabold text-sky-200">휴대성</h3>
+    </div>
+    <p class="text-slate-200 text-lg md:text-xl leading-relaxed tracking-tight">
+      가방·주머니에 <span class="text-emerald-300 font-semibold">쏙!</span><br>
+      어디서나 꺼내 간단히 스트레칭·훈련
+    </p>
+  </div>
+
+  <!-- 2. 즉각 피드백 -->
+  <div class="rounded-2xl border border-emerald-300/40 bg-emerald-900/20 shadow-lg p-8 md:p-9 text-center
+              hover:shadow-2xl hover:-translate-y-1 hover:ring-2 hover:ring-emerald-400/40 transition">
+    <div class="flex flex-col items-center gap-3 mb-4">
+      <span class="text-5xl">⚡</span>
+      <h3 class="text-2xl md:text-3xl font-extrabold text-emerald-200">즉각 피드백</h3>
+    </div>
+    <p class="text-slate-200 text-lg md:text-xl leading-relaxed tracking-tight">
+      당기면 바로 <span class="text-sky-300 font-semibold">교정 신호</span>!<br>
+      몸이 스스로 <span class="text-emerald-300 font-semibold">정답</span>을 기억
+    </p>
+  </div>
+
+  <!-- 3. 혼자 가능 -->
+  <div class="rounded-2xl border border-indigo-300/40 bg-indigo-900/20 shadow-lg p-8 md:p-9 text-center
+              hover:shadow-2xl hover:-translate-y-1 hover:ring-2 hover:ring-indigo-400/40 transition">
+    <div class="flex flex-col items-center gap-3 mb-4">
+      <span class="text-5xl">🏠</span>
+      <h3 class="text-2xl md:text-3xl font-extrabold text-indigo-200">혼자 가능</h3>
+    </div>
+    <p class="text-slate-200 text-lg md:text-xl leading-relaxed tracking-tight">
+      도장 밖에서도 <span class="text-emerald-300 font-semibold">하루 10분 루틴</span><br>
+      꾸준히 성장
+    </p>
+  </div>
+
+  <!-- 4. 게임화 -->
+  <div class="rounded-2xl border border-pink-300/40 bg-pink-900/20 shadow-lg p-8 md:p-9 text-center
+              hover:shadow-2xl hover:-translate-y-1 hover:ring-2 hover:ring-pink-400/40 transition">
+    <div class="flex flex-col items-center gap-3 mb-4">
+      <span class="text-5xl">🎮</span>
+      <h3 class="text-2xl md:text-3xl font-extrabold text-pink-200">게임화</h3>
+    </div>
+    <p class="text-slate-200 text-lg md:text-xl leading-relaxed tracking-tight">
+      <span class="text-yellow-300 font-semibold">레벨 미션·도전과제</span>로 재미있게!<br>
+      기록이 쌓일수록 동기 폭발
+    </p>
+  </div>
+
+  <!-- 5. 소유감 -->
+  <div class="rounded-2xl border border-amber-300/40 bg-amber-900/20 shadow-lg p-8 md:p-9 text-center
+              hover:shadow-2xl hover:-translate-y-1 hover:ring-2 hover:ring-amber-400/40 transition sm:col-span-2 lg:col-span-1">
+    <div class="flex flex-col items-center gap-3 mb-4">
+      <span class="text-5xl">🌟</span>
+      <h3 class="text-2xl md:text-3xl font-extrabold text-amber-200">소유감</h3>
+    </div>
+    <p class="text-slate-200 text-lg md:text-xl leading-relaxed tracking-tight">
+      <span class="text-amber-300 font-semibold">“내 밴드”</span>라는 자부심이<br>
+      <span class="text-emerald-300 font-semibold">애착·책임감</span>으로 연결
+    </p>
+  </div>
+
+  <!-- 6. 1일 체험 수업 키트 -->
+  <div class="rounded-2xl border border-fuchsia-300/40 bg-fuchsia-900/20 shadow-lg p-8 md:p-9 text-center
+              hover:shadow-2xl hover:-translate-y-1 hover:ring-2 hover:ring-fuchsia-400/40 transition sm:col-span-2 lg:col-span-1">
+    <div class="flex flex-col items-center gap-3 mb-4">
+      <span class="text-5xl">🚀</span>
+      <h3 class="text-2xl md:text-3xl font-extrabold text-fuchsia-200">1일 체험 수업 키트</h3>
+    </div>
+    <p class="text-slate-200 text-lg md:text-xl leading-relaxed tracking-tight mb-5">
+      첫 수업에서 바로 <span class="text-emerald-300 font-semibold">재미 + 성과</span>를 보여주세요.
+    </p>
+    <a href="/spoband/taekwondo-special.html#apply"
+       class="inline-block bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-xl px-6 py-3 mx-auto">
+      체험 키트 신청
+    </a>
+  </div>
+    </div> <!-- ✅ 카드 그리드 끝 -->
+  </div>   <!-- ✅ container-narrow 끝 -->
+</section> <!-- ✅ #kids 섹션 끝 -->
+
+
+  <!-- 운영 · 매출 설계 -->
+
+<section id="biz" class="py-24 bg-gradient-to-b from-slate-800/60 to-slate-900/90">
+  <div class="mx-auto container-narrow px-6">
+    <h2 class="text-4xl md:text-5xl font-extrabold mb-10 text-center text-sky-400">
+      🚀 관장님을 위한 운영 · 매출 설계
+    </h2>
+
+    <div class="bg-slate-900/70 border border-sky-500/40 rounded-2xl shadow-xl p-10">
+      <ul class="space-y-6 text-lg md:text-2xl leading-relaxed">
+        <li>
+          <span class="text-sky-300 font-bold text-2xl">💰 새로운 수익 루트!</span><br>
+          표준 3종 세트(5·10·15kg)로 단계별 업그레이드 → 
+          <span class="text-emerald-300 font-bold">세트 판매 시 높은 마진 확보</span>
+        </li>
+
+        <li>
+          <span class="text-sky-300 font-bold text-2xl">🎯 수업이 곧 매출</span><br>
+          10분 체험 → 회원이 직접 구매 → 특강·캠프로 확장 →  
+          <span class="text-emerald-300">매출 선순환 시스템 완성!</span>
+        </li>
+
+        <li>
+          <span class="text-sky-300 font-bold text-2xl">⚡ 초간단 운영</span><br>
+          보관 간단 · 소독 쉬움 → <span class="text-emerald-300">관장님 혼자도 충분히 운영 가능</span>
+        </li>
+
+        <li>
+          <span class="text-sky-300 font-bold text-2xl">📈 눈에 보이는 성장</span><br>
+          단 2주 만에 전·후 영상으로 <span class="text-emerald-300">학부모와 회원 모두 설득!</span>
+        </li>
+
+       <!-- 🚨 경고 박스 -->
+<div class="mt-6 p-6 rounded-xl bg-gradient-to-r from-red-700 via-red-600 to-red-700 
+            text-center shadow-lg border border-red-400">
+  <p class="text-2xl md:text-3xl font-extrabold text-white leading-relaxed">
+    🚨 지금 도입하지 않으면 
+    <span class="text-yellow-300">옆 도장</span>이 먼저 시작합니다!
+  </p>
+  <p class="mt-2 text-xl md:text-2xl font-bold text-yellow-200">
+    👉 먼저 시작한 도장이 
+    <span class="text-emerald-300">회원 · 매출</span>을 모두 가져갑니다.
+  </p>
+</div>
+
+<!-- 하단 설명 문구 -->
+<div class="mt-10 text-center max-w-4xl mx-auto space-y-6">
+  <p class="text-xl md:text-2xl lg:text-3xl text-slate-200 leading-loose font-medium">
+    스포밴드는 운동생리학적 타당성, 아이들의 사용성, <br>
+    운영 · 매출 모델이 맞물린 도구입니다.
+  </p>
+  <p class="text-2xl md:text-3xl lg:text-4xl font-extrabold leading-loose
+            bg-clip-text text-transparent bg-gradient-to-r from-sky-300 via-emerald-300 to-indigo-300">
+    안전하게 · 빠르게 · 눈에 보이게 성장시키는 완벽한 수업 <br>
+    ▶ 일석이조 판매 선순환을 만드세요.
+  </p>
+</div>
+
+    </div>
+  </section>
+
+  <!-- 참고영상 섹션 -->
+  <section id="faq" class="py-24">
+    <div class="mx-auto container-narrow px-6">
+      <h2 class="text-3xl md:text-4xl font-extrabold mb-6">참고영상 등</h2>
+      <p class="text-slate-300 mb-8">
+        소개·활용 예시 영상 6개를 모았습니다. 썸네일을 클릭하면 큰 화면으로 재생됩니다.
+      </p>
+
+      <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
+        <!-- 1 -->
+        <a class="rounded-xl overflow-hidden card hover:shadow-lg transition"
+           data-vid="PaXW4TzsQyE" href="https://www.youtube.com/watch?v=PaXW4TzsQyE" target="_blank" rel="noopener">
+          <img class="w-full h-[220px] md:h-[240px] object-cover"
+               src="https://img.youtube.com/vi/PaXW4TzsQyE/hqdefault.jpg" alt="스포밴드 영상1">
+          <div class="px-4 py-3 text-sm">스포밴드 소개 영상 1</div>
+        </a>
+        <!-- 2 -->
+        <a class="rounded-xl overflow-hidden card hover:shadow-lg transition"
+           data-vid="C2G_9G88ahw" href="https://www.youtube.com/watch?v=C2G_9G88ahw" target="_blank" rel="noopener">
+          <img class="w-full h-[220px] md:h-[240px] object-cover"
+               src="https://img.youtube.com/vi/C2G_9G88ahw/hqdefault.jpg" alt="스포밴드 영상2">
+          <div class="px-4 py-3 text-sm">스포밴드 소개 영상 2</div>
+        </a>
+        <!-- 3 -->
+        <a class="rounded-xl overflow-hidden card hover:shadow-lg transition"
+           data-vid="LWnO0hubiyw" href="https://www.youtube.com/watch?v=LWnO0hubiyw" target="_blank" rel="noopener">
+          <img class="w-full h-[220px] md:h-[240px] object-cover"
+               src="https://img.youtube.com/vi/LWnO0hubiyw/hqdefault.jpg" alt="스포밴드 영상3">
+          <div class="px-4 py-3 text-sm">스포밴드 소개 영상 3</div>
+        </a>
+        <!-- 4 -->
+        <a class="rounded-xl overflow-hidden card hover:shadow-lg transition"
+           data-vid="JnEyJ9K5EF4" href="https://www.youtube.com/watch?v=JnEyJ9K5EF4" target="_blank" rel="noopener">
+          <img class="w-full h-[220px] md:h-[240px] object-cover"
+               src="https://img.youtube.com/vi/JnEyJ9K5EF4/hqdefault.jpg" alt="스포밴드 영상4">
+          <div class="px-4 py-3 text-sm">스포밴드 소개 영상 4</div>
+        </a>
+        <!-- 5 -->
+        <a class="rounded-xl overflow-hidden card hover:shadow-lg transition"
+           data-vid="QV8ma9aEiNM" href="https://www.youtube.com/watch?v=QV8ma9aEiNM" target="_blank" rel="noopener">
+          <img class="w-full h-[220px] md:h-[240px] object-cover"
+               src="https://img.youtube.com/vi/QV8ma9aEiNM/hqdefault.jpg" alt="스포밴드 영상5">
+          <div class="px-4 py-3 text-sm">스포밴드 소개 영상 5</div>
+        </a>
+        <!-- 6 -->
+        <a class="rounded-xl overflow-hidden card hover:shadow-lg transition"
+           data-vid="QVhHzYYkqbQ" href="https://www.youtube.com/watch?v=QVhHzYYkqbQ" target="_blank" rel="noopener">
+          <img class="w-full h-[220px] md:h-[240px] object-cover"
+               src="https://img.youtube.com/vi/QVhHzYYkqbQ/hqdefault.jpg" alt="스포밴드 영상6">
+          <div class="px-4 py-3 text-sm">스포밴드 소개 영상 6</div>
+        </a>
+      </div>
+
+      <p class="text-center mt-10 text-2xl md:text-3xl text-sky-300 font-bold leading-relaxed">
+        유튜브에 스포밴드 태권도 훈련 영상이 많이 올라와 있으니 참고하시기 바랍니다!<br>(유튜브 검색어: "스포밴드 태권도")<br>
+        관장님 감사합니다!
+      </p>
+    </div>
+  </section>
+
+  <!-- 푸터 -->
+  <footer class="bg-slate-950 py-8 mt-12">
+    <div class="mx-auto container-narrow px-6 text-center text-slate-400 text-base">
+      © 2025 SPOBAND. All rights reserved.
+    </div>
+  </footer>
+</body>
+</html>
