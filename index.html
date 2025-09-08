@@ -10,25 +10,23 @@
   <style>
     .text-balance { text-wrap: balance; } /* 문장 줄바꿈을 예쁘게 */
   </style>
-</head>
-
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>...</title>
+  <link href="..." rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    .text-balance { text-wrap: balance; }
     body { font-family: 'SUIT', sans-serif; }
     .container-narrow { max-width: 1100px; }
-    .bg-hero {
-      background:
-        radial-gradient(1200px 600px at 10% 10%, rgba(56, 189, 248, 0.1), transparent 60%),
-        radial-gradient(1000px 500px at 95% 5%, rgba(59,130,246,0.2), transparent 60%),
-        linear-gradient(180deg, #020617 0%, #0f172a 100%);
-    }
+    .bg-hero { ... }
     .nav-item { transition: color .2s ease; }
     .nav-active { color:#7dd3fc !important; font-weight:600; }
-
     /* 숫자 스피너 제거 */
     input[type="number"]::-webkit-outer-spin-button,
     input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     input[type="number"] { -moz-appearance: textfield; }
-
     /* 유튜브 모달 */
     .modal{ background:rgba(2,6,23,.75); backdrop-filter: blur(2px); }
     .modal-box{ width:min(1024px, 92vw); aspect-ratio:16/9; }
@@ -36,17 +34,15 @@
     .yt-thumb:hover img{ transform: scale(1.02); }
   </style>
 </head>
+
 <body class="text-white bg-slate-900 bg-hero">
 
   <!-- 헤더 -->
   <header class="sticky top-0 z-50 bg-slate-900/80 border-b border-slate-800">
     <div class="mx-auto container-narrow px-5 py-4 flex items-center justify-between">
-      <a href="/" class="font-bold tracking-wider text-lg">
-  SPOBAND <span class="text-sky-400">Pro</span>
-</a>
 
 
-      </a>
+<a href="/" class="font-bold ...">SPOBAND <span class="text-sky-400">Pro</span></a>
 
       <!-- 네비 -->
       <nav class="hidden md:flex items-center gap-10 text-base md:text-lg font-medium text-slate-200">
@@ -414,10 +410,10 @@
                   class="w-full md:w-auto px-6 py-3 rounded-xl bg-sky-500 hover:bg-sky-400 font-semibold">
             신청 등록
           </button>
-          <a href="pages/apply-admin.html"
-             class="text-sm text-slate-400 underline underline-offset-4">관리자 페이지</a>
+          
         </div>
       </form>
+
 
       <!-- 신청 목록 -->
       <div class="mt-10">
