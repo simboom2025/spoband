@@ -5,13 +5,25 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>SPOBAND Pro | 태권도 관장님 특별구매</title>
 
+  <!-- GA4: <title> 뒤, Tailwind 앞 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RTMS0KZWPX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-RTMS0KZWPX');  // 방문수 자동 집계
+  </script>
+
   <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- 기본 스타일 -->
   <style>
     .text-balance { text-wrap: balance; }
-    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto,
+                   "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    }
     .container-narrow { max-width: 1100px; }
     .bg-hero {
       background:
@@ -34,6 +46,7 @@
     .yt-thumb:hover img{ transform: scale(1.02); }
   </style>
 </head>
+
 
 <body class="text-white bg-slate-900 bg-hero">
 
@@ -829,30 +842,34 @@
     })();
   </script>
 
-  <!-- 유튜브 썸네일 모달 연결 -->
-  <script>
-    (function(){
-      const ytModal  = document.getElementById('ytModal');
-      const ytPlayer = document.getElementById('ytPlayer');
-      const ytClose  = document.getElementById('ytClose');
-      document.querySelectorAll('.yt-thumb').forEach(el=>{
-        el.addEventListener('click', ()=>{
-          const vid = el.getAttribute('data-vid');
-          ytPlayer.src = `https://www.youtube.com/embed/${vid}?autoplay=1&rel=0`;
-          ytModal.classList.remove('hidden');
-          ytModal.classList.add('flex');
-        });
-      });
-      function closeYt(){
-        ytModal.classList.add('hidden');
-        ytModal.classList.remove('flex');
-        ytPlayer.src = "";
-      }
-      ytClose.addEventListener('click', closeYt);
-      ytModal.addEventListener('click', (e)=>{ if(e.target===ytModal) closeYt(); });
-    })();
-  </script>
+<!-- ✅ 신청 폼 전환 이벤트: </body> 바로 위에 위치 -->
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  const form = document.getElementById('postForm');
+  if (!form) return;
 
-  <!-- Hero 모달 스크립트 (위에서 이미 있음) -->
-</body>
-</html>
+  form.addEventListener('submit', function(){
+    const total = Number(document.getElementById('totalBoxes')?.value || 0);
+    const kinds = ['q_sb30','q_sb35','q_sb45','q_sb55','q_sb65']
+      .reduce((n,id)=> n + (Number(document.getElementById(id)?.value || 0) > 0 ? 1 : 0), 0);
+
+    // 🔒 필수 입력값 체크(폼 검증과 동일한 조건 최소화)
+    const dojo    = document.getElementById('dojo')?.value.trim();
+    const master  = document.getElementById('master')?.value.trim();
+    const contact = document.getElementById('contact')?.value.trim();
+    const address = document.getElementById('address')?.value.trim();
+    const pw      = document.getElementById('pw')?.value || '';
+
+    const valid = dojo && master && contact && address && pw.length >= 4 && kinds > 0;
+    if (!valid) return; // ❗️정상 제출이 아니면 전환 이벤트 보내지 않음
+
+    gtag('event', 'apply_submit', {
+      value: total,          // 총 신청 개수
+      items_selected: kinds, // 신청 품목 종류 수
+      page_location: location.href
+    });
+  });
+});
+</script>
+
+
