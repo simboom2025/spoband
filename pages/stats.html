@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>일별 통계 | SPOBAND</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body class="bg-slate-950 text-slate-100">
+  <div class="max-w-4xl mx-auto p-6">
+    <h1 class="text-2xl font-bold">일별 통계</h1>
+    <p class="text-slate-400 text-sm mt-1">pageview / sms / organic / 신청건</p>
+
+    <!-- 잠금 -->
+    <div id="lock" class="mt-6">
+      <button id="unlock" class="px-4 py-2 rounded-lg bg-amber-500 text-black font-semibold">
+        관리자 확인
+      </button>
+    </div>
+
+    <!-- 패널 -->
+    <div id="panel" class="mt-6 hidden">
+      <div class="flex gap-2 items-center">
+        <button id="btnReload" class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm">새로고침</button>
+        <button id="btnCSV" class="px-3 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-sm">CSV 다운로드</button>
+      </div>
+
+      <canvas id="chart" class="w-full h-64 mt-4"></canvas>
+
+      <table class="mt-6 w-full text-sm border border-slate-800">
+        <thead class="bg-slate-800/50">
+          <tr>
+            <th class="p-2 text-left">날짜</th>
+            <th class="p-2 text-right">PV</th>
+            <th class="p-2 text-right">SMS</th>
+            <th class="p-2 text-right">ORGANIC</th>
+            <th class="p-2 text-right">신청</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+
+      <p id="err" class="mt-4 text-rose-400 text-sm hidden"></p>
+    </div>
+  </div>
+
+<script>
+/* ====== 설정 ====== */
+const ADMIN_PASS = "1234"; // ← 원하는 비밀번호로 변경
+// 로컬(127.0.0.1/localhost)에서는 workers.dev 호출, 운영(spoband.kr)에서는 /api/* 라우팅 사용
+const API_BASE =
+  (location.hostname === '127.0.0.1' || location.hostname === 'localhost')
+    ? 'https://YOUR_WORKER_SUBDOMAIN.workers.dev'  // ← 여기만 네 워커 주소로 변경
+    : ''; // 운영: '' + '/api/...' => https://spoband.kr/api/...
+
+let chart;
+
+/* ====== 잠금 해제 ====== */
+document.getElementById('unlock').addEventListener('click', ()=>{
+  const pw = prompt('관리자 비밀번호를 입력하세요.');
+  if (pw !== ADMIN_PASS) return alert('비밀번호가 올바르지 않습니다.');
+  document.getElementById('lock').classList.add('hidden');
+  document.getElementById('panel').classList.remove('hidden');
+  loadStats();
+});
+
+/* ====== 버튼 ====== */
+document.getElementById('btnReload').addEventListener('click', loadStats);
+document.getElementById('btnCSV').addEventListener('click', downloadCSV);
+
+/* ====== 데이터 로드 + 렌더 ====== */
+async function loadStats(){
+  const err = document.getElementById('err');
+  err.classList.add('hidden');
+  err.textContent = '';
+
+  try {
+    const res = await fetch(`${API_BASE}/api/stats`, { cache:'no-store' }); // ★ API_BASE 사용
+    if (!res.ok) throw new Error('API 응답 오류');
+    const data = await res.json(); // [{date,pv,sms,organic,submit}, ...]
+
+    // 표 렌더
+    const tbody = document.getElementById('tbody');
+    tbody.innerHTML = data.map(r=>`
+      <tr class="border-t border-slate-800">
+        <td class="p-2">${r.date}</td>
+        <td class="p-2 text-right">${r.pv||0}</td>
+        <td class="p-2 text-right">${r.sms||0}</td>
+        <td class="p-2 text-right">${r.organic||0}</td>
+        <td class="p-2 text-right">${r.submit||0}</td>
+      </tr>
+    `).join('');
+
+    // 차트 렌더
+    const ctx = document.getElementById('chart');
+    const labels = data.map(d=>d.date);
+    const ds = (k)=> data.map(d=>d[k]||0);
+
+    if (chart) chart.destroy();
+    chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          { label:'PV',      data: ds('pv') },
+          { label:'SMS',     data: ds('sms') },
+          { label:'Organic', data: ds('organic') },
+          { label:'신청',     data: ds('submit') },
+        ]
+      },
+      options: {
+        responsive:true,
+        plugins:{ legend:{ position:'bottom' } },
+        interaction:{ mode:'index', intersect:false },
+        scales:{ y:{ beginAtZero:true } }
+      }
+    });
+  } catch (e){
+    err.textContent = '불러오기 실패: ' + (e?.message || e);
+    err.classList.remove('hidden');
+  }
+}
+
+/* ====== CSV 다운로드 ====== */
+async function downloadCSV(){
+  const res = await fetch(`${API_BASE}/api/stats`, { cache:'no-store' });
+  if (!res.ok) return alert('다운로드 실패: API 오류');
+  const data = await res.json();
+  const header = ['date','pv','sms','organic','submit'];
+  const rows = [header.join(',')].concat(
+    data.map(r => [r.date, r.pv||0, r.sms||0, r.organic||0, r.submit||0].join(','))
+  );
+  const blob = new Blob([rows.join('\n')], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'spoband_stats.csv';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
