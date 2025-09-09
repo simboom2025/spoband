@@ -26,7 +26,7 @@
   <header class="sticky top-0 z-50 bg-slate-900/80 backdrop-blur border-b border-slate-800">
     <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
       <!-- 로고: 모든 페이지에서 메인으로 -->
-      <a data-home href="#" class="font-extrabold text-xl tracking-wider">
+      <a data-home href="#" class="font-extrabold text-xl tracking-wider" aria-label="SPOBAND Pro 메인으로">
         SPOBAND <span class="text-sky-400">Pro</span>
       </a>
 
@@ -121,9 +121,11 @@
 
   <!-- 공통 스크립트 -->
   <script>
-    // 로고 → 항상 메인으로
+    // 로고 → 항상 메인으로 (서브폴더/로컬 미리보기에서도 안전)
     (function () {
-      var homeUrl = location.origin + "/index.html";
+      var path = location.pathname;
+      // pages/ 폴더 안에서 열리면 ../index.html, 그 외엔 ./index.html
+      var homeUrl = /\/pages\/[^/]+$/.test(path) ? '../index.html' : './index.html';
       document.querySelectorAll('[data-home]').forEach(function (el) {
         el.setAttribute('href', homeUrl);
       });
