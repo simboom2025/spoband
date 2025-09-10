@@ -49,16 +49,14 @@
 
 <body class="text-white bg-slate-900 bg-hero">
 
-<!-- 헤더: 반응형 내비게이션 -->
+<!-- 헤더 -->
 <header class="sticky top-0 z-50 bg-slate-950/70 backdrop-blur border-b border-slate-800">
   <div class="container-narrow mx-auto px-4 md:px-6">
     <div class="flex items-center justify-between h-16">
-      <!-- 로고 -->
       <a href="/" class="flex items-center gap-2">
         <span class="text-white font-extrabold text-lg tracking-tight">SPOBAND <span class="text-sky-400">Pro</span></span>
       </a>
 
-      <!-- 데스크톱 메뉴 -->
       <nav class="hidden md:flex items-center gap-6">
         <a href="pages/taekwondo-benefits.html" class="text-slate-200 hover:text-white text-sm font-medium" data-nav="benefits">운동효과</a>
         <a href="pages/taekwondo-letter.html" class="text-slate-200 hover:text-white text-sm font-medium" data-nav="letter">“관장님께 드립니다”</a>
@@ -66,7 +64,6 @@
         <a href="#faq" class="text-slate-200 hover:text-white text-sm font-medium" data-nav="faq">참고영상 등</a>
       </nav>
 
-      <!-- CTA -->
       <div class="hidden md:block">
         <a href="#apply" class="bg-sky-500 hover:bg-sky-600 text-white px-5 py-2 rounded-full font-semibold shadow">
           관장님 전용 신청
@@ -265,17 +262,16 @@
                  class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
         </div>
         <div>
-  <label class="block text-sm mb-1" for="pw">비밀번호(열람/삭제용)</label>
-  <input id="pw" type="password" minlength="4" required
-         class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
-</div>
-<div>
-  <label class="block text-sm mb-1" for="pw2">비밀번호 확인</label>
-  <input id="pw2" type="password" minlength="4" required
-         class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
-  <p class="mt-1 text-xs text-slate-400">* 위 비밀번호와 동일하게 입력해야 합니다.</p>
-</div>
-
+          <label class="block text-sm mb-1" for="pw">비밀번호(열람/삭제용)</label>
+          <input id="pw" type="password" minlength="4" required
+                 class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
+        </div>
+        <div>
+          <label class="block text-sm mb-1" for="pw2">비밀번호 확인</label>
+          <input id="pw2" type="password" minlength="4" required
+                 class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
+          <p class="mt-1 text-xs text-slate-400">* 위 비밀번호와 동일하게 입력해야 합니다.</p>
+        </div>
       </div>
 
       <div>
@@ -298,13 +294,11 @@
         </div>
 
         <div class="mt-3 overflow-hidden rounded-xl border border-slate-700/60">
-          <!-- 헤더 -->
           <div class="grid grid-cols-12 bg-slate-900/40 px-4 py-3">
             <div class="col-span-8 md:col-span-9 text-[16px] md:text-lg font-semibold text-slate-100">모델 / (운동부하량)</div>
             <div class="col-span-4 md:col-span-3 text-right pr-1 text-[16px] md:text-lg font-semibold text-slate-100">신 청 개 수</div>
           </div>
 
-          <!-- 품목 입력 행들 -->
           <div class="divide-y divide-slate-700/50 bg-slate-800/20">
             <div class="grid grid-cols-12 items-center px-4 py-3">
               <div class="col-span-8 md:col-span-9">spoband 30 / (주니어용)</div>
@@ -346,7 +340,6 @@
               </div>
             </div>
 
-            <!-- 총 신청개수 -->
             <div class="grid grid-cols-12 items-center px-4 py-3 bg-slate-900/40 border-t border-slate-800/60">
               <div class="col-span-8 md:col-span-9 text-right pr-4">
                 <span class="text-sm md:text-base font-semibold text-slate-100">총 신청개수</span>
@@ -361,99 +354,22 @@
       </div>
 
       <!-- 신청 버튼(모달 오픈) -->
- <!-- 신청 버튼(모달 오픈) -->
-<div class="flex flex-col md:flex-row gap-4 md:items-center">
-  <button type="button" id="openConsent"
-          class="w-full md:w-auto px-6 py-3 rounded-xl bg-sky-500 hover:bg-sky-400 font-semibold">
-    신청 등록
-  </button>
-</div>
+      <div class="flex flex-col md:flex-row gap-4 md:items-center">
+        <button type="button" id="openConsent"
+                class="w-full md:w-auto px-6 py-3 rounded-xl bg-sky-500 hover:bg-sky-400 font-semibold">
+          신청 등록
+        </button>
+      </div>
 
-<!-- 허니팟 (화면 밖 숨김) -->
-<div aria-hidden="true"
-     style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;">
-  <label>Leave this field empty</label>
-  <input type="text" name="hp_field" tabindex="-1"
-         autocomplete="new-password" inputmode="none" />
-</div>
-
-<!-- 제출 시간 기록 -->
-<input type="hidden" name="ts" id="ts">
-</form>
-
-<!-- ✅ JS는 폼 밖, script 태그 안에서 실행 -->
-<script>
-const FORM_MIN_SECONDS = 3;
-let pageLoadedAt = Date.now();
-const formEl = document.getElementById('postForm');
-
-if(formEl){
-  formEl.addEventListener("submit",(e)=>{
-    e.preventDefault();
-    const hp = formEl.querySelector('input[name="hp_field"]');
-    const tooFast = (Date.now() - pageLoadedAt) < FORM_MIN_SECONDS*1000;
-
-    if (hp && hp.value && hp.value.trim() !== '' && tooFast) {
-      alert("제출이 너무 빠릅니다. 몇 초 뒤 다시 시도해주세요.");
-      return;
-    }
-
-    // 기존 저장 로직...
-  });
-}
-</script>
-
-
-  // 허니팟 완화 로직
-  const hp = formEl.querySelector('input[name="hp_field"]');
-  const tooFast = (Date.now() - pageLoadedAt) < FORM_MIN_SECONDS*1000;
-
-  // 🔒 진짜 봇 의심: 너무 빨리 + 허니팟 값 채움
-  if (hp && hp.value && hp.value.trim() !== '' && tooFast) {
-    // 그냥 버리지 말고, 에러 안내만 하고 종료
-    alert("제출이 너무 빠릅니다. 몇 초 뒤 다시 시도해주세요.");
-    return;
-  }
-
-  // ---- 이하 기존 저장 로직 (비번 확인 등 포함) ----
-  const pw1 = document.getElementById("pw")?.value.trim();
-  const pw2 = document.getElementById("pw2")?.value.trim();
-  if (pw1 !== pw2){ alert("비밀번호와 비밀번호 확인이 일치하지 않습니다."); return; }
-
-  const data = {
-    dojo: document.getElementById("dojo")?.value.trim(),
-    master: document.getElementById("master")?.value.trim(),
-    contact: document.getElementById("contact")?.value.trim(),
-    address: document.getElementById("address")?.value.trim(),
-    pw: pw1,
-    ts: Number(document.getElementById('ts')?.value) || Date.now(),
-    items: {
-      sb30: Number(document.getElementById("q_sb30")?.value||0),
-      sb35: Number(document.getElementById("q_sb35")?.value||0),
-      sb45: Number(document.getElementById("q_sb45")?.value||0),
-      sb55: Number(document.getElementById("q_sb55")?.value||0),
-      sb65: Number(document.getElementById("q_sb65")?.value||0),
-    }
-  };
-
-  const valid = data.dojo && data.master && data.contact && data.address && (data.pw||"").length>=4;
-  const anyQty = Object.values(data.items).some(v=>v>0);
-  if(!valid){ alert("필수 칸을 모두 입력하고, 비밀번호는 4자 이상으로 해주세요."); return; }
-  if(!anyQty){ alert("신청 개수를 1개 이상 입력해주세요."); return; }
-
-  const post = { id: Date.now(), ...data, replies: [] };
-  posts.unshift(post); save(posts);
-  formEl.reset(); recalcTotal(); render();
-  alert("신청이 등록되었습니다. 견적서는 연락처로 보내드릴게요!");
-});
-
+      <!-- 허니팟 -->
+      <div aria-hidden="true" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;">
+        <label>Leave this field empty</label>
+        <input type="text" name="hp_field" tabindex="-1" autocomplete="new-password" inputmode="none" />
+      </div>
 
       <!-- 제출 시간 기록 -->
       <input type="hidden" name="ts" id="ts">
     </form>
-
-    <!-- ts 값 채우기 -->
-    <script>document.getElementById('ts').value = Date.now();</script>
 
     <!-- 신청 목록 -->
     <div class="mt-10">
@@ -467,7 +383,6 @@ if(formEl){
             (데모) 전체 삭제
           </button>
 
-          <!-- 모두 열람/접기 -->
           <button id="btnAdminExpandAll"
                   class="admin-only hidden text-xs px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white">
             모두 열람
@@ -498,6 +413,18 @@ if(formEl){
     /* ===== 로컬 게시판 ===== */
     const STORE_KEY = "spoband_board_posts_v2";
     const FORM_ID = 'postForm';
+    const ADMIN_STORAGE_KEY = "spoband_admin_on";
+    const ADMIN_PASS = "1234"; // 필요 시 변경
+
+    /* ▼▼ 비번 인증으로 열람 허용된 글(이 탭 세션 한정) 저장 ▼▼ */
+    const UNLOCK_STORAGE_KEY = "spoband_unlocked_ids";
+    const unlockedIds = new Set(
+      JSON.parse(sessionStorage.getItem(UNLOCK_STORAGE_KEY) || "[]")
+    );
+    function persistUnlocked(){
+      sessionStorage.setItem(UNLOCK_STORAGE_KEY, JSON.stringify([...unlockedIds]));
+    }
+    /* ▲▲ */
 
     // 헬퍼
     const $  = (s,el=document)=>el.querySelector(s);
@@ -506,27 +433,25 @@ if(formEl){
     const save=(d)=>localStorage.setItem(STORE_KEY, JSON.stringify(d));
     const load=()=>JSON.parse(localStorage.getItem(STORE_KEY)||"[]");
     const fmt =(ts)=>new Date(ts).toLocaleString();
+    const isAdmin=()=>localStorage.getItem(ADMIN_STORAGE_KEY)==="true";
 
-    // 관리자 설정
-    const ADMIN_PASS = "1234";            // ← 필요시 변경
-   function setAdminMode(on){
-  if (on) localStorage.setItem(ADMIN_STORAGE_KEY,"true");
-  else    localStorage.removeItem(ADMIN_STORAGE_KEY);
+    function setAdminMode(on){
+      if (on) localStorage.setItem(ADMIN_STORAGE_KEY,"true");
+      else    localStorage.removeItem(ADMIN_STORAGE_KEY);
 
-  document.querySelectorAll(".admin-only").forEach(el=>{
-    el.classList.toggle("hidden", !on);
-  });
+      document.querySelectorAll(".admin-only").forEach(el=>{
+        el.classList.toggle("hidden", !on);
+      });
 
-  const loginBtn  = document.getElementById("btnAdminLogin");
-  const logoutBtn = document.getElementById("btnAdminLogout");
-  if (loginBtn && logoutBtn){
-    loginBtn.classList.toggle("hidden", on);
-    logoutBtn.classList.toggle("hidden", !on);
-  }
-}
+      const loginBtn  = document.getElementById("btnAdminLogin");
+      const logoutBtn = document.getElementById("btnAdminLogout");
+      if (loginBtn && logoutBtn){
+        loginBtn.classList.toggle("hidden", on);
+        logoutBtn.classList.toggle("hidden", !on);
+      }
 
-// 렌더 후 최하단에 항상 실행되게 유지
-setAdminMode(isAdmin());
+      render(); // 상태 반영(관리자 off 시 다시 마스킹)
+    }
 
     function adminLoginFlow(){
       const pw = prompt("관리자 비밀번호를 입력하세요.");
@@ -561,6 +486,11 @@ setAdminMode(isAdmin());
       return arr[0] + "*".repeat(arr.length-2) + arr[arr.length-1];
     }
 
+    // 이 글을 전체로 보여도 되는가? (관리자 or 비번으로 열람한 글)
+    function canSee(post){
+      return isAdmin() || unlockedIds.has(post.id);
+    }
+
     // 합계 계산
     function recalcTotal(){
       const n = (id) => Math.max(0, Number((document.getElementById(id)?.value || 0)) || 0);
@@ -574,38 +504,79 @@ setAdminMode(isAdmin());
     // 상태
     let posts = load();
 
-    // 카드 템플릿(관리자 버튼 포함)
+    // 카드 템플릿
     function cardHTML(p){
-  const itemsHTML = Object.entries(p.items||{})
-    .filter(([k,v])=>v>0)
-    .map(([k,v])=>{
-      const label=({sb30:"spoband 30 / 주니어용",sb35:"spoband 35 / 모레주머니 2.5kg",sb45:"spoband 45 / 모레주머니 5kg",sb55:"spoband 55 / 모레주머니 10kg",sb65:"spoband 65 / 모레주머니 15kg"})[k]||k;
-      return "• "+esc(label)+" : "+v+" 개";
-    }).join("<br>") || "-";
+      const showFull      = canSee(p);
+      const dojoDisplay   = showFull ? esc(p.dojo)    : esc(maskDojo(p.dojo));
+      const masterDisplay = showFull ? esc(p.master)  : esc(maskName(p.master));
+      const contactDisplay= showFull ? esc(p.contact) : esc(maskPhoneOpenLast4(p.contact));
 
-  const repliesHTML = (p.replies||[]).map(r=>
-    `<div class="mt-2 p-2 rounded-lg bg-slate-800/40 border border-slate-700/50">
-       <div class="text-xs text-slate-400">${fmt(r.ts)}</div>
-       <div class="text-sky-300 font-semibold">${esc(r.content)}</div>
-     </div>`
-  ).join("");
+      const itemsHTML = Object.entries(p.items||{})
+        .filter(([k,v])=>v>0)
+        .map(([k,v])=>{
+          const label=({sb30:"spoband 30 / 주니어용",sb35:"spoband 35 / 모레주머니 2.5kg",sb45:"spoband 45 / 모레주머니 5kg",sb55:"spoband 55 / 모레주머니 10kg",sb65:"spoband 65 / 모레주머니 15kg"})[k]||k;
+          return "• "+esc(label)+" : "+v+" 개";
+        }).join("<br>") || "-";
 
-  return `
-  <article class="p-5 rounded-2xl border border-slate-700/50 bg-slate-800/40" data-id="${p.id}">
-    ...
-    <div class="md:col-span-2"><div class="text-xs text-slate-400">신청 품목(개)</div><div class="whitespace-pre-wrap">${itemsHTML}</div></div>
-    
-    <!-- ✅ 관리자 답변 -->
-    ${repliesHTML ? `<div class="md:col-span-2"><div class="text-xs text-slate-400">관리자 답변</div>${repliesHTML}</div>` : ""}
+      const repliesHTML = (p.replies||[]).map(r=>
+        `<div class="mt-2 p-2 rounded-lg bg-slate-800/40 border border-slate-700/50">
+           <div class="text-xs text-slate-400">${fmt(r.ts)}</div>
+           <div class="text-sky-300 font-semibold whitespace-pre-wrap">${esc(r.content)}</div>
+         </div>`
+      ).join("");
 
-    <!-- ✅ 관리자 모드에서 관장 입력 비밀번호 노출 -->
-    ${isAdmin() ? `<div class="md:col-span-2"><div class="text-xs text-slate-400">관장님 입력 비밀번호</div><div class="font-semibold text-red-400">${esc(p.pw)}</div></div>` : ""}
-    ...
-  </article>`;
-}
+      return `
+      <article class="p-5 rounded-2xl border border-slate-700/50 bg-slate-800/40" data-id="${p.id}">
+        <div class="grid md:grid-cols-2 gap-3">
+          <div>
+            <div class="text-xs text-slate-400">도장명</div>
+            <div class="font-semibold">${dojoDisplay}</div>
+          </div>
+          <div>
+            <div class="text-xs text-slate-400">관장님</div>
+            <div class="font-semibold">${masterDisplay}</div>
+          </div>
+          <div>
+            <div class="text-xs text-slate-400">연락처</div>
+            <div class="font-mono">${contactDisplay}</div>
+          </div>
+          <div>
+            <div class="text-xs text-slate-400">작성일</div>
+            <div>${fmt(p.ts||p.id)}</div>
+          </div>
 
+          <div class="md:col-span-2">
+            <div class="text-xs text-slate-400">신청 품목(개)</div>
+            <div class="whitespace-pre-wrap">${itemsHTML}</div>
+          </div>
 
-    // 모두 열람/접기
+          <div id="details-${p.id}" class="md:col-span-2 hidden">
+            <div class="mt-3 p-3 rounded-xl bg-slate-900/40 border border-slate-800">
+              <div class="text-xs text-slate-400">주소(상세)</div>
+              <div class="whitespace-pre-wrap">${esc(p.address||"")}</div>
+            </div>
+
+            ${repliesHTML ? `<div class="mt-3">${repliesHTML}</div>` : ""}
+
+            ${isAdmin() ? `
+              <div class="mt-3">
+                <div class="text-xs text-slate-400">관장님 입력 비밀번호</div>
+                <div class="font-semibold text-red-400">${esc(p.pw)}</div>
+              </div>` : ``}
+          </div>
+        </div>
+
+        <div class="mt-4 flex items-center gap-2">
+          <button class="btn-view px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600">열람</button>
+          <button class="btn-close px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600">접기</button>
+          ${isAdmin() ? `
+            <button class="btn-admin-reply px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white">관리자 답변</button>
+            <button class="btn-delete px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white">삭제</button>
+          `:``}
+        </div>
+      </article>`;
+    }
+
     function expandAll(open){
       posts.forEach(p=>{
         const box = document.getElementById("details-"+p.id);
@@ -613,85 +584,37 @@ setAdminMode(isAdmin());
       });
     }
 
- function render(){
-  const list=$("#boardList");
-  if(!list) return;
+    function onView(e){
+      const el = e.currentTarget.closest("article");
+      const id = Number(el.dataset.id);
+      const post = posts.find(p=>p.id===id);
+      if (!post) return;
 
-  list.innerHTML = posts.length
-    ? posts.map(p=>cardHTML(p)).join("")
-    : '<p class="text-slate-400 text-sm">아직 등록된 신청이 없습니다.</p>';
+      // 일반 사용자는 비번 필요
+      if (!isAdmin()){
+        const pw = prompt("작성 시 설정한 비밀번호를 입력하세요.");
+        if(pw===null) return;
+        if(pw!==post.pw){ alert("비밀번호가 일치하지 않습니다."); return; }
 
-  // 사용자 버튼
-  $$(".btn-view").forEach(b=>b.addEventListener("click",onView));
-  $$(".btn-close").forEach(b=>b.addEventListener("click",onClose));
-  $$(".btn-back").forEach(b=>b.addEventListener("click",onBackToList));
+        // 인증 성공 → 이 탭에서 해당 글 전체 정보 열람 허용
+        unlockedIds.add(post.id);
+        persistUnlocked();
+      }
 
-  // 관리자 버튼들
-  document.getElementById("btnAdminLogin")?.addEventListener("click", adminLoginFlow);
-  document.getElementById("btnAdminLogout")?.addEventListener("click", ()=>{ setAdminMode(false); alert("관리자 모드를 종료했습니다."); });
-  document.getElementById("clearAllBtn")?.addEventListener("click", ()=>{
-    if (!isAdmin()) { alert('관리자만 사용할 수 있습니다.'); return; }
-    if (confirm('데모 데이터를 모두 삭제할까요?')) { posts = []; save(posts); render(); }
-  });
+      // 상단 정보도 바로 풀리도록 재렌더
+      render();
 
-  // 관리자 전용 동작
-  $$(".btn-admin-reply").forEach(b=> b.addEventListener("click", onAdminReply));
-  $$(".btn-delete").forEach(b=> b.addEventListener("click", onDelete));
-
-  // 🔁 렌더 후에도 현재 관리자 상태를 다시 반영 (admin-only 토글 보정)
-  setAdminMode(isAdmin());
-}
-
-      // 모두 열람/접기
-      document.getElementById("btnAdminExpandAll")?.addEventListener("click", ()=>{
-        if (!isAdmin()) { alert('관리자만 사용할 수 있습니다.'); return; }
-        expandAll(true);
-      });
-      document.getElementById("btnAdminCollapseAll")?.addEventListener("click", ()=>{
-        if (!isAdmin()) { alert('관리자만 사용할 수 있습니다.'); return; }
-        expandAll(false);
-      });
-
-      $$(".btn-admin-reply").forEach(b=> b.addEventListener("click", onAdminReply));
-      $$(".btn-delete").forEach(b=> b.addEventListener("click", onDelete));
-    }
-
-      function onView(e){
-  const el = e.currentTarget.closest("article");
-  const id = Number(el.dataset.id);
-  const post = posts.find(p=>p.id===id);
-  if (!post) return;
-
-  // 일반 사용자는 비번 필요
-  const pw = prompt("작성 시 설정한 비밀번호를 입력하세요.");
-  if(pw===null) return;
-  if(pw!==post.pw){ alert("비밀번호가 일치하지 않습니다."); return; }
-
-  const box = document.getElementById("details-"+post.id);
-  if(box){ box.classList.remove("hidden"); box.scrollIntoView({behavior:"smooth",block:"start"}); }
-
-      const pw = prompt("작성 시 설정한 비밀번호를 입력하세요.");
-      if(pw===null) return;
-      if(pw!==post.pw){ alert("비밀번호가 일치하지 않습니다."); return; }
       const box = document.getElementById("details-"+post.id);
       if(box){ box.classList.remove("hidden"); box.scrollIntoView({behavior:"smooth",block:"start"}); }
     }
+
     function onClose(e){
       const el = e.currentTarget.closest("article");
       const id = Number(el.dataset.id);
       const box = document.getElementById("details-"+id);
       if(box) box.classList.add("hidden");
     }
-    function onBackToList(e){
-      const el = e.currentTarget.closest("article");
-      const id = Number(el.dataset.id);
-      const box = document.getElementById("details-"+id);
-      if(box) box.classList.add("hidden");
-      const top = document.getElementById("boardTop");
-      if(top) top.scrollIntoView({behavior:"smooth", block:"start"});
-    }
 
-    // 관리자 전용 동작
     function onAdminReply(e){
       if (!isAdmin()) { alert("관리자 모드에서만 답변할 수 있습니다."); return; }
       const el = e.currentTarget.closest("article");
@@ -706,6 +629,7 @@ setAdminMode(isAdmin());
       const details = document.getElementById("details-"+id);
       if(details) details.classList.remove("hidden");
     }
+
     function onDelete(e){
       if (!isAdmin()) { alert("관리자만 삭제할 수 있습니다."); return; }
       const el = e.currentTarget.closest("article");
@@ -716,35 +640,99 @@ setAdminMode(isAdmin());
       posts.splice(idx,1); save(posts); render();
     }
 
-    // 폼 제출 (허니팟 + ts 포함)
-    const formEl = document.getElementById(FORM_ID);
-    if(formEl){
-      formEl.addEventListener("submit",(e)=>{
-  e.preventDefault();
-
-  const pw1 = document.getElementById("pw")?.value.trim();
-  const pw2 = document.getElementById("pw2")?.value.trim();
-  if (pw1 !== pw2){
-    alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
-    return;
-  }
-
-  const data = {
-    dojo: document.getElementById("dojo")?.value.trim(),
-    master: document.getElementById("master")?.value.trim(),
-    contact: document.getElementById("contact")?.value.trim(),
-    address: document.getElementById("address")?.value.trim(),
-    pw: pw1,
-    ts: Number(document.getElementById('ts')?.value) || Date.now(),
-    items: {
-      sb30: Number(document.getElementById("q_sb30")?.value||0),
-      sb35: Number(document.getElementById("q_sb35")?.value||0),
-      sb45: Number(document.getElementById("q_sb45")?.value||0),
-      sb55: Number(document.getElementById("q_sb55")?.value||0),
-      sb65: Number(document.getElementById("q_sb65")?.value||0),
+    function bindCardEvents(){
+      $$(".btn-view").forEach(b=>b.addEventListener("click",onView));
+      $$(".btn-close").forEach(b=>b.addEventListener("click",onClose));
+      $$(".btn-admin-reply").forEach(b=> b.addEventListener("click", onAdminReply));
+      $$(".btn-delete").forEach(b=> b.addEventListener("click", onDelete));
     }
-  };
 
+    function render(){
+      const list=$("#boardList");
+      if(!list) return;
+
+      list.innerHTML = posts.length
+        ? posts.map(p=>cardHTML(p)).join("")
+        : '<p class="text-slate-400 text-sm">아직 등록된 신청이 없습니다.</p>';
+
+      // 상단 버튼/관리자 버튼 바인딩
+      document.getElementById("btnAdminLogin")?.addEventListener("click", adminLoginFlow);
+      document.getElementById("btnAdminLogout")?.addEventListener("click", ()=>{
+        setAdminMode(false);
+        alert("관리자 모드를 종료했습니다.");
+      });
+      document.getElementById("clearAllBtn")?.addEventListener("click", ()=>{
+        if (!isAdmin()) { alert('관리자만 사용할 수 있습니다.'); return; }
+        if (confirm('데모 데이터를 모두 삭제할까요?')) { posts = []; save(posts); render(); }
+      });
+      document.getElementById("btnAdminExpandAll")?.addEventListener("click", ()=>{
+        if (!isAdmin()) { alert('관리자만 사용할 수 있습니다.'); return; }
+        expandAll(true);
+      });
+      document.getElementById("btnAdminCollapseAll")?.addEventListener("click", ()=>{
+        if (!isAdmin()) { alert('관리자만 사용할 수 있습니다.'); return; }
+        expandAll(false);
+      });
+
+      bindCardEvents();
+
+      // admin-only 토글 보정
+      document.querySelectorAll(".admin-only").forEach(el=>{
+        el.classList.toggle("hidden", !isAdmin());
+      });
+      const loginBtn  = document.getElementById("btnAdminLogin");
+      const logoutBtn = document.getElementById("btnAdminLogout");
+      if (loginBtn && logoutBtn){
+        loginBtn.classList.toggle("hidden", isAdmin());
+        logoutBtn.classList.toggle("hidden", !isAdmin());
+      }
+    }
+
+    // 폼 제출 + 스팸 완화 + 저장 + GA
+    (function initForm(){
+      const FORM_MIN_SECONDS = 3;
+      const pageLoadedAt = Date.now();
+      const formEl = document.getElementById(FORM_ID);
+      if (!formEl) return;
+
+      // ts 값 초기화
+      const tsHidden = document.getElementById('ts');
+      if (tsHidden) tsHidden.value = String(Date.now());
+
+      formEl.addEventListener("submit",(e)=>{
+        e.preventDefault();
+
+        const hp = formEl.querySelector('input[name="hp_field"]');
+        const tooFast = (Date.now() - pageLoadedAt) < FORM_MIN_SECONDS*1000;
+
+        // 허니팟 + 너무 빠른 제출
+        if (hp && hp.value && hp.value.trim() !== '' && tooFast) {
+          alert("제출이 너무 빠릅니다. 몇 초 뒤 다시 시도해주세요.");
+          return;
+        }
+
+        const pw1 = document.getElementById("pw")?.value.trim();
+        const pw2 = document.getElementById("pw2")?.value.trim();
+        if (pw1 !== pw2){
+          alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+          return;
+        }
+
+        const data = {
+          dojo: document.getElementById("dojo")?.value.trim(),
+          master: document.getElementById("master")?.value.trim(),
+          contact: document.getElementById("contact")?.value.trim(),
+          address: document.getElementById("address")?.value.trim(),
+          pw: pw1,
+          ts: Number(document.getElementById('ts')?.value) || Date.now(),
+          items: {
+            sb30: Number(document.getElementById("q_sb30")?.value||0),
+            sb35: Number(document.getElementById("q_sb35")?.value||0),
+            sb45: Number(document.getElementById("q_sb45")?.value||0),
+            sb55: Number(document.getElementById("q_sb55")?.value||0),
+            sb65: Number(document.getElementById("q_sb65")?.value||0),
+          }
+        };
 
         const valid = data.dojo && data.master && data.contact && data.address && (data.pw||"").length>=4;
         const anyQty = Object.values(data.items).some(v=>v>0);
@@ -755,22 +743,33 @@ setAdminMode(isAdmin());
         posts.unshift(post); save(posts);
         formEl.reset(); recalcTotal(); render();
         alert("신청이 등록되었습니다. 견적서는 연락처로 보내드릴게요!");
-      });
-    }
 
-    // 합계 이벤트 연결
-    ["q_sb30","q_sb35","q_sb45","q_sb55","q_sb65"].forEach(id=>{
-      const el = document.getElementById(id);
-      if (el) el.addEventListener("input", recalcTotal);
-    });
-    recalcTotal();
+        // GA 이벤트 (정상 저장된 뒤에만)
+        try{
+          const total = (data.items.sb30+data.items.sb35+data.items.sb45+data.items.sb55+data.items.sb65);
+          const kinds = ['sb30','sb35','sb45','sb55','sb65'].reduce((n,k)=> n + (data.items[k]>0 ? 1 : 0), 0);
+          gtag('event', 'apply_submit', {
+            value: total,
+            items_selected: kinds,
+            page_location: location.href
+          });
+        }catch(_e){}
+      });
+
+      // 합계 이벤트 연결
+      ["q_sb30","q_sb35","q_sb45","q_sb55","q_sb65"].forEach(id=>{
+        const el = document.getElementById(id);
+        if (el) el.addEventListener("input", recalcTotal);
+      });
+      recalcTotal();
+    })();
 
     // 초기 렌더
     render();
   </script>
 </section>
 
-<!-- 네비 활성 표시 & 모바일 토글 & 모달 스크립트 -->
+<!-- 네비/모달 스크립트 -->
 <script>
   // 모바일 내비 토글
   function toggleNav(){
@@ -931,33 +930,9 @@ setAdminMode(isAdmin());
   })();
 </script>
 
-<!-- ✅ GA 전환 이벤트: 정상 제출시에만 -->
+<!-- ✅ GA 전환 이벤트(백업용: 메인 submit에서 이미 호출) -->
 <script>
-  document.addEventListener('DOMContentLoaded', function(){
-    const form = document.getElementById('postForm');
-    if (!form) return;
-
-    form.addEventListener('submit', function(){
-      const total = Number(document.getElementById('totalBoxes')?.value || 0);
-      const kinds = ['q_sb30','q_sb35','q_sb45','q_sb55','q_sb65']
-        .reduce((n,id)=> n + (Number(document.getElementById(id)?.value || 0) > 0 ? 1 : 0), 0);
-
-      const dojo    = document.getElementById('dojo')?.value.trim();
-      const master  = document.getElementById('master')?.value.trim();
-      const contact = document.getElementById('contact')?.value.trim();
-      const address = document.getElementById('address')?.value.trim();
-      const pw      = document.getElementById('pw')?.value || '';
-
-      const valid = dojo && master && contact && address && pw.length >= 4 && kinds > 0;
-      if (!valid) return;
-
-      gtag('event', 'apply_submit', {
-        value: total,
-        items_selected: kinds,
-        page_location: location.href
-      });
-    });
-  });
+  // 보조 스크립트 비워둠
 </script>
 
 </body>
