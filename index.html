@@ -598,13 +598,35 @@ function maskName(name){
 }
 
 function cardHTML(p){
-  const itemsHTML = Object.entries(p.items||{})
-    .filter(([k,v])=>v>0)
+  // 총합(비공개 노출용)
+  const totalCount = Object.values(p.items||{}).reduce((s,v)=> s + (Number(v)||0), 0);
+
+  // 상세(인증 후 노출용)용 품목 HTML
+  const itemsFullHTML = Object.entries(p.items||{})
+    .filter(([k,v])=> (Number(v)||0) > 0)
     .map(([k,v])=>{
-      const label=({sb30:"spoband 30 / 주니어용",sb35:"spoband 35 / 2.5kg",sb45:"spoband 45 / 5kg",sb55:"spoband 55 / 10kg",sb65:"spoband 65 / 15kg"})[k]||k;
+      const labelMap = {
+        sb30:"spoband 30 / 주니어용",
+        sb35:"spoband 35 / 2.5kg",
+        sb45:"spoband 45 / 5kg",
+        sb55:"spoband 55 / 10kg",
+        sb65:"spoband 65 / 15kg"
+      };
+      const label = labelMap[k] || k;
       return `• ${esc(label)} : ${v} 개`;
     }).join("<br>") || "-";
 
+  // 목록 카드에서는 ‘총합’만 노출, 품목 세부는 가림
+  const itemsPrivateHTML = `
+    <div class="inline-flex items-center gap-2 text-slate-300">
+      <span class="text-xs px-2 py-0.5 rounded bg-sky-500/10 text-sky-300 border border-sky-700/40">
+        총 ${totalCount} 개
+      </span>
+      <span class="text-slate-500 text-sm">(상세 내역은 비공개 · 비밀번호/관리자 인증 시 열람)</span>
+    </div>
+  `;
+
+  // 관리자 답변
   const repliesHTML = (p.replies||[]).map(r=>
     `<div class="mt-2 p-2 rounded-lg bg-slate-800/40 border border-slate-700/50">
        <div class="text-xs text-slate-400">${fmt(r.ts)}</div>
@@ -631,9 +653,11 @@ function cardHTML(p){
         <div class="text-xs text-slate-400">등록일</div>
         <div class="font-semibold">${fmt(p.ts)}</div>
       </div>
+
+      <!-- 목록에서는 품목 세부를 가림 -->
       <div class="md:col-span-2">
-        <div class="text-xs text-slate-400">신청 품목(개)</div>
-        <div class="whitespace-pre-wrap">${itemsHTML}</div>
+        <div class="text-xs text-slate-400">신청 품목</div>
+        ${itemsPrivateHTML}
       </div>
 
       ${repliesHTML ? `<div class="md:col-span-2"><div class="text-xs text-slate-400">관리자 답변</div>${repliesHTML}</div>` : ""}
@@ -647,74 +671,28 @@ function cardHTML(p){
         <button class="btn-delete admin-only ${isAdmin()?'':'hidden'} px-3 py-2 rounded-lg bg-rose-700 hover:bg-rose-600 text-sm text-white">삭제</button>
       </div>
 
+      <!-- 인증 후 열리는 상세 -->
       <div id="details-${p.id}" class="hidden md:col-span-2 p-3 rounded-lg bg-slate-900/40 border border-slate-800">
         <div class="text-xs text-slate-400 mb-1">상세 정보</div>
-        <div class="text-sm text-slate-200">도장명: ${esc(p.dojo)} / 관장님: ${esc(p.master)} / 주소: ${esc(p.address)}</div>
-        <button class="btn-back mt-2 px-2 py-1.5 rounded bg-slate-700 hover:bg-slate-600 text-xs">목록으로</button>
+        <div class="text-sm text-slate-200 mb-2">
+          도장명: ${esc(p.dojo)} / 관장님: ${esc(p.master)} / 주소: ${esc(p.address)}
+        </div>
+        <div class="text-xs text-slate-400 mb-1">신청 품목(모델별)</div>
+        <div class="whitespace-pre-wrap">${itemsFullHTML}</div>
+        <button class="btn-back mt-3 px-2 py-1.5 rounded bg-slate-700 hover:bg-slate-600 text-xs">목록으로</button>
       </div>
     </div>
   </article>`;
 }
 
-function render(){
-  const list=$("#boardList");
-  if(!list) return;
-
-  list.innerHTML = posts.length
-    ? posts.map(p=>cardHTML(p)).join("")
-    : '<p class="text-slate-400 text-sm">아직 등록된 신청이 없습니다.</p>';
-
-  // 사용자 버튼
-  $$(".btn-view").forEach(b=>b.addEventListener("click",onView));
-  $$(".btn-close").forEach(b=>b.addEventListener("click",onClose));
-  $$(".btn-back").forEach(b=>b.addEventListener("click",onBackToList));
-
-  // 관리자 버튼들
-  document.getElementById("btnAdminLogin")?.addEventListener("click", adminLoginFlow);
-  document.getElementById("btnAdminLogout")?.addEventListener("click", ()=>{ setAdminMode(false); alert("관리자 모드를 종료했습니다."); });
-  document.getElementById("clearAllBtn")?.addEventListener("click", ()=>{
-    if (!isAdmin()) { alert('관리자만 사용할 수 있습니다.'); return; }
-    if (confirm('데모 데이터를 모두 삭제할까요?')) { posts = []; save(posts); render(); }
-  });
-  document.getElementById("btnAdminExpandAll")?.addEventListener("click", ()=>{
-    if (!isAdmin()) { alert('관리자만 사용할 수 있습니다.'); return; }
-    posts.forEach(p=>$("#details-"+p.id)?.classList.remove("hidden"));
-  });
-  document.getElementById("btnAdminCollapseAll")?.addEventListener("click", ()=>{
-    if (!isAdmin()) { alert('관리자만 사용할 수 있습니다.'); return; }
-    posts.forEach(p=>$("#details-"+p.id)?.classList.add("hidden"));
-  });
-
-  $$(".btn-admin-reply").forEach(b=> b.addEventListener("click", onAdminReply));
-  $$(".btn-delete").forEach(b=> b.addEventListener("click", onDelete));
-
-  // 렌더 후 관리자 표시 보정
-  setAdminMode(isAdmin());
-}
-
-function adminLoginFlow(){
-  const pw = prompt("관리자 비밀번호를 입력하세요.");
-  if (pw===null) return;
-  if (pw===ADMIN_PASS){
-    alert("관리자 모드가 켜졌습니다.");
-    setAdminMode(true);
-    render();
-  }else{
-    alert("비밀번호가 올바르지 않습니다.");
-  }
-}
-
-/* ===============================
-   카드 동작
-================================= */
 function onView(e){
   const el = e.currentTarget.closest("article");
   const id = Number(el.dataset.id);
   const post = posts.find(p=>p.id===id);
   if (!post) return;
 
-  // 일반 사용자: 비번 확인
-  if(!isAdmin()){
+  // 관리자면 비번 없이 바로 열람
+  if (!isAdmin()){
     const pw = prompt("작성 시 설정한 비밀번호를 입력하세요.");
     if(pw===null) return;
     if(pw!==post.pw){ alert("비밀번호가 일치하지 않습니다."); return; }
@@ -723,6 +701,7 @@ function onView(e){
   const box = document.getElementById("details-"+post.id);
   if(box){ box.classList.remove("hidden"); box.scrollIntoView({behavior:"smooth",block:"start"}); }
 }
+
 function onClose(e){
   const el = e.currentTarget.closest("article");
   const id = Number(el.dataset.id);
@@ -879,3 +858,4 @@ document.addEventListener('DOMContentLoaded', function () {
 
 </body>
 </html>
+
