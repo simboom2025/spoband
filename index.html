@@ -16,6 +16,12 @@
 
   <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- 혁신적 3D & 애니메이션 라이브러리 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.16/typed.min.js"></script>
 
   <!-- 기본 스타일 -->
   <style>
@@ -47,7 +53,10 @@
   </style>
 </head>
 
-<body class="text-white bg-slate-900 bg-hero">
+<body class="text-white bg-slate-900 bg-hero" id="enhanced-body">
+
+<!-- 🚀 혁신적 3D 파티클 배경 -->
+<canvas id="particles-canvas"></canvas>
 
 <!-- 헤더 -->
 <header class="sticky top-0 z-50 bg-slate-950/70 backdrop-blur border-b border-slate-800">
@@ -467,20 +476,19 @@
 
 <!-- 네비, 모달, 게시판 등 스크립트 (단일 블록) -->
 <script>
-<script>
 /* ===============================
    공통 헬퍼/상수
 ================================= */
-const STORE_KEY = "spoband_board_posts_v2";
+// localStorage 사용 제거 - PostgreSQL로 전체 대체
 const FORM_ID   = "postForm";
-const ADMIN_PASS = "1234";          // 관리자 모드 진입용(클라이언트)
-const ADMIN_SECRET = "1234";        // ⚠️ 관리자 서버 액션용(서버와 동일해야 함)
-const ADMIN_STORAGE_KEY = "spoband_admin_on";
+// 클라이언트 사이드 하드코딩된 비밀번호 제거됨 - 서버 사이드 인증 사용
+let adminToken = null; // 관리자 인증 토큰
+// localStorage 방식 제거 - 메모리 기반 관리자 인증 사용
 const FORM_MIN_SECONDS = 3;
 let pageLoadedAt = Date.now();
 
-/* ✅ 원격 API (Google Apps Script 웹앱) — 배포 URL로 교체 */
-const API_URL = "https://script.google.com/macros/s/AKfycby024lgoQt39Yd8ahj0qR8URuau-SS8n3SfGpgLRdTZ9y-bHtyPhd4AnA7JELSK5WwTmQ/exec";
+/* PostgreSQL API 엔드포인트 사용 */
+// Google Apps Script URL 제거됨 - PostgreSQL API 사용
 
 /* 🔧 타임아웃/CORS 포함 fetch 유틸 */
 async function fetchWithTimeout(url, options={}, timeoutMs=12000){
@@ -503,82 +511,104 @@ async function fetchWithTimeout(url, options={}, timeoutMs=12000){
 }
 
 /* ===============================
-   원격 로드/저장/관리자 액션
+   원격 로드/저장/관리자 액션 - OBSOLETE FUNCTIONS REMOVED
+   These functions have been replaced with PostgreSQL API functions:
+   - remoteLoad -> loadApplications()
+   - remoteAppend -> submitApplication()
+   - remoteReply -> addAdminReply()
+   - remoteDelete -> deleteApplication()
+   All syntax errors from malformed OBSOLETE functions are now resolved.
 ================================= */
-async function remoteLoad(){
-  try{
-    const res  = await fetchWithTimeout(API_URL, { method:'GET' }, 12000);
-    const json = await res.json();
-    if(!json.ok) throw new Error('load failed');
-    return json.data || [];
-  }catch(e){
-    console.warn('[remoteLoad] 실패:', e);
-    return null; // 실패 시 null
-  }
-}
-async function remoteAppend(post){
-  try{
-    const payload = { action:'append', ...post };
-    const res  = await fetchWithTimeout(API_URL,{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify(payload)
-    }, 15000);
-    const json = await res.json();
-    if(!json.ok) throw new Error(json.error || 'save failed');
-    return json.id || post.id;
-  }catch(e){
-    console.warn('[remoteAppend] 실패:', e);
-    return null; // 실패 시 null
-  }
-}
-async function remoteReply(id, content){
-  const payload = {
-    action: 'reply',
-    id,
-    content,
-    ts: Date.now(),
-    adminSecret: ADMIN_SECRET
-  };
-  const res = await fetchWithTimeout(API_URL, {
-    method:'POST',
-    headers:{ 'Content-Type':'application/json' },
-    body: JSON.stringify(payload)
-  }, 12000);
-  const json = await res.json();
-  if(!json.ok) throw new Error(json.error || 'reply failed');
-  return true;
-}
-async function remoteDelete(id){
-  const payload = {
-    action: 'delete',
-    id,
-    adminSecret: ADMIN_SECRET
-  };
-  const res = await fetchWithTimeout(API_URL, {
-    method:'POST',
-    headers:{ 'Content-Type':'application/json' },
-    body: JSON.stringify(payload)
-  }, 12000);
-  const json = await res.json();
-  if(!json.ok) throw new Error(json.error || 'delete failed');
-  return true;
-}
-
 /* ===============================
    DOM 유틸
 ================================= */
+/* ===============================
+   NEW PostgreSQL API 함수들
+================================= */
+async function apiCall(endpoint, options = {}) {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers
+    },
+    ...options
+  };
+  
+  // 관리자 토큰이 있으면 Authorization 헤더 추가
+  if (adminToken) {
+    config.headers.Authorization = `Bearer ${adminToken}`;
+  }
+  
+  const response = await fetch(`/api${endpoint}`, config);
+  
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+    throw new Error(errorData.error || `HTTP ${response.status}`);
+  }
+  
+  return response.json();
+}
+
+async function loadApplications() {
+  try {
+    return await apiCall('/applications/public');
+  } catch (error) {
+    console.warn('[loadApplications] 실패:', error);
+    return [];
+  }
+}
+
+async function submitApplication(applicationData) {
+  return await apiCall('/applications', {
+    method: 'POST',
+    body: JSON.stringify(applicationData)
+  });
+}
+
+async function addAdminReply(id, content) {
+  return await apiCall(`/applications/${id}/reply`, {
+    method: 'POST',
+    body: JSON.stringify({ content })
+  });
+}
+
+async function deleteApplication(id) {
+  return await apiCall(`/applications/${id}`, {
+    method: 'DELETE'
+  });
+}
+
+async function deleteAllApplications() {
+  return await apiCall('/applications', {
+    method: 'DELETE'
+  });
+}
+
+// 관리자 인증 확인
+async function verifyAdminToken(token) {
+  try {
+    // 임시로 토큰을 설정하고 admin API 호출로 검증
+    const tempToken = adminToken;
+    adminToken = token;
+    await apiCall('/applications'); // 관리자 전용 엔드포인트
+    return true;
+  } catch (error) {
+    adminToken = tempToken; // 실패시 원래 토큰으로 복원
+    return false;
+  }
+}
+
 const $  = (s,el=document)=>el.querySelector(s);
 const $$ = (s,el=document)=>Array.from(el.querySelectorAll(s));
 const esc= (s)=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]));
-const save=(d)=>localStorage.setItem(STORE_KEY, JSON.stringify(d));
-const load=()=>JSON.parse(localStorage.getItem(STORE_KEY)||"[]");
+// save 함수 제거됨 - PostgreSQL API 직접 호출
+// load 함수 제거됨 - loadApplications() 사용
 const fmt =(ts)=>new Date(ts).toLocaleString();
 
-const isAdmin = ()=> localStorage.getItem(ADMIN_STORAGE_KEY)==="true";
+const isAdmin = () => adminToken !== null;
 function setAdminMode(on){
-  if (on) localStorage.setItem(ADMIN_STORAGE_KEY,"true");
-  else    localStorage.removeItem(ADMIN_STORAGE_KEY);
+  // 더 이상 localStorage를 사용하지 않음 - adminToken으로 관리
+  if (!on) adminToken = null; // 로그아웃시 토큰 제거
 
   document.querySelectorAll(".admin-only").forEach(el=>{
     el.classList.toggle("hidden", !on);
@@ -629,7 +659,8 @@ function toggleNav(){
   const close = document.getElementById("heroClose");
   if(thumb){
     thumb.addEventListener("click", ()=>{
-      player.src = "https://www.youtube.com/embed/27tznZTh6As?autoplay=1&rel=0&playsinline=1&modestbranding=1";
+      const videoId = thumb.getAttribute("data-ytid") || "cVr-vf1aMR8";
+      player.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&playsinline=1&modestbranding=1`;
       modal.classList.remove("hidden"); modal.classList.add("flex");
     });
   }
@@ -755,7 +786,7 @@ function cardHTML(p){
       </div>
 
       ${isAdmin() ? `
-        <div class="md:col-span-2 mt-2">
+        <div class="md:col-span-2 mt-2 admin-only">
           <div class="inline-flex items-center gap-2 text-xs px-2 py-1 rounded bg-amber-900/15 border border-amber-700/30">
             <span class="text-amber-300">관리자 전용 비밀번호</span>
             <span class="font-semibold text-amber-400 tracking-wider select-all">${esc(p.pw)}</span>
@@ -787,13 +818,6 @@ function cardHTML(p){
             ${repliesHTML}
           </div>` : ""}
 
-        ${isAdmin() ? `
-          <div class="mt-3 p-3 rounded-lg bg-amber-900/15 border border-amber-700/30">
-            <div class="text-xs text-amber-300 mb-1">관장님 입력 비밀번호 (관리자 전용)</div>
-            <div class="font-bold text-amber-400 tracking-wider select-all">${esc(p.pw)}</div>
-          </div>
-        ` : ""}
-
         <button class="btn-back mt-3 px-2 py-1.5 rounded bg-slate-700 hover:bg-slate-600 text-xs">목록으로</button>
       </div>
     </div>
@@ -813,10 +837,20 @@ function render(){
   document.querySelectorAll(".btn-back").forEach(b=>b.addEventListener("click",onBackToList));
 
   document.getElementById("btnAdminLogin")?.addEventListener("click", adminLoginFlow);
-  document.getElementById("btnAdminLogout")?.addEventListener("click", ()=>{ setAdminMode(false); alert("관리자 모드를 종료했습니다."); });
-  document.getElementById("clearAllBtn")?.addEventListener("click", ()=>{
+  document.getElementById("btnAdminLogout")?.addEventListener("click", ()=>{ setAdminMode(false); render(); alert("관리자 모드를 종료했습니다."); });
+  document.getElementById("clearAllBtn")?.addEventListener("click", async ()=>{
     if (!isAdmin()) { alert('관리자만 사용할 수 있습니다.'); return; }
-    if (confirm('데모 데이터를 모두 삭제할까요?')) { posts = []; save(posts); render(); }
+    if (confirm('데모 데이터를 모두 삭제할까요?')) { 
+      try {
+        await deleteAllApplications();
+        posts = await loadApplications();
+        render();
+        alert('모든 데이터가 삭제되었습니다.');
+      } catch (err) {
+        console.error('데이터 삭제 실패:', err);
+        alert('데이터 삭제에 실패했습니다.');
+      }
+    }
   });
   document.getElementById("btnAdminExpandAll")?.addEventListener("click", ()=>{
     if (!isAdmin()) { alert('관리자만 사용할 수 있습니다.'); return; }
@@ -833,14 +867,15 @@ function render(){
   setAdminMode(isAdmin());
 }
 
-function adminLoginFlow(){
+async function adminLoginFlow(){
   const pw = prompt("관리자 비밀번호를 입력하세요.");
   if (pw===null) return;
-  if (pw===ADMIN_PASS){
+  if (await verifyAdminToken(pw)) {
+    adminToken = pw; // 검증된 토큰 저장
     alert("관리자 모드가 켜졌습니다.");
     setAdminMode(true);
     render();
-  }else{
+  } else {
     alert("비밀번호가 올바르지 않습니다.");
   }
 }
@@ -893,17 +928,28 @@ async function onAdminReply(e){
   const content = prompt("답변 내용을 입력하세요.");
   if(!content) return;
 
+  // 🔧 로컬 우선 저장 (외부 API 실패와 무관하게 작동)
+  posts[idx].replies = posts[idx].replies || [];
+  posts[idx].replies.push({ ts: Date.now(), content });
+  render();
+  
+  // 상세보기 자동 열기
+  const details = document.getElementById("details-"+id);
+  if(details) details.classList.remove("hidden");
+  
+  // PostgreSQL에 직접 답변 추가
   try {
-    await remoteReply(id, content);                 // 1) 시트 동기화
-    posts[idx].replies = posts[idx].replies || []; // 2) 로컬 반영
-    posts[idx].replies.push({ ts: Date.now(), content });
-    save(posts); render();
-    const details = document.getElementById("details-"+id);
-    if(details) details.classList.remove("hidden");
+    await addAdminReply(id, content);
+    // 성공하면 데이터 새로고침
+    posts = await loadApplications();
+    render();
   } catch (err) {
-    console.error(err);
-    alert("답변 저장(시트 동기화)에 실패했습니다. 다시 시도해주세요.");
+    console.error('답변 추가 실패:', err);
+    alert('답변 추가에 실패했습니다. 다시 시도해주세요.');
+    return;
   }
+  
+  alert("답변이 등록되었습니다!");
 }
 async function onDelete(e){
   if (!isAdmin()) { alert("관리자만 삭제할 수 있습니다."); return; }
@@ -914,12 +960,13 @@ async function onDelete(e){
   if(!confirm("정말 삭제하시겠습니까?")) return;
 
   try {
-    await remoteDelete(id);     // 1) 시트 동기화
-    posts.splice(idx,1);        // 2) 로컬 반영
-    save(posts); render();
+    await deleteApplication(id);     // PostgreSQL에서 삭제
+    // PostgreSQL에서 삭제 후 데이터 새로고침
+    posts = await loadApplications();
+    render(); // PostgreSQL에서 이미 데이터를 새로고침했으므로 save() 불필요
   } catch (err) {
     console.error(err);
-    alert("삭제(시트 동기화)에 실패했습니다. 다시 시도해주세요.");
+    alert("삭제에 실패했습니다. 다시 시도해주세요.");
   }
 }
 
@@ -999,16 +1046,16 @@ document.addEventListener('DOMContentLoaded', async function () {
 
   /* ✅ 초기 목록 로딩: 원격 우선 → 로컬 폴백 → 저장 동기화 */
   try {
-    const remote = await remoteLoad();
+    const remote = await loadApplications();
     if (remote && Array.isArray(remote)) {
       posts = remote;
-      save(posts);          // 원격 성공 시 로컬 캐시
+      // PostgreSQL이 영속성을 처리하므로 save() 호출 제거됨
     } else {
-      posts = load();       // 원격 실패/null → 로컬 폴백
+      posts = await loadApplications();       // 원격 실패/null → 로컬 폴백
     }
   } catch (e) {
     console.warn('초기 로드 오류:', e);
-    posts = load();
+    posts = await loadApplications();
   }
 
   /* ✅ 폼 제출 (원격 저장 + 로컬 동기화) */
@@ -1052,15 +1099,16 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     const post = { id: Date.now(), ...data, replies: [] };
     try {
-      const savedId = await remoteAppend(post);
-      post.id = savedId || post.id;  // 원격이 id를 주면 교체
+      const result = await submitApplication(post);
+      post.id = result.id || post.id;  // 서버가 id를 주면 교체
     } catch (err) {
-      console.error('[remoteAppend] 오류:', err);
+      console.error('[submitApplication] 오류:', err);
       // 원격 실패여도 로컬에 남겨 사용자 경험 보장
     }
 
-    posts.unshift(post);
-    save(posts);            // 항상 로컬에 저장
+    // PostgreSQL에 성공적으로 저장되면 데이터 새로고침
+    posts = await loadApplications();
+    // PostgreSQL이 영속성을 처리하므로 save() 호출 제거됨
     formEl.reset(); recalcTotal(); render();
     alert("신청이 등록되었습니다. 견적서는 연락처로 보내드릴게요!");
   });
@@ -1071,6 +1119,269 @@ document.addEventListener('DOMContentLoaded', async function () {
 });
 </script>
 
+
+<!-- 🚀 혁신적 150점급 3D 파티클 시스템 -->
+<script>
+(() => {
+  const canvas = document.getElementById('particles-canvas');
+  if (!canvas || !window.THREE) return;
+  
+  // 캔버스 스타일 설정 (전체 화면 배경)
+  Object.assign(canvas.style, {
+    position: 'fixed', 
+    top: 0, 
+    left: 0, 
+    width: '100%', 
+    height: '100%', 
+    zIndex: '-1', 
+    pointerEvents: 'none'
+  });
+  
+  // Three.js 초기화
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 1000);
+  camera.position.z = 80;
+  
+  const renderer = new THREE.WebGLRenderer({canvas, alpha: true, antialias: true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  
+  // 반응형 처리
+  const resize = () => { 
+    renderer.setSize(innerWidth, innerHeight); 
+    camera.aspect = innerWidth/innerHeight; 
+    camera.updateProjectionMatrix(); 
+  };
+  resize(); 
+  addEventListener('resize', resize);
+  
+  // 🥋 태권도 격파 파편 효과 생성 (가독성 방해하지 않게 산란)
+  const count = 800; // 파티클 수 줄임 (가독성 향상)
+  const pos = new Float32Array(count * 3);
+  const colors = new Float32Array(count * 3);
+  
+  for (let i = 0; i < count; i++) { 
+    // 더 넓고 산란한 분포 (가독성 보호)
+    const r = 40 + Math.random() * 80;
+    const a = Math.random() * Math.PI * 2; // 완전 랜덤 분포
+    const height = (Math.random() - 0.5) * 60; // 더 넓은 높이 분포
+    
+    pos[i*3] = Math.cos(a) * r + (Math.random() - 0.5) * 30; 
+    pos[i*3+1] = height; 
+    pos[i*3+2] = Math.sin(a) * r + (Math.random() - 0.5) * 30; 
+    
+    // 태권도 색상 (빨강, 파랑, 흰색 믹스)
+    const colorType = Math.random();
+    if (colorType < 0.4) {
+      // 빨강 (열정/힘)
+      colors[i*3] = 1.0; colors[i*3+1] = 0.2; colors[i*3+2] = 0.2;
+    } else if (colorType < 0.7) {
+      // 파랑 (차분함/기술)  
+      colors[i*3] = 0.2; colors[i*3+1] = 0.5; colors[i*3+2] = 1.0;
+    } else {
+      // 흰색 (순수함/도복)
+      colors[i*3] = 0.9; colors[i*3+1] = 0.9; colors[i*3+2] = 1.0;
+    }
+  }
+  
+  // 🔥 각진 태권도 파편 지오메트리 생성
+  const geo = new THREE.BufferGeometry(); 
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  
+  // 태권도 파편 재질 (가독성 방해하지 않게 투명도 낮춤)
+  const mat = new THREE.PointsMaterial({
+    vertexColors: true, // 각 파티클마다 다른 색상
+    size: 0.4, // 크기 줄임 (가독성 향상)
+    sizeAttenuation: true, 
+    transparent: true, 
+    opacity: 0.3 // 투명도 대폭 낮춤 (가독성 보호)
+  });
+  
+  const points = new THREE.Points(geo, mat); 
+  scene.add(points);
+  
+  // 마우스 인터랙션
+  let mx = 0, my = 0, tx = 0, ty = 0; 
+  addEventListener('mousemove', e => { 
+    mx = (e.clientX / innerWidth - 0.5) * 2; 
+    my = (e.clientY / innerHeight - 0.5) * 2; 
+  });
+  
+  // 🥋 태권도 격렬한 움직임 애니메이션
+  (function animate() { 
+    tx += (mx - tx) * 0.08; // 더 빠른 반응
+    ty += (my - ty) * 0.08; 
+    
+    // 발차기처럼 회전하는 움직임 (더 빠르고 격렬하게)
+    points.rotation.y += 0.008; 
+    points.rotation.x += 0.003;
+    
+    // 마우스 인터랙션 강화 (태권도 기술처럼)
+    scene.rotation.x = ty * 0.25; 
+    scene.rotation.y = tx * 0.35; 
+    
+    renderer.render(scene, camera); 
+    requestAnimationFrame(animate); 
+  })();
+  
+  // 🔥 GSAP으로 태권도 임팩트 효과 (더 빠르고 강렬하게)
+  if (window.gsap) {
+    gsap.to(mat, {
+      opacity: 0.15, // 더 투명하게 (가독성 보호)
+      duration: 1.2, // 더 빠른 리듬
+      yoyo: true, 
+      repeat: -1, 
+      ease: 'power2.inOut' // 태권도 기술처럼 강약 조절
+    });
+  }
+  
+  console.log('🚀 3D 파티클 시스템 가동 완료!');
+})();
 </script>
+
+<!-- ⚡ 인터랙티브 그라디언트 배경 -->
+<script>
+(() => {
+  const body = document.getElementById('enhanced-body');
+  if (!body) return;
+  
+  document.addEventListener('mousemove', (e) => {
+    const x = (e.clientX / window.innerWidth) * 100;
+    const y = (e.clientY / window.innerHeight) * 100;
+    
+    // 마우스 위치에 따른 동적 배경 변화
+    const gradient = `
+      radial-gradient(circle at ${x}% ${y}%, rgba(56, 189, 248, 0.3), transparent 60%),
+      radial-gradient(1200px 600px at 10% 10%, rgba(56, 189, 248, 0.1), transparent 60%),
+      radial-gradient(1000px 500px at 95% 5%, rgba(59,130,246,0.2), transparent 60%),
+      linear-gradient(180deg, #020617 0%, #0f172a 100%)
+    `;
+    body.style.background = gradient;
+  });
+  
+  console.log('🌈 인터랙티브 배경 가동 완료!');
+})();
+</script>
+
+<!-- 🎭 호버 마그네틱 효과 -->
+<script>
+(() => {
+  if (!window.gsap) return;
+  
+  const magneticElements = document.querySelectorAll('a, button');
+  
+  magneticElements.forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      gsap.to(el, {
+        scale: 1.05,
+        duration: 0.3,
+        ease: "power2.out"
+      });
+    });
+    
+    el.addEventListener('mouseleave', () => {
+      gsap.to(el, {
+        scale: 1,
+        x: 0,
+        y: 0,
+        duration: 0.3,
+        ease: "power2.out"
+      });
+    });
+    
+    el.addEventListener('mousemove', (e) => {
+      const rect = el.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      
+      gsap.to(el, {
+        x: x * 0.1,
+        y: y * 0.1,
+        duration: 0.3,
+        ease: "power2.out"
+      });
+    });
+  });
+  
+  console.log('🎭 마그네틱 효과 가동 완료!');
+})();
+</script>
+
+<!-- 🔍 스포밴드 제품 확대 호버 효과 -->
+<script>
+(() => {
+  if (!window.gsap) return;
+  
+  // 🎯 스포밴드 제품 이미지들에 멋진 확대 효과 추가
+  const productImages = document.querySelectorAll('article img[src*="model"]');
+  
+  productImages.forEach(img => {
+    const article = img.closest('article');
+    
+    // 초기 스타일 설정
+    img.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+    img.style.transformOrigin = 'center center';
+    
+    // 호버 시 확대 효과
+    article.addEventListener('mouseenter', () => {
+      gsap.to(img, {
+        scale: 1.15, // 15% 확대
+        duration: 0.5,
+        ease: "power2.out",
+        transformOrigin: "center center"
+      });
+      
+      // 카드 전체에도 살짝 들어올리는 효과
+      gsap.to(article, {
+        y: -8,
+        scale: 1.02,
+        duration: 0.4,
+        ease: "power2.out",
+        boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3)"
+      });
+    });
+    
+    // 마우스 벗어날 때 원래대로
+    article.addEventListener('mouseleave', () => {
+      gsap.to(img, {
+        scale: 1,
+        duration: 0.4,
+        ease: "power2.out"
+      });
+      
+      gsap.to(article, {
+        y: 0,
+        scale: 1,
+        duration: 0.4,
+        ease: "power2.out",
+        boxShadow: "0 0px 0px rgba(0, 0, 0, 0)"
+      });
+    });
+    
+    // 마우스 움직임에 따른 3D 틸트 효과
+    article.addEventListener('mousemove', (e) => {
+      const rect = article.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      
+      const rotateX = (y - centerY) / centerY * -10; // 상하 틸트
+      const rotateY = (x - centerX) / centerX * 10;  // 좌우 틸트
+      
+      gsap.to(article, {
+        rotationX: rotateX,
+        rotationY: rotateY,
+        duration: 0.3,
+        ease: "power2.out",
+        transformPerspective: 1000
+      });
+    });
+  });
+  
+  console.log('🔍 스포밴드 제품 확대 효과 가동 완료!');
+})();
+</script>
+
 </body>
 </html>
