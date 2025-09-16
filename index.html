@@ -467,18 +467,20 @@
 
 <!-- 네비, 모달, 게시판 등 스크립트 (단일 블록) -->
 <script>
+<script>
 /* ===============================
    공통 헬퍼/상수
 ================================= */
 const STORE_KEY = "spoband_board_posts_v2";
 const FORM_ID   = "postForm";
-const ADMIN_PASS = "1234";
+const ADMIN_PASS = "1234";          // 관리자 모드 진입용(클라이언트)
+const ADMIN_SECRET = "1234";        // ⚠️ 관리자 서버 액션용(서버와 동일해야 함)
 const ADMIN_STORAGE_KEY = "spoband_admin_on";
 const FORM_MIN_SECONDS = 3;
 let pageLoadedAt = Date.now();
 
-/* ✅ 원격 API (Google Apps Script 웹앱) */
-const API_URL = "https://script.google.com/macros/s/AKfycbxwmOtLakG6K4QaqyEiOtn63Pey5Lw1oSx0RBPP2cVGrdwlHIPLODYq8FNqkKZ9H4bm/exec";
+/* ✅ 원격 API (Google Apps Script 웹앱) — 배포 URL로 교체 */
+const API_URL = "https://script.google.com/macros/s/AKfycby024lgoQt39Yd8ahj0qR8URuau-SS8n3SfGpgLRdTZ9y-bHtyPhd4AnA7JELSK5WwTmQ/exec";
 
 /* 🔧 타임아웃/CORS 포함 fetch 유틸 */
 async function fetchWithTimeout(url, options={}, timeoutMs=12000){
@@ -500,7 +502,9 @@ async function fetchWithTimeout(url, options={}, timeoutMs=12000){
   }
 }
 
-/* ✅ 원격 로드/저장 함수 (안정화) */
+/* ===============================
+   원격 로드/저장/관리자 액션
+================================= */
 async function remoteLoad(){
   try{
     const res  = await fetchWithTimeout(API_URL, { method:'GET' }, 12000);
@@ -514,20 +518,56 @@ async function remoteLoad(){
 }
 async function remoteAppend(post){
   try{
+    const payload = { action:'append', ...post };
     const res  = await fetchWithTimeout(API_URL,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body: JSON.stringify(post)
+      body: JSON.stringify(payload)
     }, 15000);
     const json = await res.json();
-    if(!json.ok) throw new Error('save failed');
+    if(!json.ok) throw new Error(json.error || 'save failed');
     return json.id || post.id;
   }catch(e){
     console.warn('[remoteAppend] 실패:', e);
     return null; // 실패 시 null
   }
 }
+async function remoteReply(id, content){
+  const payload = {
+    action: 'reply',
+    id,
+    content,
+    ts: Date.now(),
+    adminSecret: ADMIN_SECRET
+  };
+  const res = await fetchWithTimeout(API_URL, {
+    method:'POST',
+    headers:{ 'Content-Type':'application/json' },
+    body: JSON.stringify(payload)
+  }, 12000);
+  const json = await res.json();
+  if(!json.ok) throw new Error(json.error || 'reply failed');
+  return true;
+}
+async function remoteDelete(id){
+  const payload = {
+    action: 'delete',
+    id,
+    adminSecret: ADMIN_SECRET
+  };
+  const res = await fetchWithTimeout(API_URL, {
+    method:'POST',
+    headers:{ 'Content-Type':'application/json' },
+    body: JSON.stringify(payload)
+  }, 12000);
+  const json = await res.json();
+  if(!json.ok) throw new Error(json.error || 'delete failed');
+  return true;
+}
 
+/* ===============================
+   DOM 유틸
+================================= */
 const $  = (s,el=document)=>el.querySelector(s);
 const $$ = (s,el=document)=>Array.from(el.querySelectorAll(s));
 const esc= (s)=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]));
@@ -589,7 +629,6 @@ function toggleNav(){
   const close = document.getElementById("heroClose");
   if(thumb){
     thumb.addEventListener("click", ()=>{
-      // 필요 시 아래 ID만 교체
       player.src = "https://www.youtube.com/embed/27tznZTh6As?autoplay=1&rel=0&playsinline=1&modestbranding=1";
       modal.classList.remove("hidden"); modal.classList.add("flex");
     });
@@ -625,7 +664,7 @@ function toggleNav(){
 /* ===============================
    게시판 상태/합계/템플릿
 ================================= */
-let posts = [];   // 원격에서 불러올 것이므로 초기엔 빈 배열
+let posts = [];   // 원격에서 불러옴
 
 function recalcTotal(){
   const n = id => Math.max(0, Number((document.getElementById(id)?.value || 0)) || 0);
@@ -811,11 +850,10 @@ function adminLoginFlow(){
 ================================= */
 function onView(e){
   const el = e.currentTarget.closest("article");
-  const id = Number(el.dataset.id);
-  const post = posts.find(p=>p.id===id);
+  const id = String(el.dataset.id);
+  const post = posts.find(p=>String(p.id)===id);
   if (!post) return;
 
-  // 관리자 모드면 비번 없이 통과, 일반 사용자는 '해당 글 비밀번호' 검증
   if (!isAdmin()){
     const pw = prompt("작성 시 설정한 비밀번호를 입력하세요.");
     if (pw===null) return;
@@ -833,43 +871,56 @@ function onView(e){
 }
 function onClose(e){
   const el = e.currentTarget.closest("article");
-  const id = Number(el.dataset.id);
+  const id = String(el.dataset.id);
   const box = document.getElementById("details-"+id);
   if(box) box.classList.add("hidden");
 }
 function onBackToList(e){
   const el = e.currentTarget.closest("article");
-  const id = Number(el.dataset.id);
+  const id = String(el.dataset.id);
   const box = document.getElementById("details-"+id);
   if(box) box.classList.add("hidden");
   const top = document.getElementById("boardTop");
   if(top) top.scrollIntoView({behavior:"smooth", block:"start"});
 }
-function onAdminReply(e){
+async function onAdminReply(e){
   if (!isAdmin()) { alert("관리자 모드에서만 답변할 수 있습니다."); return; }
   const el = e.currentTarget.closest("article");
-  const id = Number(el.dataset.id);
-  const idx = posts.findIndex(p=>p.id===id);
+  const id = String(el.dataset.id);
+  const idx = posts.findIndex(p=>String(p.id)===id);
   if (idx < 0) return;
+
   const content = prompt("답변 내용을 입력하세요.");
   if(!content) return;
-  posts[idx].replies = posts[idx].replies || [];
-  posts[idx].replies.push({ ts: Date.now(), content });
-  // 현재는 로컬 반영만. 원격 동기화 필요 시 GAS 확장 필요.
-  save(posts); render();
-  const details = document.getElementById("details-"+id);
-  if(details) details.classList.remove("hidden");
+
+  try {
+    await remoteReply(id, content);                 // 1) 시트 동기화
+    posts[idx].replies = posts[idx].replies || []; // 2) 로컬 반영
+    posts[idx].replies.push({ ts: Date.now(), content });
+    save(posts); render();
+    const details = document.getElementById("details-"+id);
+    if(details) details.classList.remove("hidden");
+  } catch (err) {
+    console.error(err);
+    alert("답변 저장(시트 동기화)에 실패했습니다. 다시 시도해주세요.");
+  }
 }
-function onDelete(e){
+async function onDelete(e){
   if (!isAdmin()) { alert("관리자만 삭제할 수 있습니다."); return; }
   const el = e.currentTarget.closest("article");
-  const id = Number(el.dataset.id);
-  const idx = posts.findIndex(p=>p.id===id);
+  const id = String(el.dataset.id);
+  const idx = posts.findIndex(p=>String(p.id)===id);
   if (idx < 0) return;
   if(!confirm("정말 삭제하시겠습니까?")) return;
-  posts.splice(idx,1);
-  // 현재는 로컬 반영만. 원격 동기화 필요 시 GAS 확장 필요.
-  save(posts); render();
+
+  try {
+    await remoteDelete(id);     // 1) 시트 동기화
+    posts.splice(idx,1);        // 2) 로컬 반영
+    save(posts); render();
+  } catch (err) {
+    console.error(err);
+    alert("삭제(시트 동기화)에 실패했습니다. 다시 시도해주세요.");
+  }
 }
 
 /* ===============================
@@ -1005,7 +1056,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       post.id = savedId || post.id;  // 원격이 id를 주면 교체
     } catch (err) {
       console.error('[remoteAppend] 오류:', err);
-      // 원격 실패여도 로컬에는 남겨 사용자 경험 보장
+      // 원격 실패여도 로컬에 남겨 사용자 경험 보장
     }
 
     posts.unshift(post);
@@ -1018,6 +1069,8 @@ document.addEventListener('DOMContentLoaded', async function () {
   render();
   setAdminMode(isAdmin());
 });
+</script>
+
 </script>
 </body>
 </html>
