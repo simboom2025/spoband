@@ -487,8 +487,8 @@ let adminToken = null; // 관리자 인증 토큰
 const FORM_MIN_SECONDS = 3;
 let pageLoadedAt = Date.now();
 
-/* PostgreSQL API 엔드포인트 사용 */
-// Google Apps Script URL 제거됨 - PostgreSQL API 사용
+/* ✅ Google Apps Script 웹앱 URL */
+const API_URL = "https://script.google.com/macros/s/AKfycbzmKry1EBAFur-vjUHUaxjVLu9Vm0s2KYJFO9HBAYYtSdAb13xFil1WiZYl-XJbKwV9Ug/exec";
 
 /* 🔧 타임아웃/CORS 포함 fetch 유틸 */
 async function fetchWithTimeout(url, options={}, timeoutMs=12000){
@@ -511,91 +511,62 @@ async function fetchWithTimeout(url, options={}, timeoutMs=12000){
 }
 
 /* ===============================
-   원격 로드/저장/관리자 액션 - OBSOLETE FUNCTIONS REMOVED
-   These functions have been replaced with PostgreSQL API functions:
-   - remoteLoad -> loadApplications()
-   - remoteAppend -> submitApplication()
-   - remoteReply -> addAdminReply()
-   - remoteDelete -> deleteApplication()
-   All syntax errors from malformed OBSOLETE functions are now resolved.
+   Google Apps Script API 함수들
 ================================= */
-/* ===============================
-   DOM 유틸
-================================= */
-/* ===============================
-   NEW PostgreSQL API 함수들
-================================= */
-async function apiCall(endpoint, options = {}) {
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers
-    },
-    ...options
-  };
-  
-  // 관리자 토큰이 있으면 Authorization 헤더 추가
-  if (adminToken) {
-    config.headers.Authorization = `Bearer ${adminToken}`;
-  }
-  
-  const response = await fetch(`/api${endpoint}`, config);
-  
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
-    throw new Error(errorData.error || `HTTP ${response.status}`);
-  }
-  
-  return response.json();
-}
 
+// 🔄 신청 목록 불러오기 (GAS doGet)
 async function loadApplications() {
   try {
-    return await apiCall('/applications/public');
+    const res = await fetch(`${API_URL}?action=list`, {
+      method: 'GET',
+      mode: 'cors'
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    // GAS가 배열을 주면 그대로, {items:[...]}면 items 사용
+    return Array.isArray(data) ? data : (data.items || []);
   } catch (error) {
     console.warn('[loadApplications] 실패:', error);
     return [];
   }
 }
 
+// 📨 신청 저장 (GAS doPost)
 async function submitApplication(applicationData) {
-  return await apiCall('/applications', {
+  const payload = {
+    action: 'create',
+    data: applicationData
+  };
+
+  const res = await fetch(API_URL, {
     method: 'POST',
-    body: JSON.stringify(applicationData)
+    headers: { "Content-Type": "application/json" },
+    mode: 'cors',
+    body: JSON.stringify(payload)
   });
-}
 
-async function addAdminReply(id, content) {
-  return await apiCall(`/applications/${id}/reply`, {
-    method: 'POST',
-    body: JSON.stringify({ content })
-  });
-}
-
-async function deleteApplication(id) {
-  return await apiCall(`/applications/${id}`, {
-    method: 'DELETE'
-  });
-}
-
-async function deleteAllApplications() {
-  return await apiCall('/applications', {
-    method: 'DELETE'
-  });
-}
-
-// 관리자 인증 확인
-async function verifyAdminToken(token) {
-  try {
-    // 임시로 토큰을 설정하고 admin API 호출로 검증
-    const tempToken = adminToken;
-    adminToken = token;
-    await apiCall('/applications'); // 관리자 전용 엔드포인트
-    return true;
-  } catch (error) {
-    adminToken = tempToken; // 실패시 원래 토큰으로 복원
-    return false;
+  if (!res.ok) {
+    const errText = await res.text().catch(()=> '');
+    throw new Error(`GAS POST 실패: HTTP ${res.status} ${errText}`);
   }
+  return res.json().catch(()=> ({}));
+}
+
+// (임시) 관리자 기능 — 나중에 GAS에 맞춰 연결
+async function addAdminReply(id, content) {
+  alert('관리자 답변 기능은 추후 연결됩니다.');
+  return { ok: true };
+}
+async function deleteApplication(id) {
+  alert('삭제 기능은 추후 연결됩니다.');
+  return { ok: true };
+}
+async function deleteAllApplications() {
+  alert('전체 삭제 기능은 추후 연결됩니다.');
+  return { ok: true };
+}
+async function verifyAdminToken(token) {
+  return false;
 }
 
 const $  = (s,el=document)=>el.querySelector(s);
