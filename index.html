@@ -479,9 +479,6 @@
 /* ===============================
    공통 헬퍼/상수
 ================================= */
-// localStorage 사용 제거 - PostgreSQL로 전체 대체
-<script>
-// ...
 const FORM_ID = "postForm";
 let adminToken = null;
 const FORM_MIN_SECONDS = 3;
@@ -1022,11 +1019,11 @@ document.addEventListener('DOMContentLoaded', async function () {
       posts = remote;
       // PostgreSQL이 영속성을 처리하므로 save() 호출 제거됨
     } else {
-      posts = await loadApplications();       // 원격 실패/null → 로컬 폴백
+      posts = [];       // 원격 실패/null → 빈 배열로 초기화
     }
   } catch (e) {
     console.warn('초기 로드 오류:', e);
-    posts = await loadApplications();
+    posts = [];
   }
 
   /* ✅ 폼 제출 (원격 저장 + 로컬 동기화) */
@@ -1036,7 +1033,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     // 허니팟 + 너무 빠른 제출 차단
     const hp = formEl.querySelector('input[name="hp_field"]');
     const tooFast = (Date.now() - pageLoadedAt) < FORM_MIN_SECONDS*1000;
-    if (hp && hp.value && hp.value.trim() !== '' && tooFast) {
+    if (hp && hp.value && hp.value.trim() !== '' || tooFast) {
       alert("제출이 너무 빠릅니다. 몇 초 뒤 다시 시도해주세요.");
       return;
     }
