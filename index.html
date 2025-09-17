@@ -480,15 +480,16 @@
    공통 헬퍼/상수
 ================================= */
 // localStorage 사용 제거 - PostgreSQL로 전체 대체
-const FORM_ID   = "postForm";
-// 클라이언트 사이드 하드코딩된 비밀번호 제거됨 - 서버 사이드 인증 사용
-let adminToken = null; // 관리자 인증 토큰
-// localStorage 방식 제거 - 메모리 기반 관리자 인증 사용
+<script>
+// ...
+const FORM_ID = "postForm";
+let adminToken = null;
 const FORM_MIN_SECONDS = 3;
 let pageLoadedAt = Date.now();
 
 /* ✅ Google Apps Script 웹앱 URL */
-const API_URL = "https://script.google.com/macros/s/AKfycbzmKry1EBAFur-vjUHUaxjVLu9Vm0s2KYJFO9HBAYYtSdAb13xFil1WiZYl-XJbKwV9Ug/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycby_BDmUuGm_uO-2T4TRVRrafdYpM_a0YnDibUDxy8Mh9yDEpn6jpdx9QOFkgdlX9KZd9A/exec";
+</script>
 
 /* 🔧 타임아웃/CORS 포함 fetch 유틸 */
 async function fetchWithTimeout(url, options={}, timeoutMs=12000){
