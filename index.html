@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>SPOBAND Pro | 태권도 관장님 특별구매</title>
 
-  <!-- GA4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-RTMS0KZWPX"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -14,16 +13,13 @@
     gtag('config', 'G-RTMS0KZWPX');
   </script>
 
-  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- 혁신적 3D & 애니메이션 라이브러리 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.16/typed.min.js"></script>
 
-  <!-- 기본 스타일 -->
   <style>
     .text-balance { text-wrap: balance; }
     body {
@@ -55,19 +51,15 @@
 
 <body class="text-white bg-slate-900 bg-hero" id="enhanced-body">
 
-<!-- 🚀 혁신적 3D 파티클 배경 -->
 <canvas id="particles-canvas"></canvas>
 
-<!-- 헤더 -->
 <header class="sticky top-0 z-50 bg-slate-950/70 backdrop-blur border-b border-slate-800">
   <div class="container-narrow mx-auto px-4 md:px-6">
     <div class="flex items-center justify-between h-16">
-      <!-- 로고 -->
       <a href="/" class="flex items-center gap-2">
         <span class="text-white font-extrabold text-lg tracking-tight">SPOBAND <span class="text-sky-400">Pro</span></span>
       </a>
 
-      <!-- 데스크톱 메뉴 -->
       <nav class="hidden md:flex items-center gap-6">
         <a href="pages/taekwondo-benefits.html" class="text-slate-100 hover:text-sky-400 text-base md:text-lg font-semibold" data-nav="benefits">운동효과</a>
         <a href="pages/taekwondo-letter.html" class="text-slate-100 hover:text-sky-400 text-base md:text-lg font-semibold" data-nav="letter">“관장님께 드립니다”</a>
@@ -75,14 +67,12 @@
         <a href="#faq" class="text-slate-100 hover:text-sky-400 text-base md:text-lg font-semibold" data-nav="faq">참고영상 등</a>
       </nav>
 
-      <!-- CTA -->
       <div class="hidden md:block">
         <a href="#apply" class="bg-sky-500 hover:bg-sky-600 text-white px-5 py-2 rounded-full font-semibold shadow">
           관장님 전용 신청
         </a>
       </div>
 
-      <!-- 모바일 햄버거 -->
       <button type="button" aria-label="메뉴 열기"
               class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-sky-500"
               onclick="toggleNav()">
@@ -93,7 +83,6 @@
       </button>
     </div>
 
-    <!-- 모바일 드롭다운 -->
     <div id="mobile-nav" class="md:hidden hidden border-t border-slate-800 py-3">
       <nav class="flex flex-col gap-2">
         <a href="pages/taekwondo-benefits.html" class="px-2 py-2 rounded-lg text-slate-200 hover:bg-white/10">운동효과</a>
@@ -108,7 +97,6 @@
   </div>
 </header>
 
-<!-- 히어로 -->
 <section class="relative">
   <div class="container mx-auto grid lg:grid-cols-2 items-center gap-10 lg:gap-16 px-6 py-16 lg:py-20">
     <div class="max-w-[760px]">
@@ -140,7 +128,7 @@
       </ul>
     </div>
 
-    <figure id="heroVideoThumb" class="relative mx-auto w-full max-w-[820px]" data-ytid="cVr-vf1aMR8">
+    <figure id="heroVideoThumb" class="relative mx-auto w-full max-w-[820px] cursor-pointer" data-ytid="cVr-vf1aMR8">
       <img src="https://i.ytimg.com/vi/cVr-vf1aMR8/hqdefault.jpg"
            alt="스포밴드 태권도 훈련 영상"
            class="w-full h-[260px] sm:h-[320px] md:h-[380px] lg:h-[520px] xl:h-[580px] rounded-2xl object-cover shadow-2xl"
@@ -153,7 +141,6 @@
   </div>
 </section>
 
-<!-- Hero Modal -->
 <div id="heroModal" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
   <div class="w-[min(960px,90vw)] aspect-video bg-black rounded-2xl overflow-hidden relative">
     <button id="heroClose" class="absolute top-2 right-2 bg-slate-800/80 text-white px-3 py-1.5 rounded-lg">닫기</button>
@@ -163,7 +150,6 @@
   </div>
 </div>
 
-<!-- 스포밴드(제품구성) -->
 <section id="kits" class="py-20">
   <div class="mx-auto container-narrow px-5">
     <h2 class="text-3xl font-extrabold">스포밴드(제품구성)</h2>
@@ -209,41 +195,39 @@
   </div>
 </section>
 
-<!-- 참고영상 등 -->
 <section id="faq" class="py-20">
   <div class="mx-auto container-narrow px-5">
     <h2 class="text-3xl font-extrabold">참고영상 등</h2>
     <p class="mt-2 text-slate-300">소개·활용 예시 영상 6개를 모았습니다. 썸네일을 클릭하면 큰 화면으로 재생됩니다.</p>
 
     <div class="mt-6 grid md:grid-cols-2 xl:grid-cols-3 gap-5">
-      <a class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40" data-vid="PaXW4TzsQyE" href="javascript:void(0)">
+      <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="PaXW4TzsQyE">
         <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/PaXW4TzsQyE/hqdefault.jpg" alt="스포밴드 영상1" loading="lazy" decoding="async">
         <div class="px-4 py-2 text-sm">스포밴드 소개 영상 1</div>
-      </a>
-      <a class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40" data-vid="C2G_9G88ahw" href="javascript:void(0)">
+      </div>
+      <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="C2G_9G88ahw">
         <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/C2G_9G88ahw/hqdefault.jpg" alt="스포밴드 영상2" loading="lazy" decoding="async">
         <div class="px-4 py-2 text-sm">스포밴드 소개 영상 2</div>
-      </a>
-      <a class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40" data-vid="LWnO0hubiyw" href="javascript:void(0)">
+      </div>
+      <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="LWnO0hubiyw">
         <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/LWnO0hubiyw/hqdefault.jpg" alt="스포밴드 영상3" loading="lazy" decoding="async">
         <div class="px-4 py-2 text-sm">스포밴드 소개 영상 3</div>
-      </a>
-      <a class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40" data-vid="JnEyJ9K5EF4" href="javascript:void(0)">
+      </div>
+      <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="JnEyJ9K5EF4">
         <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/JnEyJ9K5EF4/hqdefault.jpg" alt="스포밴드 영상4" loading="lazy" decoding="async">
         <div class="px-4 py-2 text-sm">스포밴드 소개 영상 4</div>
-      </a>
-      <a class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40" data-vid="QV8ma9aEiNM" href="javascript:void(0)">
+      </div>
+      <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="QV8ma9aEiNM">
         <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/QV8ma9aEiNM/hqdefault.jpg" alt="스포밴드 영상5" loading="lazy" decoding="async">
         <div class="px-4 py-2 text-sm">스포밴드 소개 영상 5</div>
-      </a>
-      <a class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40" data-vid="QVhHzYYkqbQ" href="javascript:void(0)">
+      </div>
+      <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="QVhHzYYkqbQ">
         <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/QVhHzYYkqbQ/hqdefault.jpg" alt="스포밴드 영상6" loading="lazy" decoding="async">
         <div class="px-4 py-2 text-sm">스포밴드 소개 영상 6</div>
-      </a>
+      </div>
     </div>
   </div>
 
-  <!-- 유튜브 모달 -->
   <div id="ytModal" class="modal fixed inset-0 hidden items-center justify-center p-4">
     <div class="modal-box rounded-2xl overflow-hidden border border-slate-700 bg-black relative">
       <button id="ytClose" class="absolute top-2 right-2 z-10 px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-sm">닫기</button>
@@ -254,13 +238,11 @@
   </div>
 </section>
 
-<!-- 제품 신청 게시판 -->
 <section id="apply" class="py-20">
   <div class="mx-auto container-narrow px-5">
     <h2 class="text-3xl md:text-4xl font-extrabold">태권도관장님 특별구매 게시판</h2>
     <p class="mt-2 text-slate-300">견적서는 <b>연락처</b>로 보내드립니다! (신청글은 비밀번호로 열람/삭제)</p>
 
-    <!-- 작성 폼 -->
     <form id="postForm" class="mt-8 grid gap-5 p-6 rounded-2xl border border-slate-700/50 bg-slate-800/40" autocomplete="off">
       <div class="grid md:grid-cols-2 gap-5">
         <div>
@@ -277,7 +259,6 @@
                  class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
         </div>
 
-        <!-- 비밀번호(열람/삭제용) — 눈 아이콘 토글 -->
         <div>
           <label class="block text-sm mb-1" for="pw">비밀번호(열람/삭제용)</label>
           <div class="relative">
@@ -309,7 +290,6 @@
                   class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></textarea>
       </div>
 
-      <!-- 모델/부하/개수 + 총합 표시 -->
       <div>
         <div class="flex items-end justify-between">
           <label class="block text-sm">구매 희망 품목</label>
@@ -378,7 +358,6 @@
         </div>
       </div>
 
-      <!-- 신청 버튼(모달 오픈) -->
       <div class="flex flex-col md:flex-row gap-4 md:items-center">
         <button type="button" id="openConsent"
                 class="w-full md:w-auto px-6 py-3 rounded-xl bg-sky-500 hover:bg-sky-400 font-semibold">
@@ -386,7 +365,6 @@
         </button>
       </div>
 
-      <!-- 허니팟 (화면 밖 숨김) -->
       <div aria-hidden="true"
            style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;">
         <label>Leave this field empty</label>
@@ -394,28 +372,17 @@
                autocomplete="new-password" inputmode="none" />
       </div>
 
-      <!-- 제출 시간 기록 -->
       <input type="hidden" name="ts" id="ts">
     </form>
 
-    <!-- 신청 목록 -->
     <div class="mt-10">
       <div class="flex items-center justify-between">
         <h3 class="text-2xl font-extrabold">신청 목록</h3>
 
-        <!-- 관리자 UI -->
         <div class="flex items-center gap-2">
           <button id="clearAllBtn"
                   class="admin-only hidden text-xs px-3 py-1.5 rounded-lg border border-slate-700 hover:bg-slate-800/60">
-            (데모) 전체 삭제
-          </button>
-          <button id="btnAdminExpandAll"
-                  class="admin-only hidden text-xs px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white">
-            모두 열람
-          </button>
-          <button id="btnAdminCollapseAll"
-                  class="admin-only hidden text-xs px-3 py-1.5 rounded-lg bg-slate-600 hover:bg-slate-500 text-white">
-            모두 접기
+            전체 삭제
           </button>
           <button id="btnAdminLogin"
                   class="text-xs px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-white">
@@ -434,7 +401,6 @@
   </div>
 </section>
 
-<!-- 개인정보 동의 모달 -->
 <div id="consentModal"
      class="fixed inset-0 z-[999] hidden items-center justify-center bg-black/60 backdrop-blur-sm">
   <div class="w-[min(720px,90vw)] max-h-[86vh] rounded-2xl border border-slate-700 bg-slate-900 text-slate-100 shadow-2xl overflow-hidden flex flex-col">
@@ -474,493 +440,374 @@
   </div>
 </div>
 
-<!-- 네비, 모달, 게시판 등 스크립트 (단일 블록) -->
 <script>
 /* ===============================
-   공통 헬퍼/상수
+    공통 헬퍼/상수
 ================================= */
 const FORM_ID = "postForm";
-let adminToken = null;
+let adminToken = sessionStorage.getItem('spobandAdminToken');
 const FORM_MIN_SECONDS = 3;
 let pageLoadedAt = Date.now();
-
-/* ✅ Google Apps Script 웹앱 URL */
 const API_URL = "https://script.google.com/macros/s/AKfycby_BDmUuGm_uO-2T4TRVRrafdYpM_a0YnDibUDxy8Mh9yDEpn6jpdx9QOFkgdlX9KZd9A/exec";
 
-/* 🔧 타임아웃/CORS 포함 fetch 유틸 */
-async function fetchWithTimeout(url, options={}, timeoutMs=12000){
-  const controller = new AbortController();
-  const timer = setTimeout(()=>controller.abort(), timeoutMs);
-  try{
-    const res = await fetch(url, {
-      mode: 'cors',
-      redirect: 'follow',
-      referrerPolicy: 'no-referrer-when-downgrade',
-      ...options,
-      signal: controller.signal
-    });
-    clearTimeout(timer);
-    return res;
-  }catch(e){
-    clearTimeout(timer);
-    throw e;
-  }
-}
-
 /* ===============================
-   Google Apps Script API 함수들
+    Google Apps Script API 함수들
 ================================= */
-
-// 🔄 신청 목록 불러오기 (GAS doGet)
-async function loadApplications() {
-  try {
-    const res = await fetch(`${API_URL}?action=list`, {
-      method: 'GET',
-      mode: 'cors'
-    });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-    // GAS가 배열을 주면 그대로, {items:[...]}면 items 사용
-    return Array.isArray(data) ? data : (data.items || []);
-  } catch (error) {
-    console.warn('[loadApplications] 실패:', error);
-    return [];
-  }
+// ==== 응답 정규화 유틸(새로 추가) ====
+function normalizeItems(raw = {}) {
+  const items = raw.items || {};
+  return {
+    sb30: Number(items.sb30 ?? raw.sb30 ?? 0) || 0,
+    sb35: Number(items.sb35 ?? raw.sb35 ?? 0) || 0,
+    sb45: Number(items.sb45 ?? raw.sb45 ?? 0) || 0,
+    sb55: Number(items.sb55 ?? raw.sb55 ?? 0) || 0,
+    sb65: Number(items.sb65 ?? raw.sb65 ?? 0) || 0,
+  };
+}
+function computeTotalCount(items) {
+  return Object.values(items).reduce((a, b) => a + (Number(b) || 0), 0);
+}
+function normalizePost(raw = {}) {
+  const n = (v, ...alts) => {
+    for (const k of [v, ...alts]) if (k !== undefined && k !== null && String(k).trim() !== '') return k;
+    return '';
+  };
+  const items = normalizeItems(raw);
+  return {
+    id: String(n(raw.id, raw._id, raw.ID, raw.rowId)),
+    dojo: String(n(raw.dojo, raw.dojoName, raw.dojo_name, raw.gym)),
+    master: String(n(raw.master, raw.masterName, raw.owner)),
+    contact: String(n(raw.contact, raw.phone, raw.contact_info)),
+    address: String(n(raw.address, raw.addr)),
+    pw: String(n(raw.pw, raw.password)),
+    ts: n(raw.ts, raw.timestamp, raw.createdAt, raw.created_at),
+    items,
+    totalCount: computeTotalCount(items),
+    replies: Array.isArray(raw.replies) ? raw.replies : [],
+  };
+}
+function normalizeListResponse(data) {
+  const arr = Array.isArray(data) ? data : (data.items || []);
+  return arr.map(normalizePost);
+}
+function normalizeDetailsResponse(data) {
+  return normalizePost(data || {});
 }
 
-// 📨 신청 저장 (GAS doPost)
-async function submitApplication(applicationData) {
-  const payload = {
-    action: 'create',
-    data: applicationData
-  };
 
+// 🔵 목록 불러오기
+async function loadApplications() {
+  const res = await fetch(`${API_URL}?action=list`);
+  if (!res.ok) throw new Error('데이터를 불러오는데 실패했습니다.');
+  const data = await res.json();
+  return normalizeListResponse(data);
+}
+
+// 🔵 신규 등록
+async function submitApplication(applicationData) {
   const res = await fetch(API_URL, {
     method: 'POST',
-    headers: { "Content-Type": "application/json" },
-    mode: 'cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'create', data: applicationData })
+  });
+  if (!res.ok) throw new Error(`신청 등록에 실패했습니다.`);
+  const created = await res.json();
+  return normalizeDetailsResponse(created);
+}
+
+// 🔵 상세 보기
+async function fetchPostDetails(id, pw) {
+  const payload = { action: 'getPost', id, pw: pw || '' };
+  if (isAdmin()) payload.adminToken = adminToken;
+  const res = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
   });
-
-  if (!res.ok) {
-    const errText = await res.text().catch(()=> '');
-    throw new Error(`GAS POST 실패: HTTP ${res.status} ${errText}`);
-  }
-  return res.json().catch(()=> ({}));
+  if (!res.ok) throw new Error('정보를 열람할 수 없습니다. 비밀번호를 확인해주세요.');
+  const data = await res.json();
+  return normalizeDetailsResponse(data);
 }
 
-// (임시) 관리자 기능 — 나중에 GAS에 맞춰 연결
-async function addAdminReply(id, content) {
-  alert('관리자 답변 기능은 추후 연결됩니다.');
-  return { ok: true };
-}
-async function deleteApplication(id) {
-  alert('삭제 기능은 추후 연결됩니다.');
-  return { ok: true };
-}
-async function deleteAllApplications() {
-  alert('전체 삭제 기능은 추후 연결됩니다.');
-  return { ok: true };
-}
+// [수정] 4. 관리자 모드 임시 로그인 (UI 테스트용)
 async function verifyAdminToken(token) {
-  return false;
+  // 경고: 이 방식은 보안에 매우 취약합니다.
+  // 사이트 정식 오픈 전에는 반드시 서버(Google Apps Script)에서 비밀번호를 검증하는 방식으로 되돌려야 합니다.
+  return token === '1234';
 }
-
 const $  = (s,el=document)=>el.querySelector(s);
 const $$ = (s,el=document)=>Array.from(el.querySelectorAll(s));
 const esc= (s)=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]));
-// save 함수 제거됨 - PostgreSQL API 직접 호출
-// load 함수 제거됨 - loadApplications() 사용
-const fmt =(ts)=>new Date(ts).toLocaleString();
-
+// [버그 수정] "Invalid Date" 오류 방지
+const fmt =(ts)=>{
+  if (!ts || isNaN(new Date(ts).getTime())) { return "날짜 정보 없음"; }
+  return new Date(ts).toLocaleString();
+};
 const isAdmin = () => adminToken !== null;
 function setAdminMode(on){
-  // 더 이상 localStorage를 사용하지 않음 - adminToken으로 관리
-  if (!on) adminToken = null; // 로그아웃시 토큰 제거
-
-  document.querySelectorAll(".admin-only").forEach(el=>{
-    el.classList.toggle("hidden", !on);
-  });
-
-  const loginBtn  = document.getElementById("btnAdminLogin");
-  const logoutBtn = document.getElementById("btnAdminLogout");
-  if (loginBtn && logoutBtn){
-    loginBtn.classList.toggle("hidden", on);
-    logoutBtn.classList.toggle("hidden", !on);
-  }
+  if (on) { sessionStorage.setItem('spobandAdminToken', adminToken); } 
+  else { adminToken = null; sessionStorage.removeItem('spobandAdminToken'); }
+  $$(".admin-only").forEach(el => el.classList.toggle("hidden", !on));
+  $("#btnAdminLogin")?.classList.toggle("hidden", on);
+  $("#btnAdminLogout")?.classList.toggle("hidden", !on);
 }
-
-/* ===============================
-   네비 토글/활성
-================================= */
-function toggleNav(){
-  const el = document.getElementById('mobile-nav');
-  if(!el) return;
-  el.classList.toggle('hidden');
-}
+function toggleNav(){ $('#mobile-nav')?.classList.toggle('hidden'); }
 (function(){
-  function setActive(key){
-    document.querySelectorAll('[data-nav]').forEach(a=>a.classList.remove('nav-active'));
-    const el = document.querySelector(`[data-nav="${key}"]`);
-    if(el) el.classList.add('nav-active');
-  }
-  const file = location.pathname.split('/').pop();
-  const hash = location.hash.replace('#','');
-  if (['kits','faq','apply'].includes(hash)) setActive(hash);
-  else if (file === 'taekwondo-benefits.html') setActive('benefits');
-  else if (file === 'taekwondo-letter.html')   setActive('letter');
-  else setActive('home');
-
-  window.addEventListener('hashchange', ()=>{
-    const h = location.hash.replace('#','');
-    setActive(['kits','faq','apply'].includes(h)?h:'home');
-  });
+  function setActive(key){ $$('[data-nav]').forEach(a=>a.classList.remove('nav-active')); $(`[data-nav="${key}"]`)?.classList.add('nav-active'); }
+  const file = location.pathname.split('/').pop(), hash = location.hash.replace('#','');
+  if (['kits','faq','apply'].includes(hash)) setActive(hash); else if (file === 'taekwondo-benefits.html') setActive('benefits'); else if (file === 'taekwondo-letter.html') setActive('letter'); else setActive('home');
+  window.addEventListener('hashchange', ()=>{ const h = location.hash.replace('#',''); setActive(['kits','faq','apply'].includes(h)?h:'home'); });
+})();
+(function(){
+  const thumb = $("#heroVideoThumb"), modal = $("#heroModal"), player = $("#heroPlayer"), close = $("#heroClose");
+  if(thumb){ thumb.addEventListener("click", ()=>{ const videoId = thumb.getAttribute("data-ytid") || "cVr-vf1aMR8"; player.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&playsinline=1&modestbranding=1`; modal.classList.remove("hidden"); modal.classList.add("flex"); }); }
+  function closeModal(){ player.src=""; modal.classList.add("hidden"); modal.classList.remove("flex"); }
+  close?.addEventListener("click", closeModal); modal?.addEventListener("click",(e)=>{ if(e.target===modal) closeModal(); });
+})();
+(function(){
+  const ytModal = $('#ytModal'), ytPlayer = $('#ytPlayer'), ytClose = $('#ytClose');
+  $$('.yt-thumb').forEach(el=>{ el.addEventListener('click', ()=>{ const vid = el.getAttribute('data-vid'); ytPlayer.src = `https://www.youtube.com/embed/${vid}?autoplay=1&rel=0&playsinline=1&modestbranding=1`; ytModal.classList.remove('hidden'); ytModal.classList.add('flex'); }); });
+  function closeYt(){ ytModal.classList.add('hidden'); ytModal.classList.remove('flex'); ytPlayer.src = ""; }
+  ytClose?.addEventListener('click', closeYt); ytModal?.addEventListener('click', (e)=>{ if(e.target===ytModal) closeYt(); });
 })();
 
 /* ===============================
-   히어로/갤러리 모달
+    게시판 상태/합계/템플릿
 ================================= */
-(function(){
-  const thumb = document.getElementById("heroVideoThumb");
-  const modal = document.getElementById("heroModal");
-  const player= document.getElementById("heroPlayer");
-  const close = document.getElementById("heroClose");
-  if(thumb){
-    thumb.addEventListener("click", ()=>{
-      const videoId = thumb.getAttribute("data-ytid") || "cVr-vf1aMR8";
-      player.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&playsinline=1&modestbranding=1`;
-      modal.classList.remove("hidden"); modal.classList.add("flex");
-    });
-  }
-  function closeModal(){
-    player.src=""; modal.classList.add("hidden"); modal.classList.remove("flex");
-  }
-  close?.addEventListener("click", closeModal);
-  modal?.addEventListener("click",(e)=>{ if(e.target===modal) closeModal(); });
-})();
-(function(){
-  const ytModal  = document.getElementById('ytModal');
-  const ytPlayer = document.getElementById('ytPlayer');
-  const ytClose  = document.getElementById('ytClose');
+let posts = [];
 
-  document.querySelectorAll('.yt-thumb').forEach(el=>{
-    el.addEventListener('click', ()=>{
-      const vid = el.getAttribute('data-vid');
-      ytPlayer.src = `https://www.youtube.com/embed/${vid}?autoplay=1&rel=0&playsinline=1&modestbranding=1`;
-      ytModal.classList.remove('hidden');
-      ytModal.classList.add('flex');
-    });
-  });
-  function closeYt(){
-    ytModal.classList.add('hidden');
-    ytModal.classList.remove('flex');
-    ytPlayer.src = "";
-  }
-  ytClose?.addEventListener('click', closeYt);
-  ytModal?.addEventListener('click', (e)=>{ if(e.target===ytModal) closeYt(); });
-})();
-
-/* ===============================
-   게시판 상태/합계/템플릿
-================================= */
-let posts = [];   // 원격에서 불러옴
-
+// 합계 계산
 function recalcTotal(){
-  const n = id => Math.max(0, Number((document.getElementById(id)?.value || 0)) || 0);
+  const n = id => Math.max(0, Number(($(`#${id}`)?.value || 0)) || 0);
   const total = n("q_sb30")+n("q_sb35")+n("q_sb45")+n("q_sb55")+n("q_sb65");
-  const badge = document.getElementById("sumBoxes");
+  const badge = $("#sumBoxes");
   if (badge) badge.textContent = `총 ${total} 개`;
-  const totalInput = document.getElementById("totalBoxes");
-  if (totalInput) totalInput.value = String(total);
+  $("#totalBoxes").value = String(total);
 }
 
-function maskPhoneOpenLast4(raw){
-  const digits = String(raw || "").replace(/\D/g,"");
-  if(digits.length < 7) return "***-****-****";
-  const head = digits.slice(0,3);
-  const tail = digits.slice(-4);
-  return `${head}-****-${tail}`;
+// 도장명/이름 마스킹
+function maskName(name = ""){
+  const str = String(name).trim();
+  if (str.length <= 1) return str;
+  if (str.length === 2) return `${str[0]}*`;
+  const mid = '*'.repeat(str.length - 2);
+  return `${str[0]}${mid}${str[str.length - 1]}`;
 }
-function maskDojo(name){
-  if(!name) return "";
-  const arr=[...String(name)];
-  if(arr.length<=1) return "*";
-  return arr[0] + "*".repeat(arr.length-1);
-}
-function maskName(name){
-  if(!name) return "";
-  const arr=[...String(name)];
-  if(arr.length===1) return "*";
-  if(arr.length===2) return arr[0]+"*";
-  return arr[0] + "*".repeat(arr.length-2) + arr[arr.length-1];
+const maskDojo = maskName;
+
+// 연락처 마스킹
+function maskContact(raw = ""){
+  const contact = String(raw).trim();
+  const digits = contact.replace(/\D/g, "");
+  if (digits.length > 7) {
+    const start = digits.slice(0, 3);
+    const end = digits.slice(-4);
+    return `${start}-****-${end}`;
+  }
+  if (contact.includes('@')) {
+    const parts = contact.split('@');
+    return `${parts[0].slice(0,3)}***@${parts[1]}`;
+  }
+  return "***-****-****";
 }
 
+/* -------------------------------
+   데이터 정규화 유틸 (추가)
+-------------------------------- */
+function normalizeItems(raw = {}) {
+  const items = raw.items || {};
+  return {
+    sb30: Number(items.sb30 ?? raw.sb30 ?? 0) || 0,
+    sb35: Number(items.sb35 ?? raw.sb35 ?? 0) || 0,
+    sb45: Number(items.sb45 ?? raw.sb45 ?? 0) || 0,
+    sb55: Number(items.sb55 ?? raw.sb55 ?? 0) || 0,
+    sb65: Number(items.sb65 ?? raw.sb65 ?? 0) || 0,
+  };
+}
+function computeTotalCount(items) {
+  return Object.values(items).reduce((a, b) => a + (Number(b) || 0), 0);
+}
+function normalizePost(raw = {}) {
+  const n = (v, ...alts) => {
+    for (const k of [v, ...alts]) {
+      if (k !== undefined && k !== null && String(k).trim() !== '') return k;
+    }
+    return '';
+  };
+  const items = normalizeItems(raw);
+  return {
+    id: String(n(raw.id, raw._id, raw.ID, raw.rowId)),
+    dojo: String(n(raw.dojo, raw.dojoName, raw.dojo_name, raw.gym)),
+    master: String(n(raw.master, raw.masterName, raw.owner)),
+    contact: String(n(raw.contact, raw.phone, raw.contact_info)),
+    address: String(n(raw.address, raw.addr)),
+    pw: String(n(raw.pw, raw.password)),
+    ts: n(raw.ts, raw.timestamp, raw.createdAt, raw.created_at),
+    items,
+    totalCount: computeTotalCount(items),
+    replies: Array.isArray(raw.replies) ? raw.replies : [],
+  };
+}
+function normalizeDetailsResponse(data) {
+  return normalizePost(data || {});
+}
+
+// 카드 템플릿
 function cardHTML(p){
-  const totalCount = Object.values(p.items||{}).reduce((s,v)=> s + (Number(v)||0), 0);
-
-  const itemsFullHTML = Object.entries(p.items||{})
-    .filter(([k,v])=> (Number(v)||0) > 0)
-    .map(([k,v])=>{
-      const labelMap = {
-        sb30:"spoband 30 / 주니어용",
-        sb35:"spoband 35 / 2.5kg",
-        sb45:"spoband 45 / 5kg",
-        sb55:"spoband 55 / 10kg",
-        sb65:"spoband 65 / 15kg"
-      };
-      const label = labelMap[k] || k;
-      return `• ${esc(label)} : ${v} 개`;
-    }).join("<br>") || "-";
-
-  const repliesHTML = (p.replies||[]).map(r=>
-    `<div class="mt-2 p-2 rounded-lg bg-slate-800/40 border border-slate-700/50">
-       <div class="text-xs text-slate-400">${fmt(r.ts)}</div>
-       <div class="text-sky-300 font-semibold">${esc(r.content)}</div>
-     </div>`
-  ).join("");
-
-  const itemsPrivateHTML = `
-    <div class="inline-flex items-center gap-2 text-slate-300">
-      <span class="text-xs px-2 py-0.5 rounded bg-sky-500/10 text-sky-300 border border-sky-700/40">
-        총 ${totalCount} 개
-      </span>
-      <span class="text-slate-500 text-sm">(상세 내역은 비공개 · 작성자/관리자만 열람)</span>
-    </div>
-  `;
-
+  const totalCount = Number(p.totalCount || 0);
   return `
   <article class="p-5 rounded-2xl border border-slate-700/50 bg-slate-800/40" data-id="${p.id}">
-    <div class="grid md:grid-cols-2 gap-4">
-      <div>
-        <div class="text-xs text-slate-400">도장명</div>
-        <div class="font-semibold">${esc(maskDojo(p.dojo))}</div>
-      </div>
-      <div>
-        <div class="text-xs text-slate-400">관장님</div>
-        <div class="font-semibold">${esc(maskName(p.master))}</div>
-      </div>
-      <div>
-        <div class="text-xs text-slate-400">연락처</div>
-        <div class="font-semibold">${esc(maskPhoneOpenLast4(p.contact))}</div>
-      </div>
-      <div>
-        <div class="text-xs text-slate-400">등록일</div>
-        <div class="font-semibold">${fmt(p.ts)}</div>
-      </div>
-
-      <div class="md:col-span-2">
-        <div class="text-xs text-slate-400">신청 품목</div>
-        ${itemsPrivateHTML}
-      </div>
-
-      ${isAdmin() ? `
-        <div class="md:col-span-2 mt-2 admin-only">
-          <div class="inline-flex items-center gap-2 text-xs px-2 py-1 rounded bg-amber-900/15 border border-amber-700/30">
-            <span class="text-amber-300">관리자 전용 비밀번호</span>
-            <span class="font-semibold text-amber-400 tracking-wider select-all">${esc(p.pw)}</span>
-          </div>
-        </div>
-      ` : "" }
-
-      <div class="md:col-span-2 flex gap-2">
+    <div class="grid md:grid-cols-2 gap-x-4 gap-y-2">
+      <div><div class="text-xs text-slate-400">도장명</div><div class="font-semibold">${esc(maskDojo(p.dojo))}</div></div>
+      <div><div class="text-xs text-slate-400">관장님</div><div class="font-semibold">${esc(maskName(p.master))}</div></div>
+      <div><div class="text-xs text-slate-400">연락처</div><div class="font-semibold">${esc(maskContact(p.contact))}</div></div>
+      <div><div class="text-xs text-slate-400">등록일</div><div class="font-semibold">${fmt(p.ts)}</div></div>
+      <div class="md:col-span-2"><div class="text-xs text-slate-400">신청 품목</div><div class="inline-flex items-center gap-2 text-slate-300"><span class="text-xs px-2 py-0.5 rounded bg-sky-500/10 text-sky-300 border border-sky-700/40">총 ${totalCount} 개</span><span class="text-slate-500 text-sm">(상세 내역은 비공개)</span></div></div>
+      <div class="md:col-span-2 flex flex-wrap gap-2 mt-2">
         <button class="btn-view px-3 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-sm">상세보기</button>
-        <button class="btn-close px-3 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-sm">닫기</button>
-        <button class="btn-admin-reply admin-only ${isAdmin()?'':'hidden'} px-3 py-2 rounded-lg bg-sky-700 hover:bg-sky-600 text-sm text-white">관리자 답변</button>
-        <button class="btn-delete admin-only ${isAdmin()?'':'hidden'} px-3 py-2 rounded-lg bg-rose-700 hover:bg-rose-600 text-sm text-white">삭제</button>
+        <button class="btn-admin-reply admin-only hidden px-3 py-2 rounded-lg bg-sky-700 hover:bg-sky-600 text-sm text-white">관리자 답변</button>
+        <button class="btn-delete admin-only hidden px-3 py-2 rounded-lg bg-rose-700 hover:bg-rose-600 text-sm text-white">삭제</button>
       </div>
-
-      <div id="details-${p.id}" class="hidden md:col-span-2 p-3 rounded-lg bg-slate-900/40 border border-slate-800">
-        <div class="text-xs text-slate-400 mb-1">상세 정보</div>
-        <div class="text-sm text-slate-200 mb-2">
-          도장명: ${esc(p.dojo)} / 관장님: ${esc(p.master)}<br>
-          연락처: ${esc(p.contact)}<br>
-          주소: ${esc(p.address)}
-        </div>
-
-        <div class="text-xs text-slate-400 mb-1">신청 품목(모델별)</div>
-        <div class="whitespace-pre-wrap">${itemsFullHTML}</div>
-
-        ${repliesHTML ? `
-          <div class="mt-3">
-            <div class="text-xs text-slate-400 mb-1">관리자 답변</div>
-            ${repliesHTML}
-          </div>` : ""}
-
-        <button class="btn-back mt-3 px-2 py-1.5 rounded bg-slate-700 hover:bg-slate-600 text-xs">목록으로</button>
-      </div>
+      <div id="details-${p.id}" class="hidden md:col-span-2 p-3 mt-2 rounded-lg bg-slate-900/40 border border-slate-800"><p class="text-center text-slate-400 p-4">상세 정보를 불러오는 중...</p></div>
     </div>
   </article>`;
 }
 
-function render(){
-  const list=document.getElementById("boardList");
-  if(!list) return;
+// 상세 렌더러 (교체 후: 안전값 + 정규화)
+function renderPostDetails(container, detailsRaw) {
+  const details = normalizeDetailsResponse(detailsRaw);
+  const safe = (v, fb='미입력') => (String(v||'').trim() ? esc(v) : fb);
 
-  list.innerHTML = posts.length
-    ? posts.map(p=>cardHTML(p)).join("")
-    : '<p class="text-slate-400 text-sm">아직 등록된 신청이 없습니다.</p>';
+  const itemsFullHTML =
+    Object.entries(details.items || {})
+      .filter(([,v])=> (Number(v)||0) > 0)
+      .map(([k,v])=>{
+        const labelMap = {
+          sb30:"spoband 30 / 주니어용",
+          sb35:"spoband 35 / 2.5kg",
+          sb45:"spoband 45 / 5kg",
+          sb55:"spoband 55 / 10kg",
+          sb65:"spoband 65 / 15kg"
+        };
+        return `• ${esc(labelMap[k] || k)} : ${v} 개`;
+      }).join("\n") || "-";
 
-  document.querySelectorAll(".btn-view").forEach(b=>b.addEventListener("click",onView));
-  document.querySelectorAll(".btn-close").forEach(b=>b.addEventListener("click",onClose));
-  document.querySelectorAll(".btn-back").forEach(b=>b.addEventListener("click",onBackToList));
+  const repliesHTML = (details.replies||[])
+    .map(r=> `
+      <div class="mt-2 p-2 rounded-lg bg-slate-800/40 border border-slate-700/50">
+        <div class="text-xs text-slate-400">${fmt(r.ts)}</div>
+        <div class="text-sky-300 font-semibold">${esc(r.content)}</div>
+      </div>
+    `).join("");
 
-  document.getElementById("btnAdminLogin")?.addEventListener("click", adminLoginFlow);
-  document.getElementById("btnAdminLogout")?.addEventListener("click", ()=>{ setAdminMode(false); render(); alert("관리자 모드를 종료했습니다."); });
-  document.getElementById("clearAllBtn")?.addEventListener("click", async ()=>{
-    if (!isAdmin()) { alert('관리자만 사용할 수 있습니다.'); return; }
-    if (confirm('데모 데이터를 모두 삭제할까요?')) { 
-      try {
-        await deleteAllApplications();
-        posts = await loadApplications();
-        render();
-        alert('모든 데이터가 삭제되었습니다.');
-      } catch (err) {
-        console.error('데이터 삭제 실패:', err);
-        alert('데이터 삭제에 실패했습니다.');
-      }
+  container.innerHTML = `
+    <div class="text-xs text-slate-400 mb-1">상세 정보</div>
+    <div class="text-sm text-slate-200 mb-2">
+      도장명: ${safe(details.dojo)} / 관장님: ${safe(details.master)}<br>
+      연락처: ${safe(details.contact)}<br>
+      주소: ${safe(details.address)}
+    </div>
+    ${isAdmin() && details.pw ? `
+      <div class="mb-2 inline-flex items-center gap-2 text-xs px-2 py-1 rounded bg-amber-900/15 border border-amber-700/30">
+        <span class="text-amber-300">비밀번호</span>
+        <span class="font-semibold text-amber-400 tracking-wider select-all">${esc(details.pw)}</span>
+      </div><br>` : ""
     }
-  });
-  document.getElementById("btnAdminExpandAll")?.addEventListener("click", ()=>{
-    if (!isAdmin()) { alert('관리자만 사용할 수 있습니다.'); return; }
-    posts.forEach(p=>document.getElementById("details-"+p.id)?.classList.remove("hidden"));
-  });
-  document.getElementById("btnAdminCollapseAll")?.addEventListener("click", ()=>{
-    if (!isAdmin()) { alert('관리자만 사용할 수 있습니다.'); return; }
-    posts.forEach(p=>document.getElementById("details-"+p.id)?.classList.add("hidden"));
-  });
+    <div class="text-xs text-slate-400 mb-1">신청 품목(모델별)</div>
+    <div class="whitespace-pre-wrap">${itemsFullHTML}</div>
+    ${repliesHTML ? `<div class="mt-3"><div class="text-xs text-slate-400 mb-1">관리자 답변</div>${repliesHTML}</div>` : ""}
+    <button class="btn-close mt-4 px-3 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-sm">닫기</button>
+  `;
 
-  document.querySelectorAll(".btn-admin-reply").forEach(b=> b.addEventListener("click", onAdminReply));
-  document.querySelectorAll(".btn-delete").forEach(b=> b.addEventListener("click", onDelete));
-
-  setAdminMode(isAdmin());
+  container.querySelector('.btn-close').addEventListener('click',()=>{
+    container.classList.add('hidden');
+    container.innerHTML = `<p class="text-center text-slate-400 p-4">상세 정보를 불러오는 중...</p>`;
+  });
 }
 
+// 목록 렌더
+function render(){
+  const list=$("#boardList"); if(!list) return;
+  list.innerHTML = posts.length
+    ? posts.map(p=>cardHTML(p)).join("")
+    : '<p class="text-slate-400 text-sm p-4 text-center">아직 등록된 신청이 없습니다.</p>';
+  $$(".btn-view").forEach(b=>b.addEventListener("click",onView));
+  $$(".btn-admin-reply").forEach(b=> b.addEventListener("click", onAdminReply));
+  $$(".btn-delete").forEach(b=> b.addEventListener("click", onDelete));
+}
+
+// 관리자 로그인
 async function adminLoginFlow(){
   const pw = prompt("관리자 비밀번호를 입력하세요.");
   if (pw===null) return;
   if (await verifyAdminToken(pw)) {
-    adminToken = pw; // 검증된 토큰 저장
-    alert("관리자 모드가 켜졌습니다.");
-    setAdminMode(true);
-    render();
-  } else {
-    alert("비밀번호가 올바르지 않습니다.");
-  }
+    adminToken = pw; alert("관리자 모드가 켜졌습니다.");
+    setAdminMode(true); render();
+  } else { alert("비밀번호가 올바르지 않습니다."); }
 }
 
-/* ===============================
-   카드 동작
-================================= */
-function onView(e){
-  const el = e.currentTarget.closest("article");
-  const id = String(el.dataset.id);
-  const post = posts.find(p=>String(p.id)===id);
-  if (!post) return;
-
+// 상세 보기
+async function onView(e){
+  const article = e.currentTarget.closest("article"),
+        id = String(article.dataset.id),
+        detailsContainer = $(`#details-${id}`, article);
+  if (!detailsContainer) return;
+  detailsContainer.classList.remove("hidden");
+  detailsContainer.scrollIntoView({behavior:"smooth", block:"center"});
+  let pw=null;
   if (!isAdmin()){
-    const pw = prompt("작성 시 설정한 비밀번호를 입력하세요.");
-    if (pw===null) return;
-    if (pw!==post.pw){
-      alert("비밀번호가 일치하지 않습니다.");
-      return;
-    }
+    pw = prompt("작성 시 설정한 비밀번호를 입력하세요.");
+    if (pw === null) { detailsContainer.classList.add('hidden'); return; }
   }
+  try {
+    const postDetails = await fetchPostDetails(id, pw);
+    renderPostDetails(detailsContainer, postDetails);
+  } catch(err) {
+    alert(err.message);
+    detailsContainer.classList.add('hidden');
+  }
+}
 
-  const box = document.getElementById("details-"+post.id);
-  if (box){
-    box.classList.remove("hidden");
-    box.scrollIntoView({behavior:"smooth", block:"start"});
-  }
-}
-function onClose(e){
-  const el = e.currentTarget.closest("article");
-  const id = String(el.dataset.id);
-  const box = document.getElementById("details-"+id);
-  if(box) box.classList.add("hidden");
-}
-function onBackToList(e){
-  const el = e.currentTarget.closest("article");
-  const id = String(el.dataset.id);
-  const box = document.getElementById("details-"+id);
-  if(box) box.classList.add("hidden");
-  const top = document.getElementById("boardTop");
-  if(top) top.scrollIntoView({behavior:"smooth", block:"start"});
-}
+// 관리자 답변
 async function onAdminReply(e){
-  if (!isAdmin()) { alert("관리자 모드에서만 답변할 수 있습니다."); return; }
-  const el = e.currentTarget.closest("article");
-  const id = String(el.dataset.id);
-  const idx = posts.findIndex(p=>String(p.id)===id);
-  if (idx < 0) return;
-
+  if (!isAdmin()) return;
+  const id = e.currentTarget.closest("article").dataset.id;
   const content = prompt("답변 내용을 입력하세요.");
   if(!content) return;
-
-  // 🔧 로컬 우선 저장 (외부 API 실패와 무관하게 작동)
-  posts[idx].replies = posts[idx].replies || [];
-  posts[idx].replies.push({ ts: Date.now(), content });
-  render();
-  
-  // 상세보기 자동 열기
-  const details = document.getElementById("details-"+id);
-  if(details) details.classList.remove("hidden");
-  
-  // PostgreSQL에 직접 답변 추가
-  try {
+  try{
     await addAdminReply(id, content);
-    // 성공하면 데이터 새로고침
-    posts = await loadApplications();
-    render();
-  } catch (err) {
-    console.error('답변 추가 실패:', err);
-    alert('답변 추가에 실패했습니다. 다시 시도해주세요.');
-    return;
-  }
-  
-  alert("답변이 등록되었습니다!");
+    alert("답변이 등록되었습니다. 상세보기를 눌러 확인하세요.");
+    const detailsContainer = $(`#details-${id}`);
+    if(detailsContainer && !detailsContainer.classList.contains('hidden')){
+      const postDetails = await fetchPostDetails(id);
+      renderPostDetails(detailsContainer, postDetails);
+    }
+  }catch(err){ alert(err.message); }
 }
+
+// 삭제
 async function onDelete(e){
-  if (!isAdmin()) { alert("관리자만 삭제할 수 있습니다."); return; }
-  const el = e.currentTarget.closest("article");
-  const id = String(el.dataset.id);
-  const idx = posts.findIndex(p=>String(p.id)===id);
-  if (idx < 0) return;
-  if(!confirm("정말 삭제하시겠습니까?")) return;
-
-  try {
-    await deleteApplication(id);     // PostgreSQL에서 삭제
-    // PostgreSQL에서 삭제 후 데이터 새로고침
-    posts = await loadApplications();
-    render(); // PostgreSQL에서 이미 데이터를 새로고침했으므로 save() 불필요
-  } catch (err) {
-    console.error(err);
-    alert("삭제에 실패했습니다. 다시 시도해주세요.");
-  }
+  if (!isAdmin()) return;
+  const article = e.currentTarget.closest("article"),
+        id = String(article.dataset.id);
+  if(!confirm("정말 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.")) return;
+  try{
+    await deleteApplication(id);
+    posts = posts.filter(p => String(p.id) !== id);
+    article.remove();
+    alert("삭제되었습니다.");
+  }catch(err){ alert(err.message); }
 }
 
-/* ===============================
-   폼 제출(허니팟/속도/검증/저장)
-================================= */
+// DOM 로드 후
 document.addEventListener('DOMContentLoaded', async function () {
-  // ts 초기값
-  const tsEl = document.getElementById('ts');
-  if(tsEl) tsEl.value = Date.now();
-
-  // 합계 바인딩
-  ["q_sb30","q_sb35","q_sb45","q_sb55","q_sb65"].forEach(id=>{
-    const el = document.getElementById(id);
-    if (el) el.addEventListener("input", recalcTotal);
-  });
+  $('#ts').value = Date.now();
+  ["q_sb30","q_sb35","q_sb45","q_sb55","q_sb65"].forEach(id => $(`#${id}`)?.addEventListener("input", recalcTotal));
   recalcTotal();
 
-  // 개인정보 동의 모달
-  const formEl      = document.getElementById(FORM_ID);
-  const openBtn     = document.getElementById('openConsent');
-  const consentModal= document.getElementById('consentModal');
-  const agreeBtn    = document.getElementById('consentAgree');
-  const cancelBtn   = document.getElementById('consentCancel');
-  const closeBtn    = document.getElementById('consentClose');
-  const consentChk  = document.getElementById('consentCheck');
+  const openBtn = $('#openConsent'), consentModal = $('#consentModal'),
+        agreeBtn = $('#consentAgree'), cancelBtn = $('#consentCancel'),
+        closeBtn = $('#consentClose'), consentChk = $('#consentCheck');
 
   function showModal(){
     if(!consentModal) return;
@@ -971,141 +818,118 @@ document.addEventListener('DOMContentLoaded', async function () {
     consentModal.classList.add('flex');
   }
   function hideModal(){
-    if(!consentModal) return;
     consentModal.classList.add('hidden');
     consentModal.classList.remove('flex');
   }
-
   openBtn?.addEventListener('click', showModal);
-  cancelBtn?.addEventListener('click', hideModal);
-  closeBtn?.addEventListener('click', hideModal);
-  consentChk?.addEventListener('change', function () {
+  [cancelBtn, closeBtn].forEach(btn => btn?.addEventListener('click', hideModal));
+  consentChk?.addEventListener('change', () => {
     const ok = consentChk.checked;
     agreeBtn.disabled = !ok;
     agreeBtn.className = ok
       ? 'px-5 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-white'
       : 'px-5 py-2 rounded-xl bg-slate-600 text-slate-300 cursor-not-allowed';
   });
-  agreeBtn?.addEventListener('click', function(){
+  agreeBtn?.addEventListener('click', ()=>{
     if (!consentChk.checked) return;
     hideModal();
-    if (formEl?.requestSubmit) formEl.requestSubmit();
-    else formEl?.submit();
+    const formEl = $(`#${FORM_ID}`);
+    if (formEl?.requestSubmit) formEl.requestSubmit(); else formEl?.submit();
   });
 
-  // 비밀번호 eye 토글
-  (function(){
-    const pw = document.getElementById('pw');
-    const btn = document.getElementById('pwToggle');
-    const icoOpen  = document.getElementById('pwIconOpen');
-    const icoClose = document.getElementById('pwIconClosed');
-    if (pw && btn) {
-      btn.addEventListener('click', ()=>{
-        const isHidden = pw.type === 'password';
-        pw.type = isHidden ? 'text' : 'password';
-        if (icoOpen && icoClose){
-          icoOpen.classList.toggle('hidden', !isHidden);
-          icoClose.classList.toggle('hidden', isHidden);
-        }
-        pw.focus({preventScroll:true});
-      });
-    }
-  })();
+  // 비밀번호 보기 토글
+  const pwInput = $('#pw'), pwToggle = $('#pwToggle');
+  pwToggle?.addEventListener('click', ()=>{
+    const isHidden = pwInput.type === 'password';
+    pwInput.type = isHidden ? 'text' : 'password';
+    $('#pwIconOpen')?.classList.toggle('hidden', !isHidden);
+    $('#pwIconClosed')?.classList.toggle('hidden', isHidden);
+  });
 
-  /* ✅ 초기 목록 로딩: 원격 우선 → 로컬 폴백 → 저장 동기화 */
+  $("#btnAdminLogin")?.addEventListener("click", adminLoginFlow);
+  $("#btnAdminLogout")?.addEventListener("click", ()=>{
+    setAdminMode(false); render(); alert("관리자 모드를 종료했습니다.");
+  });
+
+  $("#clearAllBtn")?.addEventListener("click", async ()=>{
+    if (!isAdmin() || !confirm('정말 모든 신청 데이터를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) return;
+    try{
+      await deleteAllApplications(); posts = []; render();
+      alert('모든 데이터가 삭제되었습니다.');
+    } catch (err) { alert(err.message); }
+  });
+
   try {
-    const remote = await loadApplications();
-    if (remote && Array.isArray(remote)) {
-      posts = remote;
-      // PostgreSQL이 영속성을 처리하므로 save() 호출 제거됨
-    } else {
-      posts = [];       // 원격 실패/null → 빈 배열로 초기화
-    }
+    posts = await loadApplications();
   } catch (e) {
     console.warn('초기 로드 오류:', e);
-    posts = [];
+    $("#boardList").innerHTML = `<p class="text-slate-400 text-center p-4 rounded-lg bg-red-900/20 border border-red-500/30">${e.message} 잠시 후 새로고침 해주세요.</p>`;
   }
 
-  /* ✅ 폼 제출 (원격 저장 + 로컬 동기화) */
-  formEl?.addEventListener("submit", async (e)=>{
+  $(`#${FORM_ID}`)?.addEventListener("submit", async (e)=>{
     e.preventDefault();
+    const formEl = e.target;
 
-    // 허니팟 + 너무 빠른 제출 차단
-    const hp = formEl.querySelector('input[name="hp_field"]');
-    const tooFast = (Date.now() - pageLoadedAt) < FORM_MIN_SECONDS*1000;
-    if (hp && hp.value && hp.value.trim() !== '' || tooFast) {
+    if ((formEl.querySelector('input[name="hp_field"]')?.value || '').trim() !== ''
+        || (Date.now() - pageLoadedAt) < FORM_MIN_SECONDS*1000) {
       alert("제출이 너무 빠릅니다. 몇 초 뒤 다시 시도해주세요.");
       return;
     }
-
-    const pw1 = (document.getElementById("pw")?.value || "").trim();
-    if (pw1.length < 4){
+    if (($("#pw")?.value || "").trim().length < 4) {
       alert("비밀번호는 4자 이상으로 입력해주세요.");
       return;
     }
 
     const data = {
-      dojo: document.getElementById("dojo")?.value.trim(),
-      master: document.getElementById("master")?.value.trim(),
-      contact: document.getElementById("contact")?.value.trim(),
-      address: document.getElementById("address")?.value.trim(),
-      pw: pw1,
-      ts: Number(document.getElementById('ts')?.value) || Date.now(),
+      dojo: $("#dojo")?.value.trim(),
+      master: $("#master")?.value.trim(),
+      contact: $("#contact")?.value.trim(),
+      address: $("#address")?.value.trim(),
+      pw: $("#pw")?.value.trim(),
+      ts: Date.now(),
       items: {
-        sb30: Number(document.getElementById("q_sb30")?.value||0),
-        sb35: Number(document.getElementById("q_sb35")?.value||0),
-        sb45: Number(document.getElementById("q_sb45")?.value||0),
-        sb55: Number(document.getElementById("q_sb55")?.value||0),
-        sb65: Number(document.getElementById("q_sb65")?.value||0),
+        sb30: Number($("#q_sb30")?.value||0),
+        sb35: Number($("#q_sb35")?.value||0),
+        sb45: Number($("#q_sb45")?.value||0),
+        sb55: Number($("#q_sb55")?.value||0),
+        sb65: Number($("#q_sb65")?.value||0),
       }
     };
 
-    const valid = data.dojo && data.master && data.contact && data.address && (data.pw||"").length>=4;
     const anyQty = Object.values(data.items).some(v=>v>0);
-    if(!valid){ alert("필수 칸을 모두 입력하고, 비밀번호는 4자 이상으로 해주세요."); return; }
-    if(!anyQty){ alert("신청 개수를 1개 이상 입력해주세요."); return; }
-
-    const post = { id: Date.now(), ...data, replies: [] };
-    try {
-      const result = await submitApplication(post);
-      post.id = result.id || post.id;  // 서버가 id를 주면 교체
-    } catch (err) {
-      console.error('[submitApplication] 오류:', err);
-      // 원격 실패여도 로컬에 남겨 사용자 경험 보장
+    if(!data.dojo || !data.master || !data.contact || !data.address){
+      alert("필수 칸을 모두 입력해주세요."); return;
+    }
+    if(!anyQty){
+      alert("신청 개수를 1개 이상 입력해주세요."); return;
     }
 
-    // PostgreSQL에 성공적으로 저장되면 데이터 새로고침
-    posts = await loadApplications();
-    // PostgreSQL이 영속성을 처리하므로 save() 호출 제거됨
-    formEl.reset(); recalcTotal(); render();
-    alert("신청이 등록되었습니다. 견적서는 연락처로 보내드릴게요!");
+    agreeBtn.disabled = true; agreeBtn.textContent = '제출 중...';
+    try {
+      const newPost = await submitApplication(data);
+      posts.unshift(newPost);
+      formEl.reset(); recalcTotal(); render();
+      alert("신청이 등록되었습니다. 견적서는 연락처로 보내드릴게요!");
+      $('#boardTop')?.scrollIntoView({behavior:'smooth'});
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      agreeBtn.disabled = false; agreeBtn.textContent = '동의하고 제출';
+    }
   });
 
-  // 초기 렌더 + 관리자 상태 반영
-  render();
-  setAdminMode(isAdmin());
+  render(); setAdminMode(isAdmin());
 });
 </script>
 
 
-<!-- 🚀 혁신적 150점급 3D 파티클 시스템 -->
 <script>
 (() => {
   const canvas = document.getElementById('particles-canvas');
   if (!canvas || !window.THREE) return;
   
-  // 캔버스 스타일 설정 (전체 화면 배경)
-  Object.assign(canvas.style, {
-    position: 'fixed', 
-    top: 0, 
-    left: 0, 
-    width: '100%', 
-    height: '100%', 
-    zIndex: '-1', 
-    pointerEvents: 'none'
-  });
+  Object.assign(canvas.style, { position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: '-1', pointerEvents: 'none' });
   
-  // Three.js 초기화
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 1000);
   camera.position.z = 80;
@@ -1113,241 +937,99 @@ document.addEventListener('DOMContentLoaded', async function () {
   const renderer = new THREE.WebGLRenderer({canvas, alpha: true, antialias: true});
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   
-  // 반응형 처리
-  const resize = () => { 
-    renderer.setSize(innerWidth, innerHeight); 
-    camera.aspect = innerWidth/innerHeight; 
-    camera.updateProjectionMatrix(); 
-  };
-  resize(); 
-  addEventListener('resize', resize);
+  const resize = () => { renderer.setSize(innerWidth, innerHeight); camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix(); };
+  resize(); addEventListener('resize', resize);
   
-  // 🥋 태권도 격파 파편 효과 생성 (가독성 방해하지 않게 산란)
-  const count = 800; // 파티클 수 줄임 (가독성 향상)
+  const count = 800;
   const pos = new Float32Array(count * 3);
   const colors = new Float32Array(count * 3);
   
   for (let i = 0; i < count; i++) { 
-    // 더 넓고 산란한 분포 (가독성 보호)
     const r = 40 + Math.random() * 80;
-    const a = Math.random() * Math.PI * 2; // 완전 랜덤 분포
-    const height = (Math.random() - 0.5) * 60; // 더 넓은 높이 분포
-    
+    const a = Math.random() * Math.PI * 2;
+    const height = (Math.random() - 0.5) * 60;
     pos[i*3] = Math.cos(a) * r + (Math.random() - 0.5) * 30; 
     pos[i*3+1] = height; 
     pos[i*3+2] = Math.sin(a) * r + (Math.random() - 0.5) * 30; 
-    
-    // 태권도 색상 (빨강, 파랑, 흰색 믹스)
     const colorType = Math.random();
-    if (colorType < 0.4) {
-      // 빨강 (열정/힘)
-      colors[i*3] = 1.0; colors[i*3+1] = 0.2; colors[i*3+2] = 0.2;
-    } else if (colorType < 0.7) {
-      // 파랑 (차분함/기술)  
-      colors[i*3] = 0.2; colors[i*3+1] = 0.5; colors[i*3+2] = 1.0;
-    } else {
-      // 흰색 (순수함/도복)
-      colors[i*3] = 0.9; colors[i*3+1] = 0.9; colors[i*3+2] = 1.0;
-    }
+    if (colorType < 0.4) { [colors[i*3], colors[i*3+1], colors[i*3+2]] = [1.0, 0.2, 0.2]; }
+    else if (colorType < 0.7) { [colors[i*3], colors[i*3+1], colors[i*3+2]] = [0.2, 0.5, 1.0]; }
+    else { [colors[i*3], colors[i*3+1], colors[i*3+2]] = [0.9, 0.9, 1.0]; }
   }
   
-  // 🔥 각진 태권도 파편 지오메트리 생성
   const geo = new THREE.BufferGeometry(); 
   geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
   geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
   
-  // 태권도 파편 재질 (가독성 방해하지 않게 투명도 낮춤)
-  const mat = new THREE.PointsMaterial({
-    vertexColors: true, // 각 파티클마다 다른 색상
-    size: 0.4, // 크기 줄임 (가독성 향상)
-    sizeAttenuation: true, 
-    transparent: true, 
-    opacity: 0.3 // 투명도 대폭 낮춤 (가독성 보호)
-  });
-  
+  const mat = new THREE.PointsMaterial({ vertexColors: true, size: 0.4, sizeAttenuation: true, transparent: true, opacity: 0.3 });
   const points = new THREE.Points(geo, mat); 
   scene.add(points);
   
-  // 마우스 인터랙션
   let mx = 0, my = 0, tx = 0, ty = 0; 
-  addEventListener('mousemove', e => { 
-    mx = (e.clientX / innerWidth - 0.5) * 2; 
-    my = (e.clientY / innerHeight - 0.5) * 2; 
-  });
+  addEventListener('mousemove', e => { mx = (e.clientX / innerWidth - 0.5) * 2; my = (e.clientY / innerHeight - 0.5) * 2; });
   
-  // 🥋 태권도 격렬한 움직임 애니메이션
   (function animate() { 
-    tx += (mx - tx) * 0.08; // 더 빠른 반응
-    ty += (my - ty) * 0.08; 
-    
-    // 발차기처럼 회전하는 움직임 (더 빠르고 격렬하게)
-    points.rotation.y += 0.008; 
-    points.rotation.x += 0.003;
-    
-    // 마우스 인터랙션 강화 (태권도 기술처럼)
-    scene.rotation.x = ty * 0.25; 
-    scene.rotation.y = tx * 0.35; 
-    
+    tx += (mx - tx) * 0.08; ty += (my - ty) * 0.08; 
+    points.rotation.y += 0.008; points.rotation.x += 0.003;
+    scene.rotation.x = ty * 0.25; scene.rotation.y = tx * 0.35; 
     renderer.render(scene, camera); 
     requestAnimationFrame(animate); 
   })();
   
-  // 🔥 GSAP으로 태권도 임팩트 효과 (더 빠르고 강렬하게)
   if (window.gsap) {
-    gsap.to(mat, {
-      opacity: 0.15, // 더 투명하게 (가독성 보호)
-      duration: 1.2, // 더 빠른 리듬
-      yoyo: true, 
-      repeat: -1, 
-      ease: 'power2.inOut' // 태권도 기술처럼 강약 조절
-    });
+    gsap.to(mat, { opacity: 0.15, duration: 1.2, yoyo: true, repeat: -1, ease: 'power2.inOut' });
   }
-  
-  console.log('🚀 3D 파티클 시스템 가동 완료!');
 })();
 </script>
 
-<!-- ⚡ 인터랙티브 그라디언트 배경 -->
 <script>
 (() => {
   const body = document.getElementById('enhanced-body');
   if (!body) return;
-  
   document.addEventListener('mousemove', (e) => {
     const x = (e.clientX / window.innerWidth) * 100;
     const y = (e.clientY / window.innerHeight) * 100;
-    
-    // 마우스 위치에 따른 동적 배경 변화
-    const gradient = `
-      radial-gradient(circle at ${x}% ${y}%, rgba(56, 189, 248, 0.3), transparent 60%),
-      radial-gradient(1200px 600px at 10% 10%, rgba(56, 189, 248, 0.1), transparent 60%),
-      radial-gradient(1000px 500px at 95% 5%, rgba(59,130,246,0.2), transparent 60%),
-      linear-gradient(180deg, #020617 0%, #0f172a 100%)
-    `;
-    body.style.background = gradient;
+    body.style.background = `radial-gradient(circle at ${x}% ${y}%, rgba(56, 189, 248, 0.3), transparent 60%), radial-gradient(1200px 600px at 10% 10%, rgba(56, 189, 248, 0.1), transparent 60%), radial-gradient(1000px 500px at 95% 5%, rgba(59,130,246,0.2), transparent 60%), linear-gradient(180deg, #020617 0%, #0f172a 100%)`;
   });
-  
-  console.log('🌈 인터랙티브 배경 가동 완료!');
 })();
 </script>
 
-<!-- 🎭 호버 마그네틱 효과 -->
 <script>
 (() => {
   if (!window.gsap) return;
-  
-  const magneticElements = document.querySelectorAll('a, button');
-  
-  magneticElements.forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      gsap.to(el, {
-        scale: 1.05,
-        duration: 0.3,
-        ease: "power2.out"
-      });
-    });
-    
-    el.addEventListener('mouseleave', () => {
-      gsap.to(el, {
-        scale: 1,
-        x: 0,
-        y: 0,
-        duration: 0.3,
-        ease: "power2.out"
-      });
-    });
-    
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => gsap.to(el, { scale: 1.05, duration: 0.3, ease: "power2.out" }));
+    el.addEventListener('mouseleave', () => gsap.to(el, { scale: 1, x: 0, y: 0, duration: 0.3, ease: "power2.out" }));
     el.addEventListener('mousemove', (e) => {
       const rect = el.getBoundingClientRect();
-      const x = e.clientX - rect.left - rect.width / 2;
-      const y = e.clientY - rect.top - rect.height / 2;
-      
-      gsap.to(el, {
-        x: x * 0.1,
-        y: y * 0.1,
-        duration: 0.3,
-        ease: "power2.out"
-      });
+      const x = e.clientX - rect.left - rect.width / 2, y = e.clientY - rect.top - rect.height / 2;
+      gsap.to(el, { x: x * 0.1, y: y * 0.1, duration: 0.3, ease: "power2.out" });
     });
   });
-  
-  console.log('🎭 마그네틱 효과 가동 완료!');
 })();
 </script>
 
-<!-- 🔍 스포밴드 제품 확대 호버 효과 -->
 <script>
 (() => {
   if (!window.gsap) return;
-  
-  // 🎯 스포밴드 제품 이미지들에 멋진 확대 효과 추가
-  const productImages = document.querySelectorAll('article img[src*="model"]');
-  
-  productImages.forEach(img => {
+  document.querySelectorAll('article img[src*="model"]').forEach(img => {
     const article = img.closest('article');
-    
-    // 초기 스타일 설정
-    img.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
-    img.style.transformOrigin = 'center center';
-    
-    // 호버 시 확대 효과
     article.addEventListener('mouseenter', () => {
-      gsap.to(img, {
-        scale: 1.15, // 15% 확대
-        duration: 0.5,
-        ease: "power2.out",
-        transformOrigin: "center center"
-      });
-      
-      // 카드 전체에도 살짝 들어올리는 효과
-      gsap.to(article, {
-        y: -8,
-        scale: 1.02,
-        duration: 0.4,
-        ease: "power2.out",
-        boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3)"
-      });
+      gsap.to(img, { scale: 1.15, duration: 0.5, ease: "power2.out", transformOrigin: "center center" });
+      gsap.to(article, { y: -8, scale: 1.02, duration: 0.4, ease: "power2.out", boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3)" });
     });
-    
-    // 마우스 벗어날 때 원래대로
     article.addEventListener('mouseleave', () => {
-      gsap.to(img, {
-        scale: 1,
-        duration: 0.4,
-        ease: "power2.out"
-      });
-      
-      gsap.to(article, {
-        y: 0,
-        scale: 1,
-        duration: 0.4,
-        ease: "power2.out",
-        boxShadow: "0 0px 0px rgba(0, 0, 0, 0)"
-      });
+      gsap.to(img, { scale: 1, duration: 0.4, ease: "power2.out" });
+      gsap.to(article, { y: 0, scale: 1, duration: 0.4, ease: "power2.out", boxShadow: "0 0px 0px rgba(0, 0, 0, 0)", rotationX: 0, rotationY: 0 });
     });
-    
-    // 마우스 움직임에 따른 3D 틸트 효과
     article.addEventListener('mousemove', (e) => {
       const rect = article.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-      
-      const rotateX = (y - centerY) / centerY * -10; // 상하 틸트
-      const rotateY = (x - centerX) / centerX * 10;  // 좌우 틸트
-      
-      gsap.to(article, {
-        rotationX: rotateX,
-        rotationY: rotateY,
-        duration: 0.3,
-        ease: "power2.out",
-        transformPerspective: 1000
-      });
+      const x = e.clientX - rect.left, y = e.clientY - rect.top;
+      const rotateX = (y - rect.height / 2) / (rect.height / 2) * -10;
+      const rotateY = (x - rect.width / 2) / (rect.width / 2) * 10;
+      gsap.to(article, { rotationX: rotateX, rotationY: rotateY, duration: 0.3, ease: "power2.out", transformPerspective: 1000 });
     });
   });
-  
-  console.log('🔍 스포밴드 제품 확대 효과 가동 완료!');
 })();
 </script>
 
