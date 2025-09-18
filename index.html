@@ -14,7 +14,6 @@
   </script>
 
   <script src="https://cdn.tailwindcss.com"></script>
-  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
@@ -35,13 +34,9 @@
     }
     .nav-item { transition: color .2s ease; }
     .nav-active { color:#7dd3fc !important; font-weight:600; }
-
-    /* 숫자 스피너 제거 */
     input[type="number"]::-webkit-outer-spin-button,
     input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     input[type="number"] { -moz-appearance: textfield; }
-
-    /* 유튜브 모달 */
     .modal{ background:rgba(2,6,23,.75); backdrop-filter: blur(2px); }
     .modal-box{ width:min(1024px, 92vw); aspect-ratio:16/9; }
     .yt-thumb img{ transition: transform .2s ease; }
@@ -59,366 +54,218 @@
       <a href="/" class="flex items-center gap-2">
         <span class="text-white font-extrabold text-lg tracking-tight">SPOBAND <span class="text-sky-400">Pro</span></span>
       </a>
-
       <nav class="hidden md:flex items-center gap-6">
         <a href="pages/taekwondo-benefits.html" class="text-slate-100 hover:text-sky-400 text-base md:text-lg font-semibold" data-nav="benefits">운동효과</a>
         <a href="pages/taekwondo-letter.html" class="text-slate-100 hover:text-sky-400 text-base md:text-lg font-semibold" data-nav="letter">“관장님께 드립니다”</a>
         <a href="#kits" class="text-slate-100 hover:text-sky-400 text-base md:text-lg font-semibold" data-nav="kits">스포밴드</a>
         <a href="#faq" class="text-slate-100 hover:text-sky-400 text-base md:text-lg font-semibold" data-nav="faq">참고영상 등</a>
       </nav>
-
       <div class="hidden md:block">
         <a href="#apply" class="bg-sky-500 hover:bg-sky-600 text-white px-5 py-2 rounded-full font-semibold shadow">
           관장님 전용 신청
         </a>
       </div>
-
-      <button type="button" aria-label="메뉴 열기"
-              class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-sky-500"
-              onclick="toggleNav()">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-200" fill="none" viewBox="0 0 24 24"
-             stroke="currentColor" stroke-width="2">
+      <button type="button" aria-label="메뉴 열기" class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-sky-500" onclick="toggleNav()">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
         </svg>
       </button>
     </div>
-
     <div id="mobile-nav" class="md:hidden hidden border-t border-slate-800 py-3">
       <nav class="flex flex-col gap-2">
         <a href="pages/taekwondo-benefits.html" class="px-2 py-2 rounded-lg text-slate-200 hover:bg-white/10">운동효과</a>
         <a href="pages/taekwondo-letter.html" class="px-2 py-2 rounded-lg text-slate-200 hover:bg-white/10">“관장님께 드립니다”</a>
         <a href="#kits" class="px-2 py-2 rounded-lg text-slate-200 hover:bg-white/10">스포밴드</a>
         <a href="#faq" class="px-2 py-2 rounded-lg text-slate-200 hover:bg-white/10">참고영상 등</a>
-        <a href="#apply" class="mt-2 px-3 py-3 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-semibold text-center shadow">
-          관장님 전용 신청
-        </a>
+        <a href="#apply" class="mt-2 px-3 py-3 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-semibold text-center shadow">관장님 전용 신청</a>
       </nav>
     </div>
   </div>
 </header>
 
-<section class="relative">
-  <div class="container mx-auto grid lg:grid-cols-2 items-center gap-10 lg:gap-16 px-6 py-16 lg:py-20">
-    <div class="max-w-[760px]">
-      <span class="inline-block px-4 py-2 rounded-xl bg-sky-500/15 border border-sky-400 text-sky-200 font-bold">
-        태권도 관장님 전용 프로모션
-      </span>
-
-      <h1 class="mt-6 text-4xl md:text-6xl xl:text-7xl 2xl:text-8xl font-black leading-[1.1] text-white drop-shadow-[0_6px_24px_rgba(2,6,23,.4)] text-balance">
-        <span class="block">10분 루틴으로</span>
-        <span class="block mt-2 md:mt-3 xl:mt-4 text-transparent bg-clip-text bg-gradient-to-r from-sky-300 to-cyan-300">킥 속도 +</span>
-        <span class="block mt-2 md:mt-3 xl:mt-4 text-transparent bg-clip-text bg-gradient-to-r from-sky-300 to-cyan-300">정확도 +</span>
-        <span class="block mt-2 md:mt-3 xl:mt-4 text-transparent bg-clip-text bg-gradient-to-r from-sky-300 to-cyan-300">밸런스가</span>
-        <span class="block mt-2 md:mt-3 xl:mt-4">눈에 보입니다.</span>
-      </h1>
-
-      <p class="mt-5 md:mt-6 text-slate-300 md:text-xl leading-relaxed">
-        탄성 저항이라 안전하게. 초보도 단계별로.
-      </p>
-
-      <div class="mt-8 flex flex-wrap gap-3">
-        <a href="#apply" class="px-7 py-3.5 rounded-2xl bg-sky-500 hover:bg-sky-400 text-white font-bold shadow-lg shadow-sky-500/20">관장님 전용 신청</a>
-        <a href="#faq" class="px-7 py-3.5 rounded-2xl bg-slate-700/70 hover:bg-slate-600 text-white font-semibold">1분 소개 영상</a>
-      </div>
-
-      <ul class="mt-6 space-y-1 text-slate-400 text-sm md:text-base">
-        <li>2주 전·후 영상 제공</li>
-        <li>전국 다수 도장 도입</li>
-        <li>단계별 강도</li>
-      </ul>
-    </div>
-
-    <figure id="heroVideoThumb" class="relative mx-auto w-full max-w-[820px] cursor-pointer" data-ytid="cVr-vf1aMR8">
-      <img src="https://i.ytimg.com/vi/cVr-vf1aMR8/hqdefault.jpg"
-           alt="스포밴드 태권도 훈련 영상"
-           class="w-full h-[260px] sm:h-[320px] md:h-[380px] lg:h-[520px] xl:h-[580px] rounded-2xl object-cover shadow-2xl"
-           loading="lazy" decoding="async" />
-      <div class="absolute inset-0 flex items-center justify-center">
-        <span class="bg-white/85 text-black font-bold px-6 py-3 rounded-full shadow-lg">▶ 영상 보기</span>
-      </div>
-    </figure>
-
-  </div>
-</section>
-
-<div id="heroModal" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
-  <div class="w-[min(960px,90vw)] aspect-video bg-black rounded-2xl overflow-hidden relative">
-    <button id="heroClose" class="absolute top-2 right-2 bg-slate-800/80 text-white px-3 py-1.5 rounded-lg">닫기</button>
-    <iframe id="heroPlayer" class="w-full h-full" src="" frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen loading="lazy"></iframe>
-  </div>
-</div>
-
-<section id="kits" class="py-20">
-  <div class="mx-auto container-narrow px-5">
-    <h2 class="text-3xl font-extrabold">스포밴드(제품구성)</h2>
-    <p class="mt-2 text-slate-300">모델별 이미지와 간단 스펙을 확인하세요. 상세 스펙 이미지는 새 창으로 열립니다.</p>
-
-    <div class="mt-6 grid md:grid-cols-2 gap-6">
-      <article class="rounded-2xl border border-slate-700/50 bg-slate-800/30 overflow-hidden">
-        <img src="img/35_model.JPG" alt="SPOBAND 35" class="w-full object-cover" loading="lazy" decoding="async">
-        <div class="p-5">
-          <h3 class="text-xl font-bold">SPOBAND 35 <span class="text-slate-400 text-base">/ 모레주머니(아령) 2.5kg 운동부하량</span></h3>
-          <p class="mt-1 text-slate-300 text-sm">길이 1,000mm · 폭 20mm · 두께 5mm</p>
-          <a href="img/35_spec.JPG" target="_blank" class="inline-block mt-3 text-sky-300 underline underline-offset-4">상세 스펙 이미지 보기</a>
-        </div>
-      </article>
-
-      <article class="rounded-2xl border border-slate-700/50 bg-slate-800/30 overflow-hidden">
-        <img src="img/45_model.JPG" alt="SPOBAND 45" class="w-full object-cover" loading="lazy" decoding="async">
-        <div class="p-5">
-          <h3 class="text-xl font-bold">SPOBAND 45 <span class="text-slate-400 text-base">/ 모레주머니(아령) 5kg 운동부하량</span></h3>
-          <p class="mt-1 text-slate-300 text-sm">길이 1,100mm · 폭 45mm · 두께 5mm</p>
-          <a href="img/45_spec.JPG" target="_blank" class="inline-block mt-3 text-sky-300 underline underline-offset-4">상세 스펙 이미지 보기</a>
-        </div>
-      </article>
-
-      <article class="rounded-2xl border border-slate-700/50 bg-slate-800/30 overflow-hidden">
-        <img src="img/55_model.JPG" alt="SPOBAND 55" class="w-full object-cover" loading="lazy" decoding="async">
-        <div class="p-5">
-          <h3 class="text-xl font-bold">SPOBAND 55 <span class="text-slate-400 text-base">/ 모레주머니(아령)10kg 운동부하량</span></h3>
-          <p class="mt-1 text-slate-300 text-sm">길이 1,100mm · 폭 55mm · 두께 5mm</p>
-          <a href="img/55_spec.JPG" target="_blank" class="inline-block mt-3 text-sky-300 underline underline-offset-4">상세 스펙 이미지 보기</a>
-        </div>
-      </article>
-
-      <article class="rounded-2xl border border-slate-700/50 bg-slate-800/30 overflow-hidden">
-        <img src="img/65_model.jpg" alt="SPOBAND 65" class="w-full object-cover" loading="lazy" decoding="async">
-        <div class="p-5">
-          <h3 class="text-xl font-bold">SPOBAND 65 <span class="text-slate-400 text-base">/ 모레주머니(아령)15kg 운동부하량</span></h3>
-          <p class="mt-1 text-slate-300 text-sm">길이 1,300mm · 폭 65mm · 두께 5mm</p>
-          <a href="img/65_spec.jpg" target="_blank" class="inline-block mt-3 text-sky-300 underline underline-offset-4">상세 스펙 이미지 보기</a>
-        </div>
-      </article>
-    </div>
-  </div>
-</section>
-
-<section id="faq" class="py-20">
-  <div class="mx-auto container-narrow px-5">
-    <h2 class="text-3xl font-extrabold">참고영상 등</h2>
-    <p class="mt-2 text-slate-300">소개·활용 예시 영상 6개를 모았습니다. 썸네일을 클릭하면 큰 화면으로 재생됩니다.</p>
-
-    <div class="mt-6 grid md:grid-cols-2 xl:grid-cols-3 gap-5">
-      <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="PaXW4TzsQyE">
-        <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/PaXW4TzsQyE/hqdefault.jpg" alt="스포밴드 영상1" loading="lazy" decoding="async">
-        <div class="px-4 py-2 text-sm">스포밴드 소개 영상 1</div>
-      </div>
-      <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="C2G_9G88ahw">
-        <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/C2G_9G88ahw/hqdefault.jpg" alt="스포밴드 영상2" loading="lazy" decoding="async">
-        <div class="px-4 py-2 text-sm">스포밴드 소개 영상 2</div>
-      </div>
-      <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="LWnO0hubiyw">
-        <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/LWnO0hubiyw/hqdefault.jpg" alt="스포밴드 영상3" loading="lazy" decoding="async">
-        <div class="px-4 py-2 text-sm">스포밴드 소개 영상 3</div>
-      </div>
-      <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="JnEyJ9K5EF4">
-        <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/JnEyJ9K5EF4/hqdefault.jpg" alt="스포밴드 영상4" loading="lazy" decoding="async">
-        <div class="px-4 py-2 text-sm">스포밴드 소개 영상 4</div>
-      </div>
-      <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="QV8ma9aEiNM">
-        <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/QV8ma9aEiNM/hqdefault.jpg" alt="스포밴드 영상5" loading="lazy" decoding="async">
-        <div class="px-4 py-2 text-sm">스포밴드 소개 영상 5</div>
-      </div>
-      <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="QVhHzYYkqbQ">
-        <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/QVhHzYYkqbQ/hqdefault.jpg" alt="스포밴드 영상6" loading="lazy" decoding="async">
-        <div class="px-4 py-2 text-sm">스포밴드 소개 영상 6</div>
-      </div>
-    </div>
-  </div>
-
-  <div id="ytModal" class="modal fixed inset-0 hidden items-center justify-center p-4">
-    <div class="modal-box rounded-2xl overflow-hidden border border-slate-700 bg-black relative">
-      <button id="ytClose" class="absolute top-2 right-2 z-10 px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-sm">닫기</button>
-      <iframe id="ytPlayer" class="w-full h-full" src="" title="YouTube video player"
-              frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen loading="lazy"></iframe>
-    </div>
-  </div>
-</section>
-
-<section id="apply" class="py-20">
-  <div class="mx-auto container-narrow px-5">
-    <h2 class="text-3xl md:text-4xl font-extrabold">태권도관장님 특별구매 게시판</h2>
-    <p class="mt-2 text-slate-300">견적서는 <b>연락처</b>로 보내드립니다! (신청글은 비밀번호로 열람/삭제)</p>
-
-    <form id="postForm" class="mt-8 grid gap-5 p-6 rounded-2xl border border-slate-700/50 bg-slate-800/40" autocomplete="off">
-      <div class="grid md:grid-cols-2 gap-5">
-        <div>
-          <label class="block text-sm mb-1" for="dojo">태권도장 명</label>
-          <input id="dojo" required class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
-        </div>
-        <div>
-          <label class="block text-sm mb-1" for="master">관장님 성함</label>
-          <input id="master" required class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
-        </div>
-        <div>
-          <label class="block text-sm mb-1" for="contact">연락처(전화/카톡/이메일)</label>
-          <input id="contact" required placeholder="예: 010-1234-5678 / dojo@naver.com"
-                 class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
-        </div>
-
-        <div>
-          <label class="block text-sm mb-1" for="pw">비밀번호(열람/삭제용)</label>
-          <div class="relative">
-            <input id="pw" type="password" minlength="4" required
-                   class="w-full pr-12 px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
-            <button type="button" id="pwToggle" aria-label="비밀번호 표시/숨김 전환"
-                    class="absolute inset-y-0 right-2 my-auto h-8 w-8 grid place-items-center rounded-md hover:bg-white/10">
-              <svg id="pwIconClosed" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="2" class="h-5 w-5 text-slate-300">
-                <path d="M3 3l18 18" />
-                <path d="M10.58 10.58A2 2 0 0112 10c1.1 0 2 .9 2 2 0 .42-.13.81-.35 1.13" />
-                <path d="M9.88 5.09A10.44 10.44 0 0112 5c5 0 9 4 10 7- .28.69-.7 1.38-1.24 2.02a11.58 11.58 0 01-3.14 2.57" />
-                <path d="M6.18 6.18A11.58 11.58 0 002 12c.28.69.7 1.38 1.24 2.02A11.58 11.58 0 006.38 16.6" />
-              </svg>
-              <svg id="pwIconOpen" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="2" class="h-5 w-5 text-slate-300 hidden">
-                <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z" />
-                <circle cx="12" cy="12" r="3" />
-              </svg>
-            </button>
+<main>
+    <section class="relative">
+      <div class="container mx-auto grid lg:grid-cols-2 items-center gap-10 lg:gap-16 px-6 py-16 lg:py-20">
+        <div class="max-w-[760px]">
+          <span class="inline-block px-4 py-2 rounded-xl bg-sky-500/15 border border-sky-400 text-sky-200 font-bold">태권도 관장님 전용 프로모션</span>
+          <h1 class="mt-6 text-4xl md:text-6xl xl:text-7xl 2xl:text-8xl font-black leading-[1.1] text-white drop-shadow-[0_6px_24px_rgba(2,6,23,.4)] text-balance">
+            <span class="block">10분 루틴으로</span>
+            <span class="block mt-2 md:mt-3 xl:mt-4 text-transparent bg-clip-text bg-gradient-to-r from-sky-300 to-cyan-300">킥 속도 +</span>
+            <span class="block mt-2 md:mt-3 xl:mt-4 text-transparent bg-clip-text bg-gradient-to-r from-sky-300 to-cyan-300">정확도 +</span>
+            <span class="block mt-2 md:mt-3 xl:mt-4 text-transparent bg-clip-text bg-gradient-to-r from-sky-300 to-cyan-300">밸런스가</span>
+            <span class="block mt-2 md:mt-3 xl:mt-4">눈에 보입니다.</span>
+          </h1>
+          <p class="mt-5 md:mt-6 text-slate-300 md:text-xl leading-relaxed">탄성 저항이라 안전하게. 초보도 단계별로.</p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a href="#apply" class="px-7 py-3.5 rounded-2xl bg-sky-500 hover:bg-sky-400 text-white font-bold shadow-lg shadow-sky-500/20">관장님 전용 신청</a>
+            <a href="#faq" class="px-7 py-3.5 rounded-2xl bg-slate-700/70 hover:bg-slate-600 text-white font-semibold">1분 소개 영상</a>
           </div>
-          <p class="mt-1 text-xs text-slate-400">* 최소 4자. 눈 아이콘으로 오탈자 확인 가능.</p>
+          <ul class="mt-6 space-y-1 text-slate-400 text-sm md:text-base">
+            <li>2주 전·후 영상 제공</li>
+            <li>전국 다수 도장 도입</li>
+            <li>단계별 강도</li>
+          </ul>
+        </div>
+        <figure id="heroVideoThumb" class="relative mx-auto w-full max-w-[820px] cursor-pointer" data-ytid="cVr-vf1aMR8">
+          <img src="https://i.ytimg.com/vi/cVr-vf1aMR8/hqdefault.jpg" alt="스포밴드 태권도 훈련 영상" class="w-full h-[260px] sm:h-[320px] md:h-[380px] lg:h-[520px] xl:h-[580px] rounded-2xl object-cover shadow-2xl" loading="lazy" decoding="async" />
+          <div class="absolute inset-0 flex items-center justify-center">
+            <span class="bg-white/85 text-black font-bold px-6 py-3 rounded-full shadow-lg">▶ 영상 보기</span>
+          </div>
+        </figure>
+      </div>
+    </section>
+
+    <div id="heroModal" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
+      <div class="w-[min(960px,90vw)] aspect-video bg-black rounded-2xl overflow-hidden relative">
+        <button id="heroClose" class="absolute top-2 right-2 bg-slate-800/80 text-white px-3 py-1.5 rounded-lg">닫기</button>
+        <iframe id="heroPlayer" class="w-full h-full" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+      </div>
+    </div>
+
+    <section id="kits" class="py-20 scroll-mt-16">
+      <div class="mx-auto container-narrow px-5">
+        <h2 class="text-3xl font-extrabold">스포밴드(제품구성)</h2>
+        <p class="mt-2 text-slate-300">모델별 이미지와 간단 스펙을 확인하세요. 상세 스펙 이미지는 새 창으로 열립니다.</p>
+        <div class="mt-6 grid md:grid-cols-2 gap-6">
+          <article class="rounded-2xl border border-slate-700/50 bg-slate-800/30 overflow-hidden">
+            <img src="img/35_model.JPG" alt="SPOBAND 35" class="w-full object-cover" loading="lazy" decoding="async">
+            <div class="p-5">
+              <h3 class="text-xl font-bold">SPOBAND 35 <span class="text-slate-400 text-base">/ 모레주머니(아령) 2.5kg 운동부하량</span></h3>
+              <p class="mt-1 text-slate-300 text-sm">길이 1,000mm · 폭 20mm · 두께 5mm</p>
+              <a href="img/35_spec.JPG" target="_blank" class="inline-block mt-3 text-sky-300 underline underline-offset-4">상세 스펙 이미지 보기</a>
+            </div>
+          </article>
+          <article class="rounded-2xl border border-slate-700/50 bg-slate-800/30 overflow-hidden">
+            <img src="img/45_model.JPG" alt="SPOBAND 45" class="w-full object-cover" loading="lazy" decoding="async">
+            <div class="p-5">
+              <h3 class="text-xl font-bold">SPOBAND 45 <span class="text-slate-400 text-base">/ 모레주머니(아령) 5kg 운동부하량</span></h3>
+              <p class="mt-1 text-slate-300 text-sm">길이 1,100mm · 폭 45mm · 두께 5mm</p>
+              <a href="img/45_spec.JPG" target="_blank" class="inline-block mt-3 text-sky-300 underline underline-offset-4">상세 스펙 이미지 보기</a>
+            </div>
+          </article>
+          <article class="rounded-2xl border border-slate-700/50 bg-slate-800/30 overflow-hidden">
+            <img src="img/55_model.JPG" alt="SPOBAND 55" class="w-full object-cover" loading="lazy" decoding="async">
+            <div class="p-5">
+              <h3 class="text-xl font-bold">SPOBAND 55 <span class="text-slate-400 text-base">/ 모레주머니(아령)10kg 운동부하량</span></h3>
+              <p class="mt-1 text-slate-300 text-sm">길이 1,100mm · 폭 55mm · 두께 5mm</p>
+              <a href="img/55_spec.JPG" target="_blank" class="inline-block mt-3 text-sky-300 underline underline-offset-4">상세 스펙 이미지 보기</a>
+            </div>
+          </article>
+          <article class="rounded-2xl border border-slate-700/50 bg-slate-800/30 overflow-hidden">
+            <img src="img/65_model.jpg" alt="SPOBAND 65" class="w-full object-cover" loading="lazy" decoding="async">
+            <div class="p-5">
+              <h3 class="text-xl font-bold">SPOBAND 65 <span class="text-slate-400 text-base">/ 모레주머니(아령)15kg 운동부하량</span></h3>
+              <p class="mt-1 text-slate-300 text-sm">길이 1,300mm · 폭 65mm · 두께 5mm</p>
+              <a href="img/65_spec.jpg" target="_blank" class="inline-block mt-3 text-sky-300 underline underline-offset-4">상세 스펙 이미지 보기</a>
+            </div>
+          </article>
         </div>
       </div>
+    </section>
 
-      <div>
-        <label class="block text-sm mb-1" for="address">택배 주소지 또는 태권도장 소재지</label>
-        <textarea id="address" rows="2" required
-                  class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></textarea>
-      </div>
-
-      <div>
-        <div class="flex items-end justify-between">
-          <label class="block text-sm">구매 희망 품목</label>
-          <div class="flex items-center gap-3">
-            <small class="text-slate-400">단위: 개 (수량)</small>
-            <span id="sumBoxes"
-                  class="inline-flex items-center px-2 py-1 rounded-lg bg-sky-500/10 text-sky-300 text-xs font-semibold">
-              총 0 개
-            </span>
-          </div>
+    <section id="faq" class="py-20 scroll-mt-16">
+      <div class="mx-auto container-narrow px-5">
+        <h2 class="text-3xl font-extrabold">참고영상 등</h2>
+        <p class="mt-2 text-slate-300">소개·활용 예시 영상 6개를 모았습니다. 썸네일을 클릭하면 큰 화면으로 재생됩니다.</p>
+        <div class="mt-6 grid md:grid-cols-2 xl:grid-cols-3 gap-5">
+            <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="PaXW4TzsQyE"><img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/PaXW4TzsQyE/hqdefault.jpg" alt="스포밴드 영상1" loading="lazy" decoding="async"><div class="px-4 py-2 text-sm">스포밴드 소개 영상 1</div></div>
+            <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="C2G_9G88ahw"><img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/C2G_9G88ahw/hqdefault.jpg" alt="스포밴드 영상2" loading="lazy" decoding="async"><div class="px-4 py-2 text-sm">스포밴드 소개 영상 2</div></div>
+            <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="LWnO0hubiyw"><img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/LWnO0hubiyw/hqdefault.jpg" alt="스포밴드 영상3" loading="lazy" decoding="async"><div class="px-4 py-2 text-sm">스포밴드 소개 영상 3</div></div>
+            <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="JnEyJ9K5EF4"><img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/JnEyJ9K5EF4/hqdefault.jpg" alt="스포밴드 영상4" loading="lazy" decoding="async"><div class="px-4 py-2 text-sm">스포밴드 소개 영상 4</div></div>
+            <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="QV8ma9aEiNM"><img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/QV8ma9aEiNM/hqdefault.jpg" alt="스포밴드 영상5" loading="lazy" decoding="async"><div class="px-4 py-2 text-sm">스포밴드 소개 영상 5</div></div>
+            <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="QVhHzYYkqbQ"><img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/QVhHzYYkqbQ/hqdefault.jpg" alt="스포밴드 영상6" loading="lazy" decoding="async"><div class="px-4 py-2 text-sm">스포밴드 소개 영상 6</div></div>
         </div>
+      </div>
+      <div id="ytModal" class="modal fixed inset-0 hidden items-center justify-center p-4">
+        <div class="modal-box rounded-2xl overflow-hidden border border-slate-700 bg-black relative">
+          <button id="ytClose" class="absolute top-2 right-2 z-10 px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-sm">닫기</button>
+          <iframe id="ytPlayer" class="w-full h-full" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+        </div>
+      </div>
+    </section>
 
-        <div class="mt-3 overflow-hidden rounded-xl border border-slate-700/60">
-          <div class="grid grid-cols-12 bg-slate-900/40 px-4 py-3">
-            <div class="col-span-8 md:col-span-9 text-[16px] md:text-lg font-semibold text-slate-100">모델 / (운동부하량)</div>
-            <div class="col-span-4 md:col-span-3 text-right pr-1 text-[16px] md:text-lg font-semibold text-slate-100">신 청 개 수</div>
+    <section id="apply" class="py-20 scroll-mt-16">
+      <div class="mx-auto container-narrow px-5">
+        <h2 class="text-3xl md:text-4xl font-extrabold">태권도관장님 특별구매 게시판</h2>
+        <p class="mt-2 text-slate-300">견적서는 <b>연락처</b>로 보내드립니다! (신청글은 비밀번호로 열람/삭제)</p>
+        <form id="postForm" class="mt-8 grid gap-5 p-6 rounded-2xl border border-slate-700/50 bg-slate-800/40" autocomplete="off">
+          <div class="grid md:grid-cols-2 gap-5">
+            <div><label class="block text-sm mb-1" for="dojo">태권도장 명</label><input id="dojo" required class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></div>
+            <div><label class="block text-sm mb-1" for="master">관장님 성함</label><input id="master" required class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></div>
+            <div><label class="block text-sm mb-1" for="contact">연락처(전화/카톡/이메일)</label><input id="contact" required placeholder="예: 010-1234-5678 / dojo@naver.com" class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></div>
+            <div>
+              <label class="block text-sm mb-1" for="pw">비밀번호(열람/삭제용)</label>
+              <div class="relative">
+                <input id="pw" type="password" minlength="4" required class="w-full pr-12 px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
+                <button type="button" id="pwToggle" aria-label="비밀번호 표시/숨김 전환" class="absolute inset-y-0 right-2 my-auto h-8 w-8 grid place-items-center rounded-md hover:bg-white/10">
+                  <svg id="pwIconClosed" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5 text-slate-300"><path d="M3 3l18 18" /><path d="M10.58 10.58A2 2 0 0112 10c1.1 0 2 .9 2 2 0 .42-.13.81-.35 1.13" /><path d="M9.88 5.09A10.44 10.44 0 0112 5c5 0 9 4 10 7- .28.69-.7 1.38-1.24 2.02a11.58 11.58 0 01-3.14 2.57" /><path d="M6.18 6.18A11.58 11.58 0 002 12c.28.69.7 1.38 1.24 2.02A11.58 11.58 0 006.38 16.6" /></svg>
+                  <svg id="pwIconOpen" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5 text-slate-300 hidden"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z" /><circle cx="12" cy="12" r="3" /></svg>
+                </button>
+              </div>
+              <p class="mt-1 text-xs text-slate-400">* 최소 4자. 눈 아이콘으로 오탈자 확인 가능.</p>
+            </div>
           </div>
-
-          <div class="divide-y divide-slate-700/50 bg-slate-800/20">
-            <div class="grid grid-cols-12 items-center px-4 py-3">
-              <div class="col-span-8 md:col-span-9">spoband 30 / (주니어용)</div>
-              <div class="col-span-4 md:col-span-3">
-                <input id="q_sb30" type="number" min="0" value="0"
-                       class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
+          <div><label class="block text-sm mb-1" for="address">택배 주소지 또는 태권도장 소재지</label><textarea id="address" rows="2" required class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></textarea></div>
+          <div>
+            <div class="flex items-end justify-between">
+              <label class="block text-sm">구매 희망 품목</label>
+              <div class="flex items-center gap-3">
+                <small class="text-slate-400">단위: 개 (수량)</small>
+                <span id="sumBoxes" class="inline-flex items-center px-2 py-1 rounded-lg bg-sky-500/10 text-sky-300 text-xs font-semibold">총 0 개</span>
               </div>
             </div>
-            <div class="grid grid-cols-12 items-center px-4 py-3">
-              <div class="col-span-8 md:col-span-9">spoband 35 / (운동부하량:아령 또는 모레주머니 2.5kg)</div>
-              <div class="col-span-4 md:col-span-3">
-                <input id="q_sb35" type="number" min="0" value="0"
-                       class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
+            <div class="mt-3 overflow-hidden rounded-xl border border-slate-700/60">
+              <div class="grid grid-cols-12 bg-slate-900/40 px-4 py-3">
+                <div class="col-span-8 md:col-span-9 text-[16px] md:text-lg font-semibold text-slate-100">모델 / (운동부하량)</div>
+                <div class="col-span-4 md:col-span-3 text-right pr-1 text-[16px] md:text-lg font-semibold text-slate-100">신 청 개 수</div>
               </div>
-            </div>
-            <div class="grid grid-cols-12 items-center px-4 py-3">
-              <div class="col-span-8 md:col-span-9">spoband 45 / (운동부하량:아령 또는 모레주머니 5kg)</div>
-              <div class="col-span-4 md:col-span-3">
-                <input id="q_sb45" type="number" min="0" value="0"
-                       class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
-              </div>
-            </div>
-            <div class="grid grid-cols-12 items-center px-4 py-3">
-              <div class="col-span-8 md:col-span-9">spoband 55 / (운동부하량:아령 또는 모레주머니 10kg)</div>
-              <div class="col-span-4 md:col-span-3">
-                <input id="q_sb55" type="number" min="0" value="0"
-                       class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
-              </div>
-            </div>
-            <div class="grid grid-cols-12 items-center px-4 py-3">
-              <div class="col-span-8 md:col-span-9">spoband 65 / (운동부하량:아령 또는 모레주머니 15kg)</div>
-              <div class="col-span-4 md:col-span-3">
-                <input id="q_sb65" type="number" min="0" value="0"
-                       class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
-              </div>
-            </div>
-
-            <div class="grid grid-cols-12 items-center px-4 py-3 bg-slate-900/40 border-t border-slate-800/60">
-              <div class="col-span-8 md:col-span-9 text-right pr-4">
-                <span class="text-sm md:text-base font-semibold text-slate-100">총 신청개수</span>
-              </div>
-              <div class="col-span-4 md:col-span-3">
-                <input id="totalBoxes" type="text" inputmode="numeric" readonly value="0"
-                       class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-0">
+              <div class="divide-y divide-slate-700/50 bg-slate-800/20">
+                <div class="grid grid-cols-12 items-center px-4 py-3"><div class="col-span-8 md:col-span-9">spoband 30 / (주니어용)</div><div class="col-span-4 md:col-span-3"><input id="q_sb30" type="number" min="0" value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></div></div>
+                <div class="grid grid-cols-12 items-center px-4 py-3"><div class="col-span-8 md:col-span-9">spoband 35 / (운동부하량:아령 또는 모레주머니 2.5kg)</div><div class="col-span-4 md:col-span-3"><input id="q_sb35" type="number" min="0" value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></div></div>
+                <div class="grid grid-cols-12 items-center px-4 py-3"><div class="col-span-8 md:col-span-9">spoband 45 / (운동부하량:아령 또는 모레주머니 5kg)</div><div class="col-span-4 md:col-span-3"><input id="q_sb45" type="number" min="0" value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></div></div>
+                <div class="grid grid-cols-12 items-center px-4 py-3"><div class="col-span-8 md:col-span-9">spoband 55 / (운동부하량:아령 또는 모레주머니 10kg)</div><div class="col-span-4 md:col-span-3"><input id="q_sb55" type="number" min="0" value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></div></div>
+                <div class="grid grid-cols-12 items-center px-4 py-3"><div class="col-span-8 md:col-span-9">spoband 65 / (운동부하량:아령 또는 모레주머니 15kg)</div><div class="col-span-4 md:col-span-3"><input id="q_sb65" type="number" min="0" value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></div></div>
+                <div class="grid grid-cols-12 items-center px-4 py-3 bg-slate-900/40 border-t border-slate-800/60">
+                  <div class="col-span-8 md:col-span-9 text-right pr-4"><span class="text-sm md:text-base font-semibold text-slate-100">총 신청개수</span></div>
+                  <div class="col-span-4 md:col-span-3"><input id="totalBoxes" type="text" inputmode="numeric" readonly value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-0"></div>
+                </div>
               </div>
             </div>
           </div>
+          <div class="flex items-center mt-4 flex-wrap gap-y-4">
+            <button type="button" id="openConsent" class="px-5 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-semibold">신청 등록</button>
+            <div class="ml-auto text-yellow-400 font-extrabold text-lg md:text-2xl tracking-wide drop-shadow text-right">
+              ※ 문의: 스포밴드연구소 소장<br class="md:hidden"/> 010-5214-1492 / simboom@hanmail.net
+            </div>
+          </div>
+          <div aria-hidden="true" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;">
+            <label>Leave this field empty</label><input type="text" name="hp_field" tabindex="-1" autocomplete="new-password" inputmode="none" />
+          </div>
+          <input type="hidden" name="ts" id="ts">
+        </form>
+
+        <div class="mt-10">
+          <div class="flex items-center justify-between">
+            <h3 class="text-2xl font-extrabold">신청 목록</h3>
+            <div class="flex items-center gap-2">
+              <button id="clearAllBtn" class="admin-only hidden text-xs px-3 py-1.5 rounded-lg border border-slate-700 hover:bg-slate-800/60">전체 삭제</button>
+              <button id="btnAdminLogin" class="text-xs px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-white">관리자 모드</button>
+              <button id="btnAdminLogout" class="hidden text-xs px-3 py-1.5 rounded-lg bg-slate-600 hover:bg-slate-500 text-white">관리자 로그아웃</button>
+            </div>
+          </div>
+          <div id="boardTop" class="mt-1"></div>
+          <div id="boardList" class="mt-4 grid gap-4"></div>
         </div>
       </div>
+    </section>
+</main>
 
-<div class="flex items-center mt-4 flex-wrap">
-  <!-- 신청 버튼 -->
-  <button type="submit" class="px-5 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-white">
-    신청 등록
-  </button>
-
-  <!-- ✅ 문의 문구 (오른쪽 끝 + 큰 노란색 글씨) -->
-  <span class="ml-auto text-yellow-400 font-extrabold text-2xl tracking-wide drop-shadow">
-    ※ 문의: 스포밴드연구소 소장 / 010-5214-1492 / simboom@hanmail.net
-  </span>
-</div>
-
-  </span>
-</div>
-        </button>
-      </div>
-
-      <div aria-hidden="true"
-           style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;">
-        <label>Leave this field empty</label>
-        <input type="text" name="hp_field" tabindex="-1"
-               autocomplete="new-password" inputmode="none" />
-      </div>
-
-      <input type="hidden" name="ts" id="ts">
-    </form>
-
-    <div class="mt-10">
-      <div class="flex items-center justify-between">
-        <h3 class="text-2xl font-extrabold">신청 목록</h3>
-
-        <div class="flex items-center gap-2">
-          <button id="clearAllBtn"
-                  class="admin-only hidden text-xs px-3 py-1.5 rounded-lg border border-slate-700 hover:bg-slate-800/60">
-            전체 삭제
-          </button>
-          <button id="btnAdminLogin"
-                  class="text-xs px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-white">
-            관리자 모드
-          </button>
-          <button id="btnAdminLogout"
-                  class="hidden text-xs px-3 py-1.5 rounded-lg bg-slate-600 hover:bg-slate-500 text-white">
-            관리자 로그아웃
-          </button>
-        </div>
-      </div>
-
-      <div id="boardTop"></div>
-      <div id="boardList" class="mt-4 grid gap-4"></div>
-    </div>
-  </div>
-</section>
-
-<div id="consentModal"
-     class="fixed inset-0 z-[999] hidden items-center justify-center bg-black/60 backdrop-blur-sm">
+<div id="consentModal" class="fixed inset-0 z-[999] hidden items-center justify-center bg-black/60 backdrop-blur-sm">
   <div class="w-[min(720px,90vw)] max-h-[86vh] rounded-2xl border border-slate-700 bg-slate-900 text-slate-100 shadow-2xl overflow-hidden flex flex-col">
     <div class="px-5 py-4 border-b border-slate-800 flex items-center justify-between">
       <h3 class="text-lg font-bold">개인정보 수집·이용 동의</h3>
       <button id="consentClose" class="px-3 py-1.5 rounded-lg hover:bg-slate-800 text-sm">닫기</button>
     </div>
-
     <div class="px-5 py-4 space-y-3 overflow-auto">
       <p class="text-sm text-slate-300">스포밴드 태권도관장님 특별구매 신청 처리를 위해 아래와 같이 개인정보를 수집·이용합니다.</p>
       <div class="text-sm bg-slate-800/50 border border-slate-700 rounded-xl p-4">
@@ -430,618 +277,500 @@
           <li>동의를 거부할 권리가 있으나, 거부 시 신청 접수가 제한될 수 있습니다.</li>
         </ul>
       </div>
-
-      <a href="privacy.html" target="_blank" rel="noopener" class="underline decoration-dotted">
-        개인정보 처리방침 전문 보기
-      </a>
-
+      <a href="privacy.html" target="_blank" rel="noopener" class="underline decoration-dotted">개인정보 처리방침 전문 보기</a>
       <label class="flex items-start gap-3 mt-2">
         <input id="consentCheck" type="checkbox" class="mt-0.5 accent-sky-400">
         <span class="text-sm">위 내용에 <b>동의합니다</b>.</span>
       </label>
     </div>
-
     <div class="px-5 py-4 border-t border-slate-800 flex items-center justify-end gap-2">
       <button id="consentCancel" class="px-4 py-2 rounded-xl border border-slate-700 hover:bg-slate-800">취소</button>
-      <button id="consentAgree" class="px-5 py-2 rounded-xl bg-slate-600 text-slate-300 cursor-not-allowed" disabled>
-        동의하고 제출
-      </button>
+      <button id="consentAgree" class="px-5 py-2 rounded-xl bg-slate-600 text-slate-300 cursor-not-allowed" disabled>동의하고 제출</button>
     </div>
   </div>
 </div>
 
+
 <script>
 /* ===============================
-    공통 헬퍼/상수
+    글로벌 상수 및 헬퍼
 ================================= */
 const FORM_ID = "postForm";
-let adminToken = sessionStorage.getItem('spobandAdminToken');
+const API_URL = "https://script.google.com/macros/s/AKfycbxEB88DQN-qc9vk_wby6HSIuV_aCplzwAMw53OdH5OLqkY6mGRFB-2cd_q_q_gqR1E9bw/exec";
 const FORM_MIN_SECONDS = 3;
+let adminToken = sessionStorage.getItem('spobandAdminToken');
 let pageLoadedAt = Date.now();
-
-const API_URL = "https://script.google.com/macros/s/AKfycbxkh5SJPghFcaT66xnTXtvqW7S3SHqC7zjSbWFc1b4h62FP5wlK3JVmD3YPttXZD2b-Gw/exec";
-/* ===============================
-    Google Apps Script API 함수들
-================================= */
-// ==== 응답 정규화 유틸(새로 추가) ====
-function normalizeItems(raw = {}) {
-  const items = raw.items || {};
-  return {
-    sb30: Number(items.sb30 ?? raw.sb30 ?? 0) || 0,
-    sb35: Number(items.sb35 ?? raw.sb35 ?? 0) || 0,
-    sb45: Number(items.sb45 ?? raw.sb45 ?? 0) || 0,
-    sb55: Number(items.sb55 ?? raw.sb55 ?? 0) || 0,
-    sb65: Number(items.sb65 ?? raw.sb65 ?? 0) || 0,
-  };
-}
-function computeTotalCount(items) {
-  return Object.values(items).reduce((a, b) => a + (Number(b) || 0), 0);
-}
-function normalizePost(raw = {}) {
-  const n = (v, ...alts) => {
-    for (const k of [v, ...alts]) if (k !== undefined && k !== null && String(k).trim() !== '') return k;
-    return '';
-  };
-  const items = normalizeItems(raw);
-  return {
-    id: String(n(raw.id, raw._id, raw.ID, raw.rowId)),
-    dojo: String(n(raw.dojo, raw.dojoName, raw.dojo_name, raw.gym)),
-    master: String(n(raw.master, raw.masterName, raw.owner)),
-    contact: String(n(raw.contact, raw.phone, raw.contact_info)),
-    address: String(n(raw.address, raw.addr)),
-    pw: String(n(raw.pw, raw.password)),
-    ts: n(raw.ts, raw.timestamp, raw.createdAt, raw.created_at),
-    items,
-    totalCount: computeTotalCount(items),
-    replies: Array.isArray(raw.replies) ? raw.replies : [],
-  };
-}
-function normalizeListResponse(data) {
-  const arr = Array.isArray(data) ? data : (data.items || []);
-  return arr.map(normalizePost);
-}
-function normalizeDetailsResponse(data) {
-  return normalizePost(data || {});
-}
-
-
-// 🔵 목록 불러오기
-async function loadApplications() {
-  const res = await fetch(`${API_URL}?action=list`);
-  if (!res.ok) throw new Error('데이터를 불러오는데 실패했습니다.');
-  const data = await res.json();
-  return normalizeListResponse(data);
-}
-
-// 🔵 신규 등록
-async function submitApplication(applicationData) {
-  const res = await fetch(API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ action: 'create', data: applicationData })
-  });
-  if (!res.ok) throw new Error(`신청 등록에 실패했습니다.`);
-  const created = await res.json();
-  return normalizeDetailsResponse(created);
-}
-
-// 🔵 상세 보기
-async function fetchPostDetails(id, pw) {
-  const payload = { action: 'getPost', id, pw: pw || '' };
-  if (isAdmin()) payload.adminToken = adminToken;
-  const res = await fetch(API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  });
-  if (!res.ok) throw new Error('정보를 열람할 수 없습니다. 비밀번호를 확인해주세요.');
-  const data = await res.json();
-  return normalizeDetailsResponse(data);
-}
-
-// [수정] 4. 관리자 모드 임시 로그인 (UI 테스트용)
-async function verifyAdminToken(token) {
-  // 경고: 이 방식은 보안에 매우 취약합니다.
-  // 사이트 정식 오픈 전에는 반드시 서버(Google Apps Script)에서 비밀번호를 검증하는 방식으로 되돌려야 합니다.
-  return token === '1234';
-}
-const $  = (s,el=document)=>el.querySelector(s);
-const $$ = (s,el=document)=>Array.from(el.querySelectorAll(s));
-const esc= (s)=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]));
-// [버그 수정] "Invalid Date" 오류 방지
-const fmt =(ts)=>{
-  if (!ts || isNaN(new Date(ts).getTime())) { return "날짜 정보 없음"; }
-  return new Date(ts).toLocaleString();
-};
-const isAdmin = () => adminToken !== null;
-function setAdminMode(on){
-  if (on) { sessionStorage.setItem('spobandAdminToken', adminToken); } 
-  else { adminToken = null; sessionStorage.removeItem('spobandAdminToken'); }
-  $$(".admin-only").forEach(el => el.classList.toggle("hidden", !on));
-  $("#btnAdminLogin")?.classList.toggle("hidden", on);
-  $("#btnAdminLogout")?.classList.toggle("hidden", !on);
-}
-function toggleNav(){ $('#mobile-nav')?.classList.toggle('hidden'); }
-(function(){
-  function setActive(key){ $$('[data-nav]').forEach(a=>a.classList.remove('nav-active')); $(`[data-nav="${key}"]`)?.classList.add('nav-active'); }
-  const file = location.pathname.split('/').pop(), hash = location.hash.replace('#','');
-  if (['kits','faq','apply'].includes(hash)) setActive(hash); else if (file === 'taekwondo-benefits.html') setActive('benefits'); else if (file === 'taekwondo-letter.html') setActive('letter'); else setActive('home');
-  window.addEventListener('hashchange', ()=>{ const h = location.hash.replace('#',''); setActive(['kits','faq','apply'].includes(h)?h:'home'); });
-})();
-(function(){
-  const thumb = $("#heroVideoThumb"), modal = $("#heroModal"), player = $("#heroPlayer"), close = $("#heroClose");
-  if(thumb){ thumb.addEventListener("click", ()=>{ const videoId = thumb.getAttribute("data-ytid") || "cVr-vf1aMR8"; player.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&playsinline=1&modestbranding=1`; modal.classList.remove("hidden"); modal.classList.add("flex"); }); }
-  function closeModal(){ player.src=""; modal.classList.add("hidden"); modal.classList.remove("flex"); }
-  close?.addEventListener("click", closeModal); modal?.addEventListener("click",(e)=>{ if(e.target===modal) closeModal(); });
-})();
-(function(){
-  const ytModal = $('#ytModal'), ytPlayer = $('#ytPlayer'), ytClose = $('#ytClose');
-  $$('.yt-thumb').forEach(el=>{ el.addEventListener('click', ()=>{ const vid = el.getAttribute('data-vid'); ytPlayer.src = `https://www.youtube.com/embed/${vid}?autoplay=1&rel=0&playsinline=1&modestbranding=1`; ytModal.classList.remove('hidden'); ytModal.classList.add('flex'); }); });
-  function closeYt(){ ytModal.classList.add('hidden'); ytModal.classList.remove('flex'); ytPlayer.src = ""; }
-  ytClose?.addEventListener('click', closeYt); ytModal?.addEventListener('click', (e)=>{ if(e.target===ytModal) closeYt(); });
-})();
-
-/* ===============================
-    게시판 상태/합계/템플릿
-================================= */
 let posts = [];
 
-// 합계 계산
-function recalcTotal(){
-  const n = id => Math.max(0, Number(($(`#${id}`)?.value || 0)) || 0);
-  const total = n("q_sb30")+n("q_sb35")+n("q_sb45")+n("q_sb55")+n("q_sb65");
-  const badge = $("#sumBoxes");
-  if (badge) badge.textContent = `총 ${total} 개`;
-  $("#totalBoxes").value = String(total);
-}
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
+const esc = (s) => String(s).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[c]);
+const fmt = (ts) => !ts || isNaN(new Date(ts).getTime()) ? "날짜 정보 없음" : new Date(ts).toLocaleString();
+const isAdmin = () => adminToken !== null;
 
-// 도장명/이름 마스킹
-function maskName(name = ""){
-  const str = String(name).trim();
-  if (str.length <= 1) return str;
-  if (str.length === 2) return `${str[0]}*`;
-  const mid = '*'.repeat(str.length - 2);
-  return `${str[0]}${mid}${str[str.length - 1]}`;
-}
-const maskDojo = maskName;
 
-// 연락처 마스킹
-function maskContact(raw = ""){
-  const contact = String(raw).trim();
-  const digits = contact.replace(/\D/g, "");
-  if (digits.length > 7) {
-    const start = digits.slice(0, 3);
-    const end = digits.slice(-4);
-    return `${start}-****-${end}`;
-  }
-  if (contact.includes('@')) {
-    const parts = contact.split('@');
-    return `${parts[0].slice(0,3)}***@${parts[1]}`;
-  }
-  return "***-****-****";
-}
-
-/* -------------------------------
-   데이터 정규화 유틸 (추가)
--------------------------------- */
+/* ===============================
+    데이터 정규화 (Normalization)
+================================= */
+// API 응답 데이터 구조를 일관성 있게 표준화합니다.
 function normalizeItems(raw = {}) {
-  const items = raw.items || {};
-  return {
-    sb30: Number(items.sb30 ?? raw.sb30 ?? 0) || 0,
-    sb35: Number(items.sb35 ?? raw.sb35 ?? 0) || 0,
-    sb45: Number(items.sb45 ?? raw.sb45 ?? 0) || 0,
-    sb55: Number(items.sb55 ?? raw.sb55 ?? 0) || 0,
-    sb65: Number(items.sb65 ?? raw.sb65 ?? 0) || 0,
-  };
+    const items = raw.items || {};
+    return {
+        sb30: Number(items.sb30 ?? raw.sb30 ?? 0) || 0,
+        sb35: Number(items.sb35 ?? raw.sb35 ?? 0) || 0,
+        sb45: Number(items.sb45 ?? raw.sb45 ?? 0) || 0,
+        sb55: Number(items.sb55 ?? raw.sb55 ?? 0) || 0,
+        sb65: Number(items.sb65 ?? raw.sb65 ?? 0) || 0,
+    };
 }
+
 function computeTotalCount(items) {
-  return Object.values(items).reduce((a, b) => a + (Number(b) || 0), 0);
+    return Object.values(items).reduce((a, b) => a + (Number(b) || 0), 0);
 }
+
 function normalizePost(raw = {}) {
-  const n = (v, ...alts) => {
-    for (const k of [v, ...alts]) {
-      if (k !== undefined && k !== null && String(k).trim() !== '') return k;
-    }
-    return '';
-  };
-  const items = normalizeItems(raw);
-  return {
-    id: String(n(raw.id, raw._id, raw.ID, raw.rowId)),
-    dojo: String(n(raw.dojo, raw.dojoName, raw.dojo_name, raw.gym)),
-    master: String(n(raw.master, raw.masterName, raw.owner)),
-    contact: String(n(raw.contact, raw.phone, raw.contact_info)),
-    address: String(n(raw.address, raw.addr)),
-    pw: String(n(raw.pw, raw.password)),
-    ts: n(raw.ts, raw.timestamp, raw.createdAt, raw.created_at),
-    items,
-    totalCount: computeTotalCount(items),
-    replies: Array.isArray(raw.replies) ? raw.replies : [],
-  };
-}
-function normalizeDetailsResponse(data) {
-  return normalizePost(data || {});
+    const findValue = (...keys) => {
+        for (const key of keys) if (raw[key] !== undefined && raw[key] !== null && String(raw[key]).trim() !== '') return raw[key];
+        return '';
+    };
+    const items = normalizeItems(raw);
+    return {
+        id: String(findValue('id', '_id', 'ID', 'rowId')),
+        dojo: String(findValue('dojo', 'dojoName', 'dojo_name', 'gym')),
+        master: String(findValue('master', 'masterName', 'owner')),
+        contact: String(findValue('contact', 'phone', 'contact_info')),
+        address: String(findValue('address', 'addr')),
+        pw: String(findValue('pw', 'password')),
+        ts: findValue('ts', 'timestamp', 'createdAt', 'created_at'),
+        items,
+        totalCount: computeTotalCount(items),
+        replies: Array.isArray(raw.replies) ? raw.replies : [],
+    };
 }
 
-// 카드 템플릿
-function cardHTML(p){
-  const totalCount = Number(p.totalCount || 0);
-  return `
-  <article class="p-5 rounded-2xl border border-slate-700/50 bg-slate-800/40" data-id="${p.id}">
-    <div class="grid md:grid-cols-2 gap-x-4 gap-y-2">
-      <div><div class="text-xs text-slate-400">도장명</div><div class="font-semibold">${esc(maskDojo(p.dojo))}</div></div>
-      <div><div class="text-xs text-slate-400">관장님</div><div class="font-semibold">${esc(maskName(p.master))}</div></div>
-      <div><div class="text-xs text-slate-400">연락처</div><div class="font-semibold">${esc(maskContact(p.contact))}</div></div>
-      <div><div class="text-xs text-slate-400">등록일</div><div class="font-semibold">${fmt(p.ts)}</div></div>
-      <div class="md:col-span-2"><div class="text-xs text-slate-400">신청 품목</div><div class="inline-flex items-center gap-2 text-slate-300"><span class="text-xs px-2 py-0.5 rounded bg-sky-500/10 text-sky-300 border border-sky-700/40">총 ${totalCount} 개</span><span class="text-slate-500 text-sm">(상세 내역은 비공개)</span></div></div>
-      <div class="md:col-span-2 flex flex-wrap gap-2 mt-2">
-        <button class="btn-view px-3 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-sm">상세보기</button>
-        <button class="btn-admin-reply admin-only hidden px-3 py-2 rounded-lg bg-sky-700 hover:bg-sky-600 text-sm text-white">관리자 답변</button>
-        <button class="btn-delete admin-only hidden px-3 py-2 rounded-lg bg-rose-700 hover:bg-rose-600 text-sm text-white">삭제</button>
-      </div>
-      <div id="details-${p.id}" class="hidden md:col-span-2 p-3 mt-2 rounded-lg bg-slate-900/40 border border-slate-800"><p class="text-center text-slate-400 p-4">상세 정보를 불러오는 중...</p></div>
-    </div>
-  </article>`;
+/* ===============================
+    Google Apps Script API 연동
+================================= */
+// 목록 불러오기
+async function loadApplications() {
+    const res = await fetch(`${API_URL}?action=list`);
+    if (!res.ok) throw new Error('데이터를 불러오는데 실패했습니다.');
+    const data = await res.json();
+    return Array.isArray(data) ? data.map(normalizePost) : [];
 }
 
-// 상세 렌더러 (교체 후: 안전값 + 정규화)
-function renderPostDetails(container, detailsRaw) {
-  const details = normalizeDetailsResponse(detailsRaw);
-  const safe = (v, fb='미입력') => (String(v||'').trim() ? esc(v) : fb);
-
-  const itemsFullHTML =
-    Object.entries(details.items || {})
-      .filter(([,v])=> (Number(v)||0) > 0)
-      .map(([k,v])=>{
-        const labelMap = {
-          sb30:"spoband 30 / 주니어용",
-          sb35:"spoband 35 / 2.5kg",
-          sb45:"spoband 45 / 5kg",
-          sb55:"spoband 55 / 10kg",
-          sb65:"spoband 65 / 15kg"
-        };
-        return `• ${esc(labelMap[k] || k)} : ${v} 개`;
-      }).join("\n") || "-";
-
-  const repliesHTML = (details.replies||[])
-    .map(r=> `
-      <div class="mt-2 p-2 rounded-lg bg-slate-800/40 border border-slate-700/50">
-        <div class="text-xs text-slate-400">${fmt(r.ts)}</div>
-        <div class="text-sky-300 font-semibold">${esc(r.content)}</div>
-      </div>
-    `).join("");
-
-  container.innerHTML = `
-    <div class="text-xs text-slate-400 mb-1">상세 정보</div>
-    <div class="text-sm text-slate-200 mb-2">
-      도장명: ${safe(details.dojo)} / 관장님: ${safe(details.master)}<br>
-      연락처: ${safe(details.contact)}<br>
-      주소: ${safe(details.address)}
-    </div>
-    ${isAdmin() && details.pw ? `
-      <div class="mb-2 inline-flex items-center gap-2 text-xs px-2 py-1 rounded bg-amber-900/15 border border-amber-700/30">
-        <span class="text-amber-300">비밀번호</span>
-        <span class="font-semibold text-amber-400 tracking-wider select-all">${esc(details.pw)}</span>
-      </div><br>` : ""
-    }
-    <div class="text-xs text-slate-400 mb-1">신청 품목(모델별)</div>
-    <div class="whitespace-pre-wrap">${itemsFullHTML}</div>
-    ${repliesHTML ? `<div class="mt-3"><div class="text-xs text-slate-400 mb-1">관리자 답변</div>${repliesHTML}</div>` : ""}
-    <button class="btn-close mt-4 px-3 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-sm">닫기</button>
-  `;
-
-  container.querySelector('.btn-close').addEventListener('click',()=>{
-    container.classList.add('hidden');
-    container.innerHTML = `<p class="text-center text-slate-400 p-4">상세 정보를 불러오는 중...</p>`;
-  });
-}
-
-// 목록 렌더
-function render(){
-  const list=$("#boardList"); if(!list) return;
-  list.innerHTML = posts.length
-    ? posts.map(p=>cardHTML(p)).join("")
-    : '<p class="text-slate-400 text-sm p-4 text-center">아직 등록된 신청이 없습니다.</p>';
-  $$(".btn-view").forEach(b=>b.addEventListener("click",onView));
-  $$(".btn-admin-reply").forEach(b=> b.addEventListener("click", onAdminReply));
-  $$(".btn-delete").forEach(b=> b.addEventListener("click", onDelete));
-}
-
-// 관리자 로그인
-async function adminLoginFlow(){
-  const pw = prompt("관리자 비밀번호를 입력하세요.");
-  if (pw===null) return;
-  if (await verifyAdminToken(pw)) {
-    adminToken = pw; alert("관리자 모드가 켜졌습니다.");
-    setAdminMode(true); render();
-  } else { alert("비밀번호가 올바르지 않습니다."); }
+// 신규 등록
+async function submitApplication(applicationData) {
+    const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'create', data: applicationData })
+    });
+    if (!res.ok) throw new Error(`신청 등록에 실패했습니다.`);
+    const created = await res.json();
+    return normalizePost(created);
 }
 
 // 상세 보기
-async function onView(e){
-  const article = e.currentTarget.closest("article"),
-        id = String(article.dataset.id),
-        detailsContainer = $(`#details-${id}`, article);
-  if (!detailsContainer) return;
-  detailsContainer.classList.remove("hidden");
-  detailsContainer.scrollIntoView({behavior:"smooth", block:"center"});
-  let pw=null;
-  if (!isAdmin()){
-    pw = prompt("작성 시 설정한 비밀번호를 입력하세요.");
-    if (pw === null) { detailsContainer.classList.add('hidden'); return; }
-  }
-  try {
-    const postDetails = await fetchPostDetails(id, pw);
-    renderPostDetails(detailsContainer, postDetails);
-  } catch(err) {
-    alert(err.message);
-    detailsContainer.classList.add('hidden');
-  }
+async function fetchPostDetails(id, pw = '') {
+    const payload = { action: 'getPost', id, pw };
+    if (isAdmin()) payload.adminToken = adminToken;
+    const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error('정보를 열람할 수 없습니다. 비밀번호를 확인해주세요.');
+    const data = await res.json();
+    return normalizePost(data);
 }
 
-// 관리자 답변
-async function onAdminReply(e){
-  if (!isAdmin()) return;
-  const id = e.currentTarget.closest("article").dataset.id;
-  const content = prompt("답변 내용을 입력하세요.");
-  if(!content) return;
-  try{
-    await addAdminReply(id, content);
-    alert("답변이 등록되었습니다. 상세보기를 눌러 확인하세요.");
-    const detailsContainer = $(`#details-${id}`);
-    if(detailsContainer && !detailsContainer.classList.contains('hidden')){
-      const postDetails = await fetchPostDetails(id);
-      renderPostDetails(detailsContainer, postDetails);
-    }
-  }catch(err){ alert(err.message); }
+// 삭제 (관리자용)
+async function deleteApplication(id) {
+    if (!isAdmin()) throw new Error('삭제 권한이 없습니다.');
+    const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'delete', id, adminToken })
+    });
+    if (!res.ok) throw new Error('삭제에 실패했습니다.');
 }
 
-// 삭제
-async function onDelete(e){
-  if (!isAdmin()) return;
-  const article = e.currentTarget.closest("article"),
-        id = String(article.dataset.id);
-  if(!confirm("정말 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.")) return;
-  try{
-    await deleteApplication(id);
-    posts = posts.filter(p => String(p.id) !== id);
-    article.remove();
-    alert("삭제되었습니다.");
-  }catch(err){ alert(err.message); }
+// 전체 삭제 (관리자용)
+async function deleteAllApplications() {
+    if (!isAdmin()) throw new Error('삭제 권한이 없습니다.');
+    const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'deleteAll', adminToken })
+    });
+    if (!res.ok) throw new Error('전체 삭제에 실패했습니다.');
 }
 
-// DOM 로드 후
-document.addEventListener('DOMContentLoaded', async function () {
-  $('#ts').value = Date.now();
-  ["q_sb30","q_sb35","q_sb45","q_sb55","q_sb65"].forEach(id => $(`#${id}`)?.addEventListener("input", recalcTotal));
-  recalcTotal();
 
-  const openBtn = $('#openConsent'), consentModal = $('#consentModal'),
-        agreeBtn = $('#consentAgree'), cancelBtn = $('#consentCancel'),
-        closeBtn = $('#consentClose'), consentChk = $('#consentCheck');
+/* ===============================
+    UI 컨트롤 및 렌더링
+================================= */
+// 네비게이션 활성화
+function setActiveNav() {
+    const file = location.pathname.split('/').pop();
+    const hash = location.hash.replace('#', '');
+    let activeKey = 'home';
+    if (['kits', 'faq', 'apply'].includes(hash)) activeKey = hash;
+    else if (file === 'taekwondo-benefits.html') activeKey = 'benefits';
+    else if (file === 'taekwondo-letter.html') activeKey = 'letter';
+    
+    $$('[data-nav]').forEach(a => a.classList.remove('nav-active'));
+    $(`[data-nav="${activeKey}"]`)?.classList.add('nav-active');
+}
 
-  function showModal(){
-    if(!consentModal) return;
-    consentChk.checked = false;
-    agreeBtn.disabled = true;
-    agreeBtn.className = 'px-5 py-2 rounded-xl bg-slate-600 text-slate-300 cursor-not-allowed';
-    consentModal.classList.remove('hidden');
-    consentModal.classList.add('flex');
-  }
-  function hideModal(){
-    consentModal.classList.add('hidden');
-    consentModal.classList.remove('flex');
-  }
-  openBtn?.addEventListener('click', showModal);
-  [cancelBtn, closeBtn].forEach(btn => btn?.addEventListener('click', hideModal));
-  consentChk?.addEventListener('change', () => {
-    const ok = consentChk.checked;
-    agreeBtn.disabled = !ok;
-    agreeBtn.className = ok
-      ? 'px-5 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-white'
-      : 'px-5 py-2 rounded-xl bg-slate-600 text-slate-300 cursor-not-allowed';
-  });
-  agreeBtn?.addEventListener('click', ()=>{
-    if (!consentChk.checked) return;
-    hideModal();
-    const formEl = $(`#${FORM_ID}`);
-    if (formEl?.requestSubmit) formEl.requestSubmit(); else formEl?.submit();
-  });
-
-  // 비밀번호 보기 토글
-  const pwInput = $('#pw'), pwToggle = $('#pwToggle');
-  pwToggle?.addEventListener('click', ()=>{
-    const isHidden = pwInput.type === 'password';
-    pwInput.type = isHidden ? 'text' : 'password';
-    $('#pwIconOpen')?.classList.toggle('hidden', !isHidden);
-    $('#pwIconClosed')?.classList.toggle('hidden', isHidden);
-  });
-
-  $("#btnAdminLogin")?.addEventListener("click", adminLoginFlow);
-  $("#btnAdminLogout")?.addEventListener("click", ()=>{
-    setAdminMode(false); render(); alert("관리자 모드를 종료했습니다.");
-  });
-
-  $("#clearAllBtn")?.addEventListener("click", async ()=>{
-    if (!isAdmin() || !confirm('정말 모든 신청 데이터를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) return;
-    try{
-      await deleteAllApplications(); posts = []; render();
-      alert('모든 데이터가 삭제되었습니다.');
-    } catch (err) { alert(err.message); }
-  });
-
-  try {
-    posts = await loadApplications();
-  } catch (e) {
-    console.warn('초기 로드 오류:', e);
-    $("#boardList").innerHTML = `<p class="text-slate-400 text-center p-4 rounded-lg bg-red-900/20 border border-red-500/30">${e.message} 잠시 후 새로고침 해주세요.</p>`;
-  }
-
-  $(`#${FORM_ID}`)?.addEventListener("submit", async (e)=>{
-    e.preventDefault();
-    const formEl = e.target;
-
-    if ((formEl.querySelector('input[name="hp_field"]')?.value || '').trim() !== ''
-        || (Date.now() - pageLoadedAt) < FORM_MIN_SECONDS*1000) {
-      alert("제출이 너무 빠릅니다. 몇 초 뒤 다시 시도해주세요.");
-      return;
+// 관리자 모드 UI 토글
+function setAdminMode(on) {
+    if (on) {
+        sessionStorage.setItem('spobandAdminToken', adminToken);
+    } else {
+        adminToken = null;
+        sessionStorage.removeItem('spobandAdminToken');
     }
-    if (($("#pw")?.value || "").trim().length < 4) {
-      alert("비밀번호는 4자 이상으로 입력해주세요.");
-      return;
-    }
+    $$(".admin-only").forEach(el => el.classList.toggle("hidden", !on));
+    $("#btnAdminLogin")?.classList.toggle("hidden", on);
+    $("#btnAdminLogout")?.classList.toggle("hidden", !on);
+}
 
-    const data = {
-      dojo: $("#dojo")?.value.trim(),
-      master: $("#master")?.value.trim(),
-      contact: $("#contact")?.value.trim(),
-      address: $("#address")?.value.trim(),
-      pw: $("#pw")?.value.trim(),
-      ts: Date.now(),
-      items: {
-        sb30: Number($("#q_sb30")?.value||0),
-        sb35: Number($("#q_sb35")?.value||0),
-        sb45: Number($("#q_sb45")?.value||0),
-        sb55: Number($("#q_sb55")?.value||0),
-        sb65: Number($("#q_sb65")?.value||0),
-      }
-    };
+// 폼 수량 합계 계산
+function recalcTotal() {
+    const total = ["q_sb30", "q_sb35", "q_sb45", "q_sb55", "q_sb65"]
+        .reduce((sum, id) => sum + (Number($(`#${id}`)?.value) || 0), 0);
+    $("#sumBoxes").textContent = `총 ${total} 개`;
+    $("#totalBoxes").value = String(total);
+}
 
-    const anyQty = Object.values(data.items).some(v=>v>0);
-    if(!data.dojo || !data.master || !data.contact || !data.address){
-      alert("필수 칸을 모두 입력해주세요."); return;
+// 정보 마스킹
+const maskName = (name = "") => {
+    const str = String(name).trim();
+    if (str.length <= 1) return str;
+    return str.length === 2 ? `${str[0]}*` : `${str[0]}${'*'.repeat(str.length - 2)}${str[str.length - 1]}`;
+}
+const maskDojo = maskName;
+const maskContact = (raw = "") => {
+    const contact = String(raw).trim();
+    if (/\S+@\S+\.\S+/.test(contact)) {
+        const [local, domain] = contact.split('@');
+        return `${local.slice(0, 3)}***@${domain}`;
     }
-    if(!anyQty){
-      alert("신청 개수를 1개 이상 입력해주세요."); return;
-    }
+    const digits = contact.replace(/\D/g, "");
+    if (digits.length > 7) return `${digits.slice(0, 3)}-****-${digits.slice(-4)}`;
+    return "***-****-****";
+}
 
-    agreeBtn.disabled = true; agreeBtn.textContent = '제출 중...';
+// 게시글 카드 HTML 생성
+function cardHTML(p) {
+    return `
+    <article class="p-5 rounded-2xl border border-slate-700/50 bg-slate-800/40" data-id="${p.id}">
+      <div class="grid md:grid-cols-2 gap-x-4 gap-y-2">
+        <div><div class="text-xs text-slate-400">도장명</div><div class="font-semibold">${esc(maskDojo(p.dojo))}</div></div>
+        <div><div class="text-xs text-slate-400">관장님</div><div class="font-semibold">${esc(maskName(p.master))}</div></div>
+        <div><div class="text-xs text-slate-400">연락처</div><div class="font-semibold">${esc(maskContact(p.contact))}</div></div>
+        <div><div class="text-xs text-slate-400">등록일</div><div class="font-semibold">${fmt(p.ts)}</div></div>
+        <div class="md:col-span-2"><div class="text-xs text-slate-400">신청 품목</div><div class="inline-flex items-center gap-2 text-slate-300"><span class="text-xs px-2 py-0.5 rounded bg-sky-500/10 text-sky-300 border border-sky-700/40">총 ${p.totalCount} 개</span><span class="text-slate-500 text-sm">(상세 내역은 비공개)</span></div></div>
+        <div class="md:col-span-2 flex flex-wrap gap-2 mt-2">
+          <button class="btn-view px-3 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-sm">상세보기</button>
+          <button class="btn-delete admin-only hidden px-3 py-2 rounded-lg bg-rose-700 hover:bg-rose-600 text-sm text-white">삭제</button>
+        </div>
+        <div id="details-${p.id}" class="hidden md:col-span-2 p-3 mt-2 rounded-lg bg-slate-900/40 border border-slate-800"><p class="text-center text-slate-400 p-4">상세 정보를 불러오는 중...</p></div>
+      </div>
+    </article>`;
+}
+
+// 상세 정보 렌더링
+function renderPostDetails(container, details) {
+    const safe = (v, fb = '미입력') => (String(v || '').trim() ? esc(v) : fb);
+    const itemsHTML = Object.entries(details.items || {})
+        .filter(([, v]) => (Number(v) || 0) > 0)
+        .map(([k, v]) => `• ${esc({sb30: "spoband 30 / 주니어용", sb35: "spoband 35 / 2.5kg", sb45: "spoband 45 / 5kg", sb55: "spoband 55 / 10kg", sb65: "spoband 65 / 15kg"}[k] || k)} : ${v} 개`)
+        .join("\n") || "-";
+
+    container.innerHTML = `
+        <div class="text-xs text-slate-400 mb-1">상세 정보</div>
+        <div class="text-sm text-slate-200 mb-2">
+          도장명: ${safe(details.dojo)} / 관장님: ${safe(details.master)}<br>
+          연락처: ${safe(details.contact)}<br>
+          주소: ${safe(details.address)}
+        </div>
+        ${isAdmin() && details.pw ? `<div class="mb-2 inline-flex items-center gap-2 text-xs px-2 py-1 rounded bg-amber-900/15 border border-amber-700/30"><span class="text-amber-300">비밀번호</span><span class="font-semibold text-amber-400 tracking-wider select-all">${esc(details.pw)}</span></div><br>` : ""}
+        <div class="text-xs text-slate-400 mb-1">신청 품목(모델별)</div>
+        <div class="whitespace-pre-wrap">${itemsHTML}</div>
+        <button class="btn-close mt-4 px-3 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-sm">닫기</button>`;
+    container.querySelector('.btn-close').addEventListener('click', () => {
+        container.classList.add('hidden');
+        container.innerHTML = `<p class="text-center text-slate-400 p-4">상세 정보를 불러오는 중...</p>`;
+    });
+}
+
+// 목록 렌더링
+function renderBoard() {
+    const listEl = $("#boardList");
+    if (!listEl) return;
+    listEl.innerHTML = posts.length ? posts.map(cardHTML).join("") : '<p class="text-slate-400 text-sm p-4 text-center">아직 등록된 신청이 없습니다.</p>';
+    $$(".btn-view").forEach(b => b.addEventListener("click", onViewDetails));
+    $$(".btn-delete").forEach(b => b.addEventListener("click", onDeletePost));
+}
+
+/* ===============================
+    이벤트 핸들러
+================================= */
+// 상세 보기 클릭
+async function onViewDetails(e) {
+    const article = e.currentTarget.closest("article");
+    const id = article.dataset.id;
+    const detailsContainer = $(`#details-${id}`, article);
+    if (!detailsContainer) return;
+
+    detailsContainer.classList.remove("hidden");
+    detailsContainer.scrollIntoView({ behavior: "smooth", block: "center" });
+    
+    let pw = null;
+    if (!isAdmin()) {
+        pw = prompt("작성 시 설정한 비밀번호를 입력하세요.");
+        if (pw === null) {
+            detailsContainer.classList.add('hidden');
+            return;
+        }
+    }
     try {
-      const newPost = await submitApplication(data);
-      posts.unshift(newPost);
-      formEl.reset(); recalcTotal(); render();
-      alert("신청이 등록되었습니다. 견적서는 연락처로 보내드릴게요!");
-      $('#boardTop')?.scrollIntoView({behavior:'smooth'});
+        const postDetails = await fetchPostDetails(id, pw);
+        renderPostDetails(detailsContainer, postDetails);
     } catch (err) {
-      alert(err.message);
-    } finally {
-      agreeBtn.disabled = false; agreeBtn.textContent = '동의하고 제출';
+        alert(err.message);
+        detailsContainer.classList.add('hidden');
     }
-  });
+}
 
-  render(); setAdminMode(isAdmin());
+// 삭제 클릭
+async function onDeletePost(e) {
+    if (!isAdmin()) return;
+    const article = e.currentTarget.closest("article");
+    const id = article.dataset.id;
+    if (!confirm("정말 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.")) return;
+    try {
+        await deleteApplication(id);
+        posts = posts.filter(p => p.id !== id);
+        renderBoard(); // Re-render the board instead of removing one element
+        alert("삭제되었습니다.");
+    } catch (err) {
+        alert(err.message);
+    }
+}
+
+// 관리자 로그인
+async function adminLoginFlow() {
+    const pw = prompt("관리자 비밀번호를 입력하세요.");
+    if (pw === null) return;
+    
+    // 실제 운영 환경에서는 서버 측 검증이 필수입니다.
+    // 현재는 임시로 프론트엔드에서 간단히 확인합니다.
+    if (pw === '1234') { // 임시 비밀번호
+        adminToken = pw;
+        alert("관리자 모드가 켜졌습니다.");
+        setAdminMode(true);
+        renderBoard(); // Re-render to show admin buttons
+    } else {
+        alert("비밀번호가 올바르지 않습니다.");
+    }
+}
+
+/* ===============================
+    초기화 및 이벤트 리스너 설정
+================================= */
+document.addEventListener('DOMContentLoaded', async () => {
+    // --- UI 요소 초기화 ---
+    const formEl = $(`#${FORM_ID}`);
+    const consentModal = $('#consentModal'), agreeBtn = $('#consentAgree'), consentChk = $('#consentCheck');
+    const pwInput = $('#pw'), pwToggle = $('#pwToggle');
+
+    // --- 네비게이션 및 UI 이벤트 바인딩 ---
+    setActiveNav();
+    window.addEventListener('hashchange', setActiveNav);
+    window.toggleNav = () => $('#mobile-nav')?.classList.toggle('hidden');
+    
+    // Hero 비디오 모달
+    $('#heroVideoThumb')?.addEventListener("click", (e) => {
+        const videoId = e.currentTarget.dataset.ytid || "cVr-vf1aMR8";
+        $('#heroPlayer').src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+        $('#heroModal').classList.remove("hidden");
+        $('#heroModal').classList.add("flex");
+    });
+    const closeHeroModal = () => {
+        $('#heroPlayer').src = "";
+        $('#heroModal').classList.add("hidden");
+        $('#heroModal').classList.remove("flex");
+    };
+    $('#heroClose')?.addEventListener("click", closeHeroModal);
+    $('#heroModal')?.addEventListener("click", (e) => e.target === e.currentTarget && closeHeroModal());
+
+    // 참고영상 모달
+    const ytModal = $('#ytModal'), ytPlayer = $('#ytPlayer');
+    $$('.yt-thumb').forEach(el => el.addEventListener('click', () => {
+        ytPlayer.src = `https://www.youtube.com/embed/${el.dataset.vid}?autoplay=1&rel=0`;
+        ytModal.classList.replace('hidden', 'flex');
+    }));
+    const closeYtModal = () => {
+        ytPlayer.src = "";
+        ytModal.classList.replace('flex', 'hidden');
+    };
+    $('#ytClose')?.addEventListener('click', closeYtModal);
+    ytModal?.addEventListener('click', (e) => e.target === ytModal && closeYtModal());
+
+    // --- 폼 관련 이벤트 바인딩 ---
+    ['q_sb30', 'q_sb35', 'q_sb45', 'q_sb55', 'q_sb65'].forEach(id => $(`#${id}`)?.addEventListener("input", recalcTotal));
+    recalcTotal();
+    
+    pwToggle?.addEventListener('click', () => {
+        const isHidden = pwInput.type === 'password';
+        pwInput.type = isHidden ? 'text' : 'password';
+        $('#pwIconOpen')?.classList.toggle('hidden', !isHidden);
+        $('#pwIconClosed')?.classList.toggle('hidden', isHidden);
+    });
+
+    // 개인정보 동의 모달
+    $('#openConsent')?.addEventListener('click', () => consentModal.classList.replace('hidden', 'flex'));
+    const hideConsentModal = () => consentModal.classList.replace('flex', 'hidden');
+    $('#consentClose')?.addEventListener('click', hideConsentModal);
+    $('#consentCancel')?.addEventListener('click', hideConsentModal);
+    consentChk?.addEventListener('change', () => {
+        const isChecked = consentChk.checked;
+        agreeBtn.disabled = !isChecked;
+        agreeBtn.className = isChecked
+            ? 'px-5 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-white'
+            : 'px-5 py-2 rounded-xl bg-slate-600 text-slate-300 cursor-not-allowed';
+    });
+    agreeBtn?.addEventListener('click', () => {
+        if (consentChk.checked) {
+            hideConsentModal();
+            formEl?.requestSubmit ? formEl.requestSubmit() : formEl?.submit();
+        }
+    });
+
+    // --- 폼 제출 로직 (★ Google Sheets 호환성 개선) ---
+    formEl?.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        if ((Date.now() - pageLoadedAt) < FORM_MIN_SECONDS * 1000) {
+            return alert("제출이 너무 빠릅니다. 잠시 후 다시 시도해주세요.");
+        }
+        if (($("#pw")?.value || "").trim().length < 4) {
+            return alert("비밀번호는 4자 이상으로 입력해주세요.");
+        }
+
+        // [개선] 데이터를 Flat하게 만듦
+        const data = {
+            dojo: $("#dojo")?.value.trim(),
+            master: $("#master")?.value.trim(),
+            contact: $("#contact")?.value.trim(),
+            address: $("#address")?.value.trim(),
+            pw: $("#pw")?.value.trim(),
+            ts: new Date().toISOString(), // ISO 문자열로 표준화
+            sb30: Number($("#q_sb30")?.value || 0),
+            sb35: Number($("#q_sb35")?.value || 0),
+            sb45: Number($("#q_sb45")?.value || 0),
+            sb55: Number($("#q_sb55")?.value || 0),
+            sb65: Number($("#q_sb65")?.value || 0),
+        };
+
+        const totalQty = data.sb30 + data.sb35 + data.sb45 + data.sb55 + data.sb65;
+        if (!data.dojo || !data.master || !data.contact || !data.address) {
+            return alert("필수 입력란을 모두 채워주세요.");
+        }
+        if (totalQty === 0) {
+            return alert("신청 개수를 1개 이상 입력해주세요.");
+        }
+
+        agreeBtn.disabled = true;
+        agreeBtn.textContent = '제출 중...';
+        try {
+            const newPost = await submitApplication(data);
+            posts.unshift(newPost);
+            formEl.reset();
+            recalcTotal();
+            renderBoard();
+            alert("신청이 성공적으로 등록되었습니다!");
+            $('#boardTop')?.scrollIntoView({ behavior: 'smooth' });
+        } catch (err) {
+            alert(err.message);
+        } finally {
+            agreeBtn.disabled = false;
+            agreeBtn.textContent = '동의하고 제출';
+        }
+    });
+    
+    // --- 관리자 기능 이벤트 바인딩 ---
+    $("#btnAdminLogin")?.addEventListener("click", adminLoginFlow);
+    $("#btnAdminLogout")?.addEventListener("click", () => {
+        setAdminMode(false);
+        renderBoard();
+        alert("관리자 모드를 종료했습니다.");
+    });
+    $("#clearAllBtn")?.addEventListener("click", async () => {
+        if (!isAdmin() || !confirm('정말 모든 신청 데이터를 삭제하시겠습니까?')) return;
+        try {
+            await deleteAllApplications();
+            posts = [];
+            renderBoard();
+            alert('모든 데이터가 삭제되었습니다.');
+        } catch (err) {
+            alert(err.message);
+        }
+    });
+
+    // --- 초기 데이터 로드 및 렌더링 ---
+    try {
+        posts = await loadApplications();
+    } catch (e) {
+        console.warn('초기 데이터 로드 오류:', e);
+        $("#boardList").innerHTML = `<p class="text-slate-400 text-center p-4 rounded-lg bg-red-900/20 border border-red-500/30">${e.message} 잠시 후 새로고침 해주세요.</p>`;
+    }
+    renderBoard();
+    setAdminMode(isAdmin());
 });
-</script>
 
-
-<script>
+// --- 배경 애니메이션 스크립트 (Three.js) ---
 (() => {
-  const canvas = document.getElementById('particles-canvas');
-  if (!canvas || !window.THREE) return;
-  
-  Object.assign(canvas.style, { position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: '-1', pointerEvents: 'none' });
-  
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 1000);
-  camera.position.z = 80;
-  
-  const renderer = new THREE.WebGLRenderer({canvas, alpha: true, antialias: true});
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-  
-  const resize = () => { renderer.setSize(innerWidth, innerHeight); camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix(); };
-  resize(); addEventListener('resize', resize);
-  
-  const count = 800;
-  const pos = new Float32Array(count * 3);
-  const colors = new Float32Array(count * 3);
-  
-  for (let i = 0; i < count; i++) { 
-    const r = 40 + Math.random() * 80;
-    const a = Math.random() * Math.PI * 2;
-    const height = (Math.random() - 0.5) * 60;
-    pos[i*3] = Math.cos(a) * r + (Math.random() - 0.5) * 30; 
-    pos[i*3+1] = height; 
-    pos[i*3+2] = Math.sin(a) * r + (Math.random() - 0.5) * 30; 
-    const colorType = Math.random();
-    if (colorType < 0.4) { [colors[i*3], colors[i*3+1], colors[i*3+2]] = [1.0, 0.2, 0.2]; }
-    else if (colorType < 0.7) { [colors[i*3], colors[i*3+1], colors[i*3+2]] = [0.2, 0.5, 1.0]; }
-    else { [colors[i*3], colors[i*3+1], colors[i*3+2]] = [0.9, 0.9, 1.0]; }
-  }
-  
-  const geo = new THREE.BufferGeometry(); 
-  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-  
-  const mat = new THREE.PointsMaterial({ vertexColors: true, size: 0.4, sizeAttenuation: true, transparent: true, opacity: 0.3 });
-  const points = new THREE.Points(geo, mat); 
-  scene.add(points);
-  
-  let mx = 0, my = 0, tx = 0, ty = 0; 
-  addEventListener('mousemove', e => { mx = (e.clientX / innerWidth - 0.5) * 2; my = (e.clientY / innerHeight - 0.5) * 2; });
-  
-  (function animate() { 
-    tx += (mx - tx) * 0.08; ty += (my - ty) * 0.08; 
-    points.rotation.y += 0.008; points.rotation.x += 0.003;
-    scene.rotation.x = ty * 0.25; scene.rotation.y = tx * 0.35; 
-    renderer.render(scene, camera); 
-    requestAnimationFrame(animate); 
-  })();
-  
-  if (window.gsap) {
-    gsap.to(mat, { opacity: 0.15, duration: 1.2, yoyo: true, repeat: -1, ease: 'power2.inOut' });
-  }
+    if (!window.THREE) return;
+    const canvas = document.getElementById('particles-canvas');
+    Object.assign(canvas.style, { position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: '-1', pointerEvents: 'none' });
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 1000);
+    camera.position.z = 80;
+    const renderer = new THREE.WebGLRenderer({canvas, alpha: true, antialias: true});
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    const resize = () => { renderer.setSize(innerWidth, innerHeight); camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix(); };
+    window.addEventListener('resize', resize);
+    resize();
+    
+    const count = 800;
+    const pos = new Float32Array(count * 3);
+    for (let i = 0; i < count * 3; i++) {
+        pos[i] = (Math.random() - 0.5) * 200;
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    const mat = new THREE.PointsMaterial({ color: 0x7dd3fc, size: 0.3, sizeAttenuation: true, transparent: true, opacity: 0.5 });
+    const points = new THREE.Points(geo, mat);
+    scene.add(points);
+    
+    let mouseX = 0, mouseY = 0;
+    window.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
+    
+    const animate = () => {
+        points.rotation.y += 0.0005;
+        camera.position.x += ((mouseX - window.innerWidth / 2) / 40 - camera.position.x) * 0.02;
+        camera.position.y += (-(mouseY - window.innerHeight / 2) / 40 - camera.position.y) * 0.02;
+        camera.lookAt(scene.position);
+        renderer.render(scene, camera);
+        requestAnimationFrame(animate);
+    };
+    animate();
 })();
-</script>
 
-<script>
-(() => {
-  const body = document.getElementById('enhanced-body');
-  if (!body) return;
-  document.addEventListener('mousemove', (e) => {
-    const x = (e.clientX / window.innerWidth) * 100;
-    const y = (e.clientY / window.innerHeight) * 100;
-    body.style.background = `radial-gradient(circle at ${x}% ${y}%, rgba(56, 189, 248, 0.3), transparent 60%), radial-gradient(1200px 600px at 10% 10%, rgba(56, 189, 248, 0.1), transparent 60%), radial-gradient(1000px 500px at 95% 5%, rgba(59,130,246,0.2), transparent 60%), linear-gradient(180deg, #020617 0%, #0f172a 100%)`;
-  });
-})();
 </script>
-
-<script>
-(() => {
-  if (!window.gsap) return;
-  document.querySelectorAll('a, button').forEach(el => {
-    el.addEventListener('mouseenter', () => gsap.to(el, { scale: 1.05, duration: 0.3, ease: "power2.out" }));
-    el.addEventListener('mouseleave', () => gsap.to(el, { scale: 1, x: 0, y: 0, duration: 0.3, ease: "power2.out" }));
-    el.addEventListener('mousemove', (e) => {
-      const rect = el.getBoundingClientRect();
-      const x = e.clientX - rect.left - rect.width / 2, y = e.clientY - rect.top - rect.height / 2;
-      gsap.to(el, { x: x * 0.1, y: y * 0.1, duration: 0.3, ease: "power2.out" });
-    });
-  });
-})();
-</script>
-
-<script>
-(() => {
-  if (!window.gsap) return;
-  document.querySelectorAll('article img[src*="model"]').forEach(img => {
-    const article = img.closest('article');
-    article.addEventListener('mouseenter', () => {
-      gsap.to(img, { scale: 1.15, duration: 0.5, ease: "power2.out", transformOrigin: "center center" });
-      gsap.to(article, { y: -8, scale: 1.02, duration: 0.4, ease: "power2.out", boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3)" });
-    });
-    article.addEventListener('mouseleave', () => {
-      gsap.to(img, { scale: 1, duration: 0.4, ease: "power2.out" });
-      gsap.to(article, { y: 0, scale: 1, duration: 0.4, ease: "power2.out", boxShadow: "0 0px 0px rgba(0, 0, 0, 0)", rotationX: 0, rotationY: 0 });
-    });
-    article.addEventListener('mousemove', (e) => {
-      const rect = article.getBoundingClientRect();
-      const x = e.clientX - rect.left, y = e.clientY - rect.top;
-      const rotateX = (y - rect.height / 2) / (rect.height / 2) * -10;
-      const rotateY = (x - rect.width / 2) / (rect.width / 2) * 10;
-      gsap.to(article, { rotationX: rotateX, rotationY: rotateY, duration: 0.3, ease: "power2.out", transformPerspective: 1000 });
-    });
-  });
-})();
-</script>
-
 </body>
 </html>
