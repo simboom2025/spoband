@@ -296,7 +296,7 @@
     글로벌 상수 및 헬퍼
 ================================= */
 const FORM_ID = "postForm";
-const API_URL = "https://script.google.com/macros/s/AKfycbxEB88DQN-qc9vk_wby6HSIuV_aCplzwAMw53OdH5OLqkY6mGRFB-2cd_q_q_gqR1E9bw/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxwFprfzLFDlXmjhWuWl53S6G3afyPZWFiy6ZtZqjqTqVt45vy4g5_WGCZCYBpUCC51BA/exec";
 const FORM_MIN_SECONDS = 3;
 let adminToken = sessionStorage.getItem('spobandAdminToken');
 let pageLoadedAt = Date.now();
@@ -347,430 +347,82 @@ function normalizePost(raw = {}) {
         replies: Array.isArray(raw.replies) ? raw.replies : [],
     };
 }
+c
+    if (!data.dojo || !data.master || !data.contact || !data.address)
+      return alert("필수 입력란을 모두 채워주세요.");
+    if (totalQty === 0)
+      return alert("신청 개수를 1개 이상 입력해주세요.");
 
-/* ===============================
-    Google Apps Script API 연동
-================================= */
-// 목록 불러오기
-async function loadApplications() {
-    const res = await fetch(`${API_URL}?action=list`);
-    if (!res.ok) throw new Error('데이터를 불러오는데 실패했습니다.');
-    const data = await res.json();
-    return Array.isArray(data) ? data.map(normalizePost) : [];
-}
-
-// 신규 등록
-async function submitApplication(applicationData) {
-    const res = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'create', data: applicationData })
-    });
-    if (!res.ok) throw new Error(`신청 등록에 실패했습니다.`);
-    const created = await res.json();
-    return normalizePost(created);
-}
-
-// 상세 보기
-async function fetchPostDetails(id, pw = '') {
-    const payload = { action: 'getPost', id, pw };
-    if (isAdmin()) payload.adminToken = adminToken;
-    const res = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-    });
-    if (!res.ok) throw new Error('정보를 열람할 수 없습니다. 비밀번호를 확인해주세요.');
-    const data = await res.json();
-    return normalizePost(data);
-}
-
-// 삭제 (관리자용)
-async function deleteApplication(id) {
-    if (!isAdmin()) throw new Error('삭제 권한이 없습니다.');
-    const res = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'delete', id, adminToken })
-    });
-    if (!res.ok) throw new Error('삭제에 실패했습니다.');
-}
-
-// 전체 삭제 (관리자용)
-async function deleteAllApplications() {
-    if (!isAdmin()) throw new Error('삭제 권한이 없습니다.');
-    const res = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'deleteAll', adminToken })
-    });
-    if (!res.ok) throw new Error('전체 삭제에 실패했습니다.');
-}
-
-
-/* ===============================
-    UI 컨트롤 및 렌더링
-================================= */
-// 네비게이션 활성화
-function setActiveNav() {
-    const file = location.pathname.split('/').pop();
-    const hash = location.hash.replace('#', '');
-    let activeKey = 'home';
-    if (['kits', 'faq', 'apply'].includes(hash)) activeKey = hash;
-    else if (file === 'taekwondo-benefits.html') activeKey = 'benefits';
-    else if (file === 'taekwondo-letter.html') activeKey = 'letter';
-    
-    $$('[data-nav]').forEach(a => a.classList.remove('nav-active'));
-    $(`[data-nav="${activeKey}"]`)?.classList.add('nav-active');
-}
-
-// 관리자 모드 UI 토글
-function setAdminMode(on) {
-    if (on) {
-        sessionStorage.setItem('spobandAdminToken', adminToken);
-    } else {
-        adminToken = null;
-        sessionStorage.removeItem('spobandAdminToken');
-    }
-    $$(".admin-only").forEach(el => el.classList.toggle("hidden", !on));
-    $("#btnAdminLogin")?.classList.toggle("hidden", on);
-    $("#btnAdminLogout")?.classList.toggle("hidden", !on);
-}
-
-// 폼 수량 합계 계산
-function recalcTotal() {
-    const total = ["q_sb30", "q_sb35", "q_sb45", "q_sb55", "q_sb65"]
-        .reduce((sum, id) => sum + (Number($(`#${id}`)?.value) || 0), 0);
-    $("#sumBoxes").textContent = `총 ${total} 개`;
-    $("#totalBoxes").value = String(total);
-}
-
-// 정보 마스킹
-const maskName = (name = "") => {
-    const str = String(name).trim();
-    if (str.length <= 1) return str;
-    return str.length === 2 ? `${str[0]}*` : `${str[0]}${'*'.repeat(str.length - 2)}${str[str.length - 1]}`;
-}
-const maskDojo = maskName;
-const maskContact = (raw = "") => {
-    const contact = String(raw).trim();
-    if (/\S+@\S+\.\S+/.test(contact)) {
-        const [local, domain] = contact.split('@');
-        return `${local.slice(0, 3)}***@${domain}`;
-    }
-    const digits = contact.replace(/\D/g, "");
-    if (digits.length > 7) return `${digits.slice(0, 3)}-****-${digits.slice(-4)}`;
-    return "***-****-****";
-}
-
-// 게시글 카드 HTML 생성
-function cardHTML(p) {
-    return `
-    <article class="p-5 rounded-2xl border border-slate-700/50 bg-slate-800/40" data-id="${p.id}">
-      <div class="grid md:grid-cols-2 gap-x-4 gap-y-2">
-        <div><div class="text-xs text-slate-400">도장명</div><div class="font-semibold">${esc(maskDojo(p.dojo))}</div></div>
-        <div><div class="text-xs text-slate-400">관장님</div><div class="font-semibold">${esc(maskName(p.master))}</div></div>
-        <div><div class="text-xs text-slate-400">연락처</div><div class="font-semibold">${esc(maskContact(p.contact))}</div></div>
-        <div><div class="text-xs text-slate-400">등록일</div><div class="font-semibold">${fmt(p.ts)}</div></div>
-        <div class="md:col-span-2"><div class="text-xs text-slate-400">신청 품목</div><div class="inline-flex items-center gap-2 text-slate-300"><span class="text-xs px-2 py-0.5 rounded bg-sky-500/10 text-sky-300 border border-sky-700/40">총 ${p.totalCount} 개</span><span class="text-slate-500 text-sm">(상세 내역은 비공개)</span></div></div>
-        <div class="md:col-span-2 flex flex-wrap gap-2 mt-2">
-          <button class="btn-view px-3 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-sm">상세보기</button>
-          <button class="btn-delete admin-only hidden px-3 py-2 rounded-lg bg-rose-700 hover:bg-rose-600 text-sm text-white">삭제</button>
-        </div>
-        <div id="details-${p.id}" class="hidden md:col-span-2 p-3 mt-2 rounded-lg bg-slate-900/40 border border-slate-800"><p class="text-center text-slate-400 p-4">상세 정보를 불러오는 중...</p></div>
-      </div>
-    </article>`;
-}
-
-// 상세 정보 렌더링
-function renderPostDetails(container, details) {
-    const safe = (v, fb = '미입력') => (String(v || '').trim() ? esc(v) : fb);
-    const itemsHTML = Object.entries(details.items || {})
-        .filter(([, v]) => (Number(v) || 0) > 0)
-        .map(([k, v]) => `• ${esc({sb30: "spoband 30 / 주니어용", sb35: "spoband 35 / 2.5kg", sb45: "spoband 45 / 5kg", sb55: "spoband 55 / 10kg", sb65: "spoband 65 / 15kg"}[k] || k)} : ${v} 개`)
-        .join("\n") || "-";
-
-    container.innerHTML = `
-        <div class="text-xs text-slate-400 mb-1">상세 정보</div>
-        <div class="text-sm text-slate-200 mb-2">
-          도장명: ${safe(details.dojo)} / 관장님: ${safe(details.master)}<br>
-          연락처: ${safe(details.contact)}<br>
-          주소: ${safe(details.address)}
-        </div>
-        ${isAdmin() && details.pw ? `<div class="mb-2 inline-flex items-center gap-2 text-xs px-2 py-1 rounded bg-amber-900/15 border border-amber-700/30"><span class="text-amber-300">비밀번호</span><span class="font-semibold text-amber-400 tracking-wider select-all">${esc(details.pw)}</span></div><br>` : ""}
-        <div class="text-xs text-slate-400 mb-1">신청 품목(모델별)</div>
-        <div class="whitespace-pre-wrap">${itemsHTML}</div>
-        <button class="btn-close mt-4 px-3 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-sm">닫기</button>`;
-    container.querySelector('.btn-close').addEventListener('click', () => {
-        container.classList.add('hidden');
-        container.innerHTML = `<p class="text-center text-slate-400 p-4">상세 정보를 불러오는 중...</p>`;
-    });
-}
-
-// 목록 렌더링
-function renderBoard() {
-    const listEl = $("#boardList");
-    if (!listEl) return;
-    listEl.innerHTML = posts.length ? posts.map(cardHTML).join("") : '<p class="text-slate-400 text-sm p-4 text-center">아직 등록된 신청이 없습니다.</p>';
-    $$(".btn-view").forEach(b => b.addEventListener("click", onViewDetails));
-    $$(".btn-delete").forEach(b => b.addEventListener("click", onDeletePost));
-}
-
-/* ===============================
-    이벤트 핸들러
-================================= */
-// 상세 보기 클릭
-async function onViewDetails(e) {
-    const article = e.currentTarget.closest("article");
-    const id = article.dataset.id;
-    const detailsContainer = $(`#details-${id}`, article);
-    if (!detailsContainer) return;
-
-    detailsContainer.classList.remove("hidden");
-    detailsContainer.scrollIntoView({ behavior: "smooth", block: "center" });
-    
-    let pw = null;
-    if (!isAdmin()) {
-        pw = prompt("작성 시 설정한 비밀번호를 입력하세요.");
-        if (pw === null) {
-            detailsContainer.classList.add('hidden');
-            return;
-        }
-    }
+    agreeBtn.disabled = true; agreeBtn.textContent = '제출 중...';
     try {
-        const postDetails = await fetchPostDetails(id, pw);
-        renderPostDetails(detailsContainer, postDetails);
+      const newPost = await submitApplication(data);
+      posts.unshift(newPost);
+      formEl.reset(); recalcTotal(); renderBoard();
+      alert("신청이 성공적으로 등록되었습니다!");
+      $('#boardTop')?.scrollIntoView({ behavior: 'smooth' });
     } catch (err) {
-        alert(err.message);
-        detailsContainer.classList.add('hidden');
+      alert(err.message);
+    } finally {
+      agreeBtn.disabled = false; agreeBtn.textContent = '동의하고 제출';
     }
-}
+  });
 
-// 삭제 클릭
-async function onDeletePost(e) {
-    if (!isAdmin()) return;
-    const article = e.currentTarget.closest("article");
-    const id = article.dataset.id;
-    if (!confirm("정말 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.")) return;
-    try {
-        await deleteApplication(id);
-        posts = posts.filter(p => p.id !== id);
-        renderBoard(); // Re-render the board instead of removing one element
-        alert("삭제되었습니다.");
-    } catch (err) {
-        alert(err.message);
-    }
-}
+  // 관리자 기능
+  $("#btnAdminLogin")?.addEventListener("click", adminLoginFlow);
+  $("#btnAdminLogout")?.addEventListener("click", () => {
+    setAdminMode(false); renderBoard(); alert("관리자 모드를 종료했습니다.");
+  });
+  $("#clearAllBtn")?.addEventListener("click", async () => {
+    if (!isAdmin() || !confirm('정말 모든 신청 데이터를 삭제하시겠습니까?')) return;
+    try { await deleteAllApplications(); posts = []; renderBoard(); alert('모든 데이터가 삭제되었습니다.'); }
+    catch (err) { alert(err.message); }
+  });
 
-// 관리자 로그인
-async function adminLoginFlow() {
-    const pw = prompt("관리자 비밀번호를 입력하세요.");
-    if (pw === null) return;
-    
-    // 실제 운영 환경에서는 서버 측 검증이 필수입니다.
-    // 현재는 임시로 프론트엔드에서 간단히 확인합니다.
-    if (pw === '1234') { // 임시 비밀번호
-        adminToken = pw;
-        alert("관리자 모드가 켜졌습니다.");
-        setAdminMode(true);
-        renderBoard(); // Re-render to show admin buttons
-    } else {
-        alert("비밀번호가 올바르지 않습니다.");
-    }
-}
-
-/* ===============================
-    초기화 및 이벤트 리스너 설정
-================================= */
-document.addEventListener('DOMContentLoaded', async () => {
-    // --- UI 요소 초기화 ---
-    const formEl = $(`#${FORM_ID}`);
-    const consentModal = $('#consentModal'), agreeBtn = $('#consentAgree'), consentChk = $('#consentCheck');
-    const pwInput = $('#pw'), pwToggle = $('#pwToggle');
-
-    // --- 네비게이션 및 UI 이벤트 바인딩 ---
-    setActiveNav();
-    window.addEventListener('hashchange', setActiveNav);
-    window.toggleNav = () => $('#mobile-nav')?.classList.toggle('hidden');
-    
-    // Hero 비디오 모달
-    $('#heroVideoThumb')?.addEventListener("click", (e) => {
-        const videoId = e.currentTarget.dataset.ytid || "cVr-vf1aMR8";
-        $('#heroPlayer').src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
-        $('#heroModal').classList.remove("hidden");
-        $('#heroModal').classList.add("flex");
-    });
-    const closeHeroModal = () => {
-        $('#heroPlayer').src = "";
-        $('#heroModal').classList.add("hidden");
-        $('#heroModal').classList.remove("flex");
-    };
-    $('#heroClose')?.addEventListener("click", closeHeroModal);
-    $('#heroModal')?.addEventListener("click", (e) => e.target === e.currentTarget && closeHeroModal());
-
-    // 참고영상 모달
-    const ytModal = $('#ytModal'), ytPlayer = $('#ytPlayer');
-    $$('.yt-thumb').forEach(el => el.addEventListener('click', () => {
-        ytPlayer.src = `https://www.youtube.com/embed/${el.dataset.vid}?autoplay=1&rel=0`;
-        ytModal.classList.replace('hidden', 'flex');
-    }));
-    const closeYtModal = () => {
-        ytPlayer.src = "";
-        ytModal.classList.replace('flex', 'hidden');
-    };
-    $('#ytClose')?.addEventListener('click', closeYtModal);
-    ytModal?.addEventListener('click', (e) => e.target === ytModal && closeYtModal());
-
-    // --- 폼 관련 이벤트 바인딩 ---
-    ['q_sb30', 'q_sb35', 'q_sb45', 'q_sb55', 'q_sb65'].forEach(id => $(`#${id}`)?.addEventListener("input", recalcTotal));
-    recalcTotal();
-    
-    pwToggle?.addEventListener('click', () => {
-        const isHidden = pwInput.type === 'password';
-        pwInput.type = isHidden ? 'text' : 'password';
-        $('#pwIconOpen')?.classList.toggle('hidden', !isHidden);
-        $('#pwIconClosed')?.classList.toggle('hidden', isHidden);
-    });
-
-    // 개인정보 동의 모달
-    $('#openConsent')?.addEventListener('click', () => consentModal.classList.replace('hidden', 'flex'));
-    const hideConsentModal = () => consentModal.classList.replace('flex', 'hidden');
-    $('#consentClose')?.addEventListener('click', hideConsentModal);
-    $('#consentCancel')?.addEventListener('click', hideConsentModal);
-    consentChk?.addEventListener('change', () => {
-        const isChecked = consentChk.checked;
-        agreeBtn.disabled = !isChecked;
-        agreeBtn.className = isChecked
-            ? 'px-5 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-white'
-            : 'px-5 py-2 rounded-xl bg-slate-600 text-slate-300 cursor-not-allowed';
-    });
-    agreeBtn?.addEventListener('click', () => {
-        if (consentChk.checked) {
-            hideConsentModal();
-            formEl?.requestSubmit ? formEl.requestSubmit() : formEl?.submit();
-        }
-    });
-
-    // --- 폼 제출 로직 (★ Google Sheets 호환성 개선) ---
-    formEl?.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        if ((Date.now() - pageLoadedAt) < FORM_MIN_SECONDS * 1000) {
-            return alert("제출이 너무 빠릅니다. 잠시 후 다시 시도해주세요.");
-        }
-        if (($("#pw")?.value || "").trim().length < 4) {
-            return alert("비밀번호는 4자 이상으로 입력해주세요.");
-        }
-
-        // [개선] 데이터를 Flat하게 만듦
-        const data = {
-            dojo: $("#dojo")?.value.trim(),
-            master: $("#master")?.value.trim(),
-            contact: $("#contact")?.value.trim(),
-            address: $("#address")?.value.trim(),
-            pw: $("#pw")?.value.trim(),
-            ts: new Date().toISOString(), // ISO 문자열로 표준화
-            sb30: Number($("#q_sb30")?.value || 0),
-            sb35: Number($("#q_sb35")?.value || 0),
-            sb45: Number($("#q_sb45")?.value || 0),
-            sb55: Number($("#q_sb55")?.value || 0),
-            sb65: Number($("#q_sb65")?.value || 0),
-        };
-
-        const totalQty = data.sb30 + data.sb35 + data.sb45 + data.sb55 + data.sb65;
-        if (!data.dojo || !data.master || !data.contact || !data.address) {
-            return alert("필수 입력란을 모두 채워주세요.");
-        }
-        if (totalQty === 0) {
-            return alert("신청 개수를 1개 이상 입력해주세요.");
-        }
-
-        agreeBtn.disabled = true;
-        agreeBtn.textContent = '제출 중...';
-        try {
-            const newPost = await submitApplication(data);
-            posts.unshift(newPost);
-            formEl.reset();
-            recalcTotal();
-            renderBoard();
-            alert("신청이 성공적으로 등록되었습니다!");
-            $('#boardTop')?.scrollIntoView({ behavior: 'smooth' });
-        } catch (err) {
-            alert(err.message);
-        } finally {
-            agreeBtn.disabled = false;
-            agreeBtn.textContent = '동의하고 제출';
-        }
-    });
-    
-    // --- 관리자 기능 이벤트 바인딩 ---
-    $("#btnAdminLogin")?.addEventListener("click", adminLoginFlow);
-    $("#btnAdminLogout")?.addEventListener("click", () => {
-        setAdminMode(false);
-        renderBoard();
-        alert("관리자 모드를 종료했습니다.");
-    });
-    $("#clearAllBtn")?.addEventListener("click", async () => {
-        if (!isAdmin() || !confirm('정말 모든 신청 데이터를 삭제하시겠습니까?')) return;
-        try {
-            await deleteAllApplications();
-            posts = [];
-            renderBoard();
-            alert('모든 데이터가 삭제되었습니다.');
-        } catch (err) {
-            alert(err.message);
-        }
-    });
-
-    // --- 초기 데이터 로드 및 렌더링 ---
-    try {
-        posts = await loadApplications();
-    } catch (e) {
-        console.warn('초기 데이터 로드 오류:', e);
-        $("#boardList").innerHTML = `<p class="text-slate-400 text-center p-4 rounded-lg bg-red-900/20 border border-red-500/30">${e.message} 잠시 후 새로고침 해주세요.</p>`;
-    }
-    renderBoard();
-    setAdminMode(isAdmin());
+  // 초기 데이터 로드
+  try { posts = await loadApplications(); }
+  catch (e) {
+    console.warn('초기 데이터 로드 오류:', e);
+    $("#boardList").innerHTML = `<p class="text-slate-400 text-center p-4 rounded-lg bg-red-900/20 border border-red-500/30">${e.message} 잠시 후 새로고침 해주세요.</p>`;
+  }
+  renderBoard(); setAdminMode(isAdmin());
 });
 
-// --- 배경 애니메이션 스크립트 (Three.js) ---
+/* ===============================
+    배경 애니메이션(Three.js)
+================================= */
 (() => {
-    if (!window.THREE) return;
-    const canvas = document.getElementById('particles-canvas');
-    Object.assign(canvas.style, { position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: '-1', pointerEvents: 'none' });
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 1000);
-    camera.position.z = 80;
-    const renderer = new THREE.WebGLRenderer({canvas, alpha: true, antialias: true});
-    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-    const resize = () => { renderer.setSize(innerWidth, innerHeight); camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix(); };
-    window.addEventListener('resize', resize);
-    resize();
-    
-    const count = 800;
-    const pos = new Float32Array(count * 3);
-    for (let i = 0; i < count * 3; i++) {
-        pos[i] = (Math.random() - 0.5) * 200;
-    }
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-    const mat = new THREE.PointsMaterial({ color: 0x7dd3fc, size: 0.3, sizeAttenuation: true, transparent: true, opacity: 0.5 });
-    const points = new THREE.Points(geo, mat);
-    scene.add(points);
-    
-    let mouseX = 0, mouseY = 0;
-    window.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
-    
-    const animate = () => {
-        points.rotation.y += 0.0005;
-        camera.position.x += ((mouseX - window.innerWidth / 2) / 40 - camera.position.x) * 0.02;
-        camera.position.y += (-(mouseY - window.innerHeight / 2) / 40 - camera.position.y) * 0.02;
-        camera.lookAt(scene.position);
-        renderer.render(scene, camera);
-        requestAnimationFrame(animate);
-    };
-    animate();
-})();
+  if (!window.THREE) return;
+  const canvas = document.getElementById('particles-canvas');
+  Object.assign(canvas.style, { position:'fixed', top:0, left:0, width:'100%', height:'100%', zIndex:'-1', pointerEvents:'none' });
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 1000);
+  camera.position.z = 80;
+  const renderer = new THREE.WebGLRenderer({canvas, alpha:true, antialias:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  const resize = () => { renderer.setSize(innerWidth, innerHeight); camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix(); };
+  window.addEventListener('resize', resize); resize();
 
+  const count = 800;
+  const pos = new Float32Array(count * 3);
+  for (let i=0;i<count*3;i++) pos[i] = (Math.random()-0.5)*200;
+  const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  const mat = new THREE.PointsMaterial({ color:0x7dd3fc, size:0.3, sizeAttenuation:true, transparent:true, opacity:0.5 });
+  const points = new THREE.Points(geo, mat); scene.add(points);
+
+  let mouseX=0, mouseY=0;
+  window.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
+
+  const animate = () => {
+    points.rotation.y += 0.0005;
+    camera.position.x += ((mouseX - innerWidth/2)/40 - camera.position.x) * 0.02;
+    camera.position.y += ((-(mouseY - innerHeight/2))/40 - camera.position.y) * 0.02;
+    camera.lookAt(scene.position);
+    renderer.render(scene, camera);
+    requestAnimationFrame(animate);
+  };
+  animate();
+})();
 </script>
+
 </body>
 </html>
