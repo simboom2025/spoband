@@ -1,158 +1,179 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SPOBAND 주문 관리자</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;}
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-        th, td { border: 1px solid #4A5568; padding: 10px; text-align: left; word-break: break-all; }
-        th { background-color: #2D3748; }
-        select { background-color: #1A202C; border: 1px solid #4A5568; color: white; padding: 5px; border-radius: 5px;}
-        .status-신규.접수 { background-color: #c6f6d5; color: #2f855a; }
-        .status-입금.확인 { background-color: #bee3f8; color: #2b6cb0; }
-        .status-배송.중 { background-color: #faf089; color: #b7791f; }
-        .status-배송.완료 { background-color: #e2e8f0; color: #1a202c; }
-        .status-주문.취소 { background-color: #fed7d7; color: #c53030; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SPOBAND 주문 관리자</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif}
+    table{width:100%;border-collapse:collapse;table-layout:fixed}
+    th,td{border:1px solid #4A5568;padding:10px;text-align:left;word-break:break-all;vertical-align:middle}
+    th{background:#2D3748}
+    textarea,select{background:#1A202C;border:1px solid #4A5568;color:#fff;padding:5px;border-radius:5px;width:100%}
+  </style>
 </head>
 <body class="bg-slate-900 text-white p-8">
 
-    <div id="dashboard" class="hidden">
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-3xl font-bold">주문 관리 대시보드</h1>
-            <button id="logout-btn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">로그아웃</button>
-        </div>
-        <div id="order-list" class="overflow-x-auto">
-            <p>주문 목록을 불러오는 중...</p>
-        </div>
+  <div id="dashboard" class="hidden">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-3xl font-bold">주문 관리 대시보드</h1>
+      <button id="logout-btn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">로그아웃</button>
     </div>
+    <div id="order-list" class="overflow-x-auto">
+      <p>주문 목록을 불러오는 중...</p>
+    </div>
+  </div>
 
 <script>
-    const $ = (s, el = document) => el.querySelector(s);
-    const API_URL = "https://script.google.com/macros/s/AKfycbxA_Q-ELqpvKY0Di_bw3SDgOieBdRFvxhpAhQQc8BqKfl3eV4tNmo8A1fquqtHWhu53Pw/exec";
+const $  = (s, el=document)=> el.querySelector(s);
+const $$ = (s, el=document)=> Array.from(el.querySelectorAll(s));
+// ✅ 프런트 전역 URL 통일
 
-    function showDashboard() {
-        const password = sessionStorage.getItem('adminPassword');
-        if (!password) {
-            showLogin();
-            return;
-        }
+const API_URL = "https://script.google.com/macros/s/AKfycbztYERcdg7Zf4qHEEaY1Y7LkXCyQ85tcD1Bfk1b3SKBP-d6EG5Lv1W-Bqfg1pngLifR/exec";
 
-        $('#dashboard').classList.remove('hidden');
+function showDashboard(){
+  const password = sessionStorage.getItem('adminPassword');
+  if(!password){ showLogin(); return; }
 
-        const statusOptions = ["신규 접수", "입금 확인", "배송 중", "배송 완료", "주문 취소"];
+  $('#dashboard').classList.remove('hidden');
+  const statusOptions = ["신규 접수","입금 확인","배송 중","배송 완료","주문 취소"];
 
-        const loadAdminOrders = async () => {
-            try {
-                $('#order-list').innerHTML = '<p>주문 목록을 불러오는 중...</p>';
-                const res = await fetch(`${API_URL}?action=list&adminPassword=${password}`);
-                if (!res.ok) throw new Error('관리자 데이터를 불러오는 데 실패했습니다.');
-                const orders = await res.json();
-                
-                if (!orders.length) {
-                    $('#order-list').innerHTML = '<p>아직 접수된 주문이 없습니다.</p>';
-                    return;
-                }
-                
-                const tableHTML = `
-                    <table>
-                        <thead>
-                            <tr>
-                                <th style="width: 15%;">신청일</th>
-                                <th style="width: 10%;">도장명</th>
-                                <th style="width: 8%;">관장님</th>
-                                <th style="width: 12%;">연락처</th>
-                                <th style="width: 20%;">주소</th>
-                                <th style="width: 25%;">주문내역</th>
-                                <th style="width: 10%;">상태</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${orders.map(order => `
-                                <tr>
-                                    <td>${new Date(order.ts).toLocaleString()}</td>
-                                    <td>${order.dojo}</td>
-                                    <td>${order.master}</td>
-                                    <td>${order.contact}</td>
-                                    <td>${order.address}</td>
-                                    <td>${Object.entries(order.items || {}).filter(([,v]) => v > 0).map(([k,v]) => `${k.replace('q_','').toUpperCase()}: ${v}개`).join('<br>')}</td>
-                                    <td>
-                                        <select data-id="${order.id}" class="status-select">
-                                            ${statusOptions.map(s => `<option value="${s}" ${s === order.status ? 'selected' : ''}>${s}</option>`).join('')}
-                                        </select>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>`;
-                $('#order-list').innerHTML = tableHTML;
-            } catch (err) {
-                alert(err.message);
-                $('#order-list').innerHTML = '<p>오류 발생: ' + err.message + '</p>';
-            }
-        };
-        
-        $('#order-list').addEventListener('change', async (e) => {
-            if (e.target.classList.contains('status-select')) {
-                const id = e.target.dataset.id;
-                const status = e.target.value;
-                const originalColor = e.target.style.backgroundColor;
-                e.target.disabled = true;
+  async function loadAdminOrders(){
+    try{
+      $('#order-list').innerHTML = '<p>주문 목록을 불러오는 중...</p>';
+      const res = await fetch(API_URL, {
+        method:'POST',
+        headers:{ 'Content-Type':'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action:'adminList', adminPassword: password })
+      });
+      const result = await res.json().catch(()=>({status:'error',message:'응답 파싱 실패'}));
+      if(!res.ok || result.status!=='success') throw new Error(result.message || '불러오기 실패');
 
-                try {
-                    const res = await fetch(API_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                        body: JSON.stringify({ action: 'updateStatus', id, status, adminPassword: password })
-                    });
-                    if (!res.ok) throw new Error('상태 업데이트 실패');
-                    const result = await res.json();
-                    if (result.status === 'success') {
-                        e.target.style.backgroundColor = 'green';
-                        setTimeout(() => { e.target.style.backgroundColor = originalColor; }, 1500);
-                    } else {
-                        throw new Error(result.message);
-                    }
-                } catch (err) {
-                    alert('오류: ' + err.message);
-                    loadAdminOrders();
-                } finally {
-                    e.target.disabled = false;
-                }
-            }
-        });
-        
-        loadAdminOrders();
+      const orders = result.data || [];
+      if(!orders.length){ $('#order-list').innerHTML = '<p>아직 접수된 주문이 없습니다.</p>'; return; }
+
+      const tableHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th style="width:12%">신청일</th>
+              <th style="width:10%">도장명</th>
+              <th style="width:8%">관장님</th>
+              <th style="width:12%">연락처</th>
+              <th style="width:18%">주소</th>
+              <th style="width:16%">주문내역</th>
+              <th style="width:8%">상태</th>
+              <th style="width:16%">답변</th>
+              <th style="width:10%">견적서</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${orders.map(order=>{
+              const lastReply = (order.replies||[]).length ? order.replies[order.replies.length-1].content : '';
+              const items = Object.entries(order.items||{}).filter(([,v])=>v>0).map(([k,v])=>`${k.replace('sb','SB').toUpperCase()}: ${v}개`).join('<br>');
+              return `
+                <tr>
+                  <td>${new Date(order.ts).toLocaleString()}</td>
+                  <td>${order.dojo||''}</td>
+                  <td>${order.master||''}</td>
+                  <td>${order.contact||''}</td>
+                  <td>${order.address||''}</td>
+                  <td>${items||''}</td>
+                  <td>
+                    <select data-id="${order.id}" class="status-select">
+                      ${statusOptions.map(s=>`<option value="${s}" ${s===(order.status||'신규 접수')?'selected':''}>${s}</option>`).join('')}
+                    </select>
+                  </td>
+                  <td>
+                    <textarea data-id="${order.id}" class="reply-content text-sm h-16 p-1" placeholder="답변을 입력하세요...">${lastReply}</textarea>
+                    <button data-id="${order.id}" class="reply-btn mt-1 w-full bg-sky-500 hover:bg-sky-600 text-white text-sm py-1 rounded">답변 전송</button>
+                  </td>
+                  <td>
+                    <div id="quotation-link-${order.id}">
+                      ${order.quotationUrl ? `<a href="${order.quotationUrl}" target="_blank" class="text-sky-400 hover:underline">견적서 보기</a>` : '<span>미등록</span>'}
+                    </div>
+                    <div class="mt-2">
+                      <input type="file" data-id="${order.id}" class="file-input text-xs w-full" />
+                      <button data-id="${order.id}" class="upload-btn mt-1 w-full bg-gray-500 hover:bg-gray-600 text-white text-xs py-1 rounded">업로드</button>
+                    </div>
+                  </td>
+                </tr>`;
+            }).join('')}
+          </tbody>
+        </table>`;
+      $('#order-list').innerHTML = tableHTML;
+    }catch(err){
+      alert(err.message||'불러오기 실패');
+      $('#order-list').innerHTML = '<p>오류 발생: '+ (err.message||'') +'</p>';
     }
+  }
 
-    function showLogin() {
-        const password = prompt("관리자 비밀번호를 입력하세요 (초기: 1234).");
-        if (password) {
-            // 간단한 비밀번호 검증 후 세션에 저장.
-            // 실제 서비스에서는 백엔드에서 비밀번호를 검증해야 합니다.
-            sessionStorage.setItem('adminPassword', password);
-            showDashboard();
-        }
+  async function handleOrderListClick(e){
+    const password = sessionStorage.getItem('adminPassword');
+    // 답변 전송
+    if(e.target.classList.contains('reply-btn')){
+      const btn = e.target; const id = btn.dataset.id;
+      const content = $(`.reply-content[data-id="${id}"]`).value.trim();
+      if(!content) return alert('답변 내용을 입력하세요.');
+      btn.disabled = true; btn.textContent = '전송 중...';
+      try{
+        const res = await fetch(API_URL, { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify({ action:'addReply', id, content, adminPassword: password }) });
+        const r = await res.json(); if(!res.ok || r.status!=='success') throw new Error(r.message||'전송 실패');
+        btn.style.backgroundColor='green'; btn.textContent='전송 완료';
+        setTimeout(()=>{ btn.style.backgroundColor=''; btn.textContent='답변 전송'; },1500);
+      }catch(err){ alert('오류: '+err.message); btn.textContent='전송 실패'; }
+      finally{ setTimeout(()=>{ btn.disabled=false; },1200); }
     }
-
-    function logout() {
-        sessionStorage.removeItem('adminPassword');
-        window.location.reload();
+    // 견적서 업로드
+    if(e.target.classList.contains('upload-btn')){
+      const btn=e.target; const id=btn.dataset.id;
+      const fileInput = $(`.file-input[data-id="${id}"]`);
+      if(!fileInput.files.length) return alert('먼저 파일을 선택하세요.');
+      const file = fileInput.files[0];
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const fileData = { name:file.name, mimeType:file.type, data: reader.result.split(',')[1] };
+        btn.disabled=true; btn.textContent='업로드 중...';
+        try{
+          const res = await fetch(API_URL, { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify({ action:'uploadFile', id, fileData, adminPassword: password }) });
+          const r = await res.json(); if(!res.ok || r.status!=='success') throw new Error(r.message||'업로드 실패');
+          $(`#quotation-link-${id}`).innerHTML = `<a href="${r.url}" target="_blank" class="text-sky-400 hover:underline">업로드 완료</a>`;
+        }catch(err){ alert('오류: '+err.message); }
+        finally{ btn.disabled=false; btn.textContent='업로드'; }
+      };
+      reader.readAsDataURL(file);
     }
+  }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        $('#logout-btn')?.addEventListener('click', logout);
+  async function handleOrderListChange(e){
+    if(!e.target.classList.contains('status-select')) return;
+    const select = e.target; const id = select.dataset.id; const status = select.value;
+    select.disabled = true;
+    try{
+      const res = await fetch(API_URL, { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify({ action:'updateStatus', id, status, adminPassword: sessionStorage.getItem('adminPassword') }) });
+      const r = await res.json(); if(!res.ok || r.status!=='success') throw new Error(r.message||'업데이트 실패');
+      const orig = select.style.backgroundColor; select.style.backgroundColor='green'; setTimeout(()=>{ select.style.backgroundColor=orig; },1000);
+    }catch(err){ alert('오류: '+err.message); loadAdminOrders(); }
+    finally{ select.disabled=false; }
+  }
 
-        if (sessionStorage.getItem('adminPassword')) {
-            showDashboard();
-        } else {
-            showLogin();
-        }
-    });
+  $('#order-list').addEventListener('click', handleOrderListClick);
+  $('#order-list').addEventListener('change', handleOrderListChange);
+  loadAdminOrders();
+}
+
+function showLogin(){
+  const password = prompt('관리자 비밀번호를 입력하세요.');
+  if(password){ sessionStorage.setItem('adminPassword', password); showDashboard(); }
+}
+function logout(){ sessionStorage.removeItem('adminPassword'); location.reload(); }
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  $('#logout-btn')?.addEventListener('click', logout);
+  if(sessionStorage.getItem('adminPassword')) showDashboard();
+  else showLogin();
+});
 </script>
-
 </body>
 </html>
