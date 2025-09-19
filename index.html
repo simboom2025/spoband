@@ -1,243 +1,246 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>SPOBAND Pro | 태권도 관장님 특별구매</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Apple SD Gothic Neo,Noto Sans KR,Malgun Gothic,sans-serif}
-    .container-narrow{max-width:1100px}
-    input[type="number"]::-webkit-outer-spin-button,input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-    input[type="number"]{-moz-appearance:textfield}
-    .modal{background:rgba(2,6,23,.75);backdrop-filter:blur(2px)}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPOBAND Pro | 태권도 관장님 특별구매</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Apple SD Gothic Neo,Noto Sans KR,Malgun Gothic,sans-serif}
+        .modal{background:rgba(2,6,23,.75);backdrop-filter:blur(2px);transition:opacity 0.3s ease;}
+    </style>
 </head>
 <body class="text-white bg-slate-900">
 
-  <header class="sticky top-0 z-50 bg-slate-950/70 backdrop-blur border-b border-slate-800">
-  <div class="container-narrow mx-auto px-4 md:px-6">
-    <div class="flex items-center justify-between h-16">
-      <a href="/" class="text-white font-extrabold">SPOBAND <span class="text-sky-400">Pro</span></a>
-      <nav class="hidden md:flex items-center gap-6">
-        <a href="pages/taekwondo-benefits.html" class="text-slate-100 hover:text-sky-400 font-semibold" data-nav="benefits">운동효과</a>
-        <a href="pages/taekwondo-letter.html" class="text-slate-100 hover:text-sky-400 font-semibold" data-nav="letter">“관장님께 드립니다”</a>
-        <a href="#kits" class="text-slate-100 hover:text-sky-400 font-semibold" data-nav="kits">스포밴드</a>
-        <a href="#faq" class="text-slate-100 hover:text-sky-400 font-semibold" data-nav="faq">참고영상 등</a>
-      </nav>
-      <div class="hidden md:block">
-        <a href="#apply" class="bg-sky-500 hover:bg-sky-600 text-white px-5 py-2 rounded-full font-semibold shadow">관장님 전용 신청</a>
+    <header class="sticky top-0 z-50 bg-slate-950/70 backdrop-blur border-b border-slate-800">
+      <div class="max-w-5xl mx-auto px-4">
+        <div class="flex items-center justify-between h-16">
+          <a href="/" class="text-white font-extrabold text-lg">SPOBAND <span class="text-sky-400">Pro</span></a>
+          <nav class="hidden md:flex items-center gap-6">
+            <a href="pages/taekwondo-benefits.html" class="text-slate-100 hover:text-sky-400 font-semibold">운동효과</a>
+            <a href="pages/taekwondo-letter.html" class="text-slate-100 hover:text-sky-400 font-semibold">“관장님께 드립니다”</a>
+            <a href="#kits" class="text-slate-100 hover:text-sky-400 font-semibold">스포밴드</a>
+            <a href="#faq" class="text-slate-100 hover:text-sky-400 font-semibold">참고영상 등</a>
+          </nav>
+          <a href="#apply" class="hidden md:inline-block bg-sky-500 hover:bg-sky-600 text-white px-5 py-2 rounded-full font-semibold shadow">관장님 전용 신청</a>
+        </div>
       </div>
-      <button type="button" aria-label="메뉴 열기" class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg hover:bg-white/10" onclick="toggleNav()">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
-        </svg>
-      </button>
-    </div>
-    <div id="mobile-nav" class="md:hidden hidden border-t border-slate-800 py-3">
-      <nav class="flex flex-col gap-2">
-        <a href="pages/taekwondo-benefits.html" class="px-2 py-2 rounded-lg hover:bg-white/10">운동효과</a>
-        <a href="pages/taekwondo-letter.html" class="px-2 py-2 rounded-lg hover:bg-white/10">“관장님께 드립니다”</a>
-        <a href="#kits" class="px-2 py-2 rounded-lg hover:bg-white/10">스포밴드</a>
-        <a href="#faq" class="px-2 py-2 rounded-lg hover:bg-white/10">참고영상 등</a>
-        <a href="#apply" class="mt-2 px-3 py-3 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-semibold text-center shadow">관장님 전용 신청</a>
-      </nav>
-    </div>
-  </div>
-</header>
+    </header>
 
-  <main>
-    <section class="py-16">
-      <div class="container-narrow mx-auto px-5 grid lg:grid-cols-2 gap-10 items-center">
-        <div>
-          <span class="inline-block px-4 py-2 rounded-xl bg-sky-500/15 border border-sky-400 text-sky-200 font-bold">태권도 관장님 전용 프로모션</span>
-          <h1 class="mt-5 text-4xl md:text-6xl font-black leading-tight">10분 루틴으로<br>킥 속도 · 정확도 · 밸런스가 눈에 보입니다.</h1>
-          <p class="mt-4 text-slate-300 md:text-lg">탄성 저항이라 안전하게. 초보도 단계별로.</p>
-        </div>
-        <figure id="heroVideoThumb" class="relative w-full max-w-[700px] cursor-pointer" data-ytid="cVr-vf1aMR8">
-          <img src="https://i.ytimg.com/vi/cVr-vf1aMR8/hqdefault.jpg" class="w-full rounded-2xl object-cover" alt="영상 썸네일" />
-          <div class="absolute inset-0 flex items-center justify-center"><span class="bg-white/90 text-black font-bold px-5 py-2 rounded-full">▶ 영상 보기</span></div>
-        </figure>
-      </div>
-    </section>
-    
-    <section id="kits" class="py-20 scroll-mt-16">
-      <div class="mx-auto container-narrow px-5">
-        <h2 class="text-3xl font-extrabold">스포밴드(제품구성)</h2>
-        <p class="mt-2 text-slate-300">모델별 이미지와 간단 스펙을 확인하세요.</p>
-        <div class="mt-6 grid md:grid-cols-2 gap-6">
-          <article class="rounded-2xl border border-slate-700/50 bg-slate-800/30 overflow-hidden"><img src="img/35_model.JPG" alt="SPOBAND 35" class="w-full object-cover"><div class="p-5"><h3 class="text-xl font-bold">SPOBAND 35 <span class="text-slate-400 text-base">/ 2.5kg 부하</span></h3><p class="mt-1 text-slate-300 text-sm">길이 1,000mm · 폭 20mm · 두께 5mm</p></div></article>
-          <article class="rounded-2xl border border-slate-700/50 bg-slate-800/30 overflow-hidden"><img src="img/45_model.JPG" alt="SPOBAND 45" class="w-full object-cover"><div class="p-5"><h3 class="text-xl font-bold">SPOBAND 45 <span class="text-slate-400 text-base">/ 5kg 부하</span></h3><p class="mt-1 text-slate-300 text-sm">길이 1,100mm · 폭 45mm · 두께 5mm</p></div></article>
-          <article class="rounded-2xl border border-slate-700/50 bg-slate-800/30 overflow-hidden"><img src="img/55_model.JPG" alt="SPOBAND 55" class="w-full object-cover"><div class="p-5"><h3 class="text-xl font-bold">SPOBAND 55 <span class="text-slate-400 text-base">/ 10kg 부하</span></h3><p class="mt-1 text-slate-300 text-sm">길이 1,100mm · 폭 55mm · 두께 5mm</p></div></article>
-          <article class="rounded-2xl border border-slate-700/50 bg-slate-800/30 overflow-hidden"><img src="img/65_model.jpg" alt="SPOBAND 65" class="w-full object-cover"><div class="p-5"><h3 class="text-xl font-bold">SPOBAND 65 <span class="text-slate-400 text-base">/ 15kg 부하</span></h3><p class="mt-1 text-slate-300 text-sm">길이 1,300mm · 폭 65mm · 두께 5mm</p></div></article>
-        </div>
-      </div>
-    </section>
-    
-    <section id="faq" class="py-20 scroll-mt-16">
-      <div class="mx-auto container-narrow px-5">
-        <h2 class="text-3xl font-extrabold">참고영상 등</h2>
-        <p class="mt-2 text-slate-300">소개·활용 예시 영상들</p>
-        <div class="mt-6 grid md:grid-cols-2 xl:grid-cols-3 gap-5">
-          <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="PaXW4TzsQyE"><img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/PaXW4TzsQyE/hqdefault.jpg" alt=""></div>
-          <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="C2G_9G88ahw"><img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/C2G_9G88ahw/hqdefault.jpg" alt=""></div>
-          <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="LWnO0hubiyw"><img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/LWnO0hubiyw/hqdefault.jpg" alt=""></div>
-          <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="JnEyJ9K5EF4"><img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/JnEyJ9K5EF4/hqdefault.jpg" alt=""></div>
-          <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="QV8ma9aEiNM"><img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/QV8ma9aEiNM/hqdefault.jpg" alt=""></div>
-          <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="QVhHzYYkqbQ"><img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/QVhHzYYkqbQ/hqdefault.jpg" alt=""></div>
-        </div>
-      </div>
-    </section>
-
-    <section id="apply" class="py-16 scroll-mt-16">
-      <div class="container-narrow mx-auto px-5">
-        <h2 class="text-3xl md:text-4xl font-extrabold">태권도관장님 특별구매 게시판</h2>
-        <p class="mt-2 text-slate-300">견적서는 <b>연락처</b>로 보내드립니다! (신청글은 비밀글로 처리됩니다)</p>
-        
-        <form id="postForm" class="mt-8 grid gap-5 p-6 rounded-2xl border border-slate-700/50 bg-slate-800/40" autocomplete="off">
-          <div class="grid md:grid-cols-2 gap-5">
-            <div><label class="block text-sm mb-1" for="dojo">태권도장 명</label><input id="dojo" required class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700"></div>
-            <div><label class="block text-sm mb-1" for="master">관장님 성함</label><input id="master" required class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700"></div>
-            <div><label class="block text-sm mb-1" for="contact">연락처(전화/카톡/이메일)</label><input id="contact" required class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700" placeholder="010-1234-5678 / dojo@naver.com"></div>
-            <div><label class="block text-sm mb-1" for="pw">비밀번호(4자리 이상)</label><input id="pw" type="password" minlength="4" required class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700"></div>
-          </div>
-          <div><label class="block text-sm mb-1" for="address">택배 주소지</label><textarea id="address" rows="2" required class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700"></textarea></div>
-          
-          <div>
-            <div class="flex items-end justify-between">
-              <label class="block text-sm">구매 희망 품목</label>
-              <div class="flex items-center gap-3">
-                <small class="text-slate-400">단위: 개 (수량)</small>
-                <span id="sumBoxes" class="inline-flex items-center px-2 py-1 rounded-lg bg-sky-500/10 text-yellow-300 text-xs font-semibold">총 0 개</span>
-              </div>
-            </div>
-            <div class="mt-3 overflow-hidden rounded-xl border border-slate-700/60">
-              <div class="grid grid-cols-12 bg-slate-900/40 px-4 py-3">
-                <div class="col-span-8 md:col-span-9 font-semibold text-slate-100">모델 / (운동부하량)</div>
-                <div class="col-span-4 md:col-span-3 text-right pr-1 font-semibold text-slate-100">신 청 개 수</div>
-              </div>
-              <div class="divide-y divide-slate-700/50 bg-slate-800/20">
-                <div class="grid grid-cols-12 items-center px-4 py-3"><div class="col-span-8 md:col-span-9">spoband 30 / (주니어용)</div><div class="col-span-4 md:col-span-3"><input id="q_sb30" type="number" min="0" value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700"></div></div>
-                <div class="grid grid-cols-12 items-center px-4 py-3"><div class="col-span-8 md:col-span-9">spoband 35 / (운동부하량 아령 2.5kg)</div><div class="col-span-4 md:col-span-3"><input id="q_sb35" type="number" min="0" value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700"></div></div>
-                <div class="grid grid-cols-12 items-center px-4 py-3"><div class="col-span-8 md:col-span-9">spoband 45 / (운동부하량 아령 5kg)</div><div class="col-span-4 md:col-span-3"><input id="q_sb45" type="number" min="0" value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700"></div></div>
-                <div class="grid grid-cols-12 items-center px-4 py-3"><div class="col-span-8 md:col-span-9">spoband 55 / (운동부하량 아령 10kg)</div><div class="col-span-4 md:col-span-3"><input id="q_sb55" type="number" min="0" value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700"></div></div>
-                <div class="grid grid-cols-12 items-center px-4 py-3"><div class="col-span-8 md:col-span-9">spoband 65 / (운동부하량 아령 15kg)</div><div class="col-span-4 md:col-span-3"><input id="q_sb65" type="number" min="0" value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700"></div></div>
-                <div class="grid grid-cols-12 items-center px-4 py-3 bg-slate-900/40 border-t border-slate-800/60">
-                  <div class="col-span-8 md:col-span-9 text-right pr-4"><span class="text-sm md:text-base font-semibold text-slate-100">총 신청개수</span></div>
-                  <div class="col-span-4 md:col-span-3"><input id="totalBoxes" type="text" readonly value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700"></div>
+    <main>
+        <section class="py-16">
+            <div class="max-w-5xl mx-auto px-4 grid lg:grid-cols-2 gap-10 items-center">
+                <div>
+                    <span class="inline-block px-4 py-2 rounded-xl bg-sky-500/15 border border-sky-400 text-sky-200 font-bold">태권도 관장님 전용 프로모션</span>
+                    <h1 class="mt-5 text-4xl md:text-6xl font-black leading-tight">10분 루틴으로<br>킥 속도 · 정확도 · 밸런스가 눈에 보입니다.</h1>
+                    <p class="mt-4 text-slate-300 md:text-lg">탄성 저항이라 안전하게. 초보도 단계별로.</p>
                 </div>
-              </div>
+                <figure class="relative w-full max-w-lg mx-auto cursor-pointer" data-ytid="cVr-vf1aMR8">
+                    <img src="https://i.ytimg.com/vi/cVr-vf1aMR8/hqdefault.jpg" class="w-full rounded-2xl object-cover" alt="영상 썸네일" />
+                    <div class="absolute inset-0 flex items-center justify-center"><span class="bg-white/90 text-black font-bold px-5 py-2 rounded-full">▶ 영상 보기</span></div>
+                </figure>
             </div>
-          </div>
-          
-          <div class="flex items-center mt-2">
-              <button type="submit" class="px-5 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-semibold">신청 등록</button>
-          </div>
-        </form>
-        
-        <div class="mt-16">
-          <div class="flex items-center justify-between flex-wrap gap-y-4">
-              <h3 class="text-2xl font-extrabold">신청 목록</h3>
-              <p class="font-bold text-lg text-yellow-400">
-                  <span class="text-2xl mr-2">※</span>문의: 스포밴드연구소 연구소장. 010-5214-1492 / simboom@hanmail.net
-              </p>
-          </div>
-          <div id="boardList" class="mt-4 grid gap-4"></div>
-        </div>
-      </div>
-    </section>
-  </main>
-  
-  <footer class="py-4 border-t border-slate-800 mt-20">
-      <div class="container-narrow mx-auto px-5 text-center text-sm text-slate-500">
-          <p>&copy; 2024 SPOBAND. All Rights Reserved. <a href="admin.html" target="_blank" class="ml-4 hover:text-white">Admin</a></p>
-      </div>
-  </footer>
+        </section>
 
-  <div id="heroModal" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50"><div class="w-[min(960px,90vw)] aspect-video bg-black rounded-2xl overflow-hidden relative"><button id="heroClose" class="absolute top-2 right-2 bg-slate-800/80 text-white px-3 py-1.5 rounded-lg">닫기</button><iframe id="heroPlayer" class="w-full h-full" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div></div>
-  <div id="ytModal" class="modal fixed inset-0 hidden items-center justify-center p-4"><div class="w-[min(1024px,92vw)] aspect-video rounded-2xl overflow-hidden border border-slate-700 bg-black relative"><button id="ytClose" class="absolute top-2 right-2 z-10 px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-sm">닫기</button><iframe id="ytPlayer" class="w-full h-full" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div></div>
+        <section id="apply" class="py-16">
+            <div class="max-w-5xl mx-auto px-4">
+                <h2 class="text-3xl md:text-4xl font-extrabold text-center">태권도관장님 특별구매 신청</h2>
+                <form id="postForm" class="mt-8 max-w-2xl mx-auto grid gap-6 p-6 rounded-2xl border border-slate-700/50 bg-slate-800/40">
+                    <div class="grid md:grid-cols-2 gap-5">
+                        <div><label for="dojo" class="block text-sm mb-1">도장명</label><input id="dojo" required class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700"></div>
+                        <div><label for="master" class="block text-sm mb-1">관장님 성함</label><input id="master" required class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700"></div>
+                        <div><label for="contact" class="block text-sm mb-1">연락처</label><input id="contact" required class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700"></div>
+                        <div><label for="pw" class="block text-sm mb-1">비밀번호 (4자리 이상)</label><input id="pw" type="password" minlength="4" required class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700"></div>
+                    </div>
+                    <div><label for="address" class="block text-sm mb-1">주소</label><textarea id="address" rows="2" required class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700"></textarea></div>
+                    <div>
+                        <div class="flex justify-between items-center mb-2"><label class="text-sm">구매 희망 품목</label><span id="sumBoxes" class="text-yellow-300 text-sm font-semibold">총 0개</span></div>
+                        <div class="border border-slate-700 rounded-xl divide-y divide-slate-700">
+                            <div class="grid grid-cols-3 items-center p-2"><label for="q_sb35" class="col-span-2">spoband 35 / (2.5kg)</label><input id="q_sb35" type="number" min="0" value="0" class="w-full text-right bg-slate-900/60 p-1 rounded"></div>
+                            <div class="grid grid-cols-3 items-center p-2"><label for="q_sb45" class="col-span-2">spoband 45 / (5kg)</label><input id="q_sb45" type="number" min="0" value="0" class="w-full text-right bg-slate-900/60 p-1 rounded"></div>
+                            <div class="grid grid-cols-3 items-center p-2"><label for="q_sb55" class="col-span-2">spoband 55 / (10kg)</label><input id="q_sb55" type="number" min="0" value="0" class="w-full text-right bg-slate-900/60 p-1 rounded"></div>
+                            <div class="grid grid-cols-3 items-center p-2"><label for="q_sb65" class="col-span-2">spoband 65 / (15kg)</label><input id="q_sb65" type="number" min="0" value="0" class="w-full text-right bg-slate-900/60 p-1 rounded"></div>
+                            <div class="grid grid-cols-3 items-center p-2 bg-slate-900/40 font-semibold"><label for="totalBoxes" class="col-span-2 text-right pr-4">총 신청개수</label><input id="totalBoxes" type="text" readonly value="0" class="w-full text-right bg-slate-700 p-1 rounded"></div>
+                        </div>
+                    </div>
+                    <button type="button" id="openConsent" class="w-full px-5 py-3 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-semibold text-lg">신청 등록</button>
+                </form>
+            </div>
+        </section>
+
+        <section class="py-16">
+            <div class="max-w-5xl mx-auto px-4">
+                <div class="flex justify-between items-center flex-wrap gap-4 mb-4">
+                    <h3 class="text-2xl font-extrabold">신청 목록</h3>
+                    <p class="font-semibold text-yellow-400 text-right">※ 문의: 스포밴드연구소 연구소장<br>010-5214-1492 / simboom@hanmail.net</p>
+                </div>
+                <div id="boardList" class="grid md:grid-cols-2 gap-4"></div>
+            </div>
+        </section>
+    
+      </main>
+    <footer class="py-4 border-t border-slate-800 mt-10">
+        <div class="max-w-5xl mx-auto px-4 text-center text-sm text-slate-500">
+            <a href="admin.html" target="_blank" class="hover:text-white">Admin Login</a>
+        </div>
+    </footer>
+
+    <div id="consentModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 modal opacity-0"><div class="absolute inset-0 bg-black/60"></div><div class="w-full max-w-lg bg-slate-800 rounded-2xl shadow-xl p-6 z-10"><h3 class="text-lg font-bold">개인정보 수집·이용 동의</h3><div class="mt-4 text-sm bg-slate-900/50 border border-slate-700 rounded-xl p-4 space-y-2"><p><b>수집 항목:</b> 도장명, 성함, 연락처, 주소, 신청 내역</p><p><b>이용 목적:</b> 신청 접수, 견적·배송 안내, 고객 응대</p><p><b>보관 기간:</b> 목적 달성 후 즉시 파기 (법령상 최대 3년)</p></div><label class="flex items-center gap-3 mt-4"><input id="consentCheck" type="checkbox" class="accent-sky-400"><span class="text-sm">위 내용에 동의합니다.</span></label><div class="mt-5 flex justify-end gap-3"><button id="consentCancel" class="px-4 py-2 rounded-xl border border-slate-700 hover:bg-slate-700">취소</button><button id="consentAgree" class="px-5 py-2 rounded-xl bg-slate-600 text-slate-400 cursor-not-allowed" disabled>동의하고 제출</button></div></div></div>
+    
+    <div id="detailsModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 modal opacity-0"><div class="absolute inset-0 bg-black/60" id="detailsModalBg"></div><div class="w-full max-w-2xl bg-slate-800 rounded-2xl shadow-xl z-10 max-h-[80vh] flex flex-col"><div class="p-4 border-b border-slate-700 flex justify-between items-center"><h3 class="text-lg font-bold">신청 내역 상세</h3><button id="detailsCloseBtn" class="text-2xl">&times;</button></div><div id="detailsContent" class="p-6 overflow-y-auto"></div></div></div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const $ = (s, el = document) => el.querySelector(s);
     const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
-    const API_URL = "https://script.google.com/macros/s/AKfycbxA_Q-ELqpvKY0Di_bw3SDgOieBdRFvxhpAhQQc8BqKfl3eV4tNmo8A1fquqtHWhu53Pw/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbxUlotmPBjsPF0Z9l7W1a3vNc1mgjPHirfXaGEpRw4ss83lwbT50Qxc0Q3sPdWiJK8sUg/exec";
 
-    const recalcTotal = () => {
-        const total = ["q_sb30","q_sb35","q_sb45","q_sb55","q_sb65"].reduce((s,id)=>s+(Number($(`#${id}`)?.value)||0),0);
-        $("#sumBoxes").textContent = `총 ${total} 개`;
-        $("#totalBoxes").value = String(total);
+    const esc = (s) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]));
+    const fmt = (ts) => new Date(ts).toLocaleString();
+    const mask = (text, type) => {
+        const s = String(text).trim();
+        if (type === 'name') return s.length > 2 ? s[0] + '*'.repeat(s.length - 2) + s.slice(-1) : (s.length > 1 ? s[0] + '*' : s);
+        if (type === 'contact') {
+            const d = s.replace(/\D/g, "");
+            return d.length > 7 ? `${d.slice(0, 3)}-****-${d.slice(-4)}` : s;
+        }
+        return s;
     };
-    ['q_sb30','q_sb35','q_sb45','q_sb55','q_sb65'].forEach(id => $(`#${id}`)?.addEventListener("input", recalcTotal));
-    recalcTotal();
-
-    $('#postForm')?.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const btn = e.target.querySelector('button[type="submit"]');
-        btn.disabled = true; btn.textContent = "처리 중...";
-        const data = {
-            dojo: $("#dojo")?.value.trim(), master: $("#master")?.value.trim(),
-            contact: $("#contact")?.value.trim(), address: $("#address")?.value.trim(),
-            pw: $("#pw")?.value.trim(),
-            items: {
-                sb30: Number($("#q_sb30")?.value||0), sb35: Number($("#q_sb35")?.value||0),
-                sb45: Number($("#q_sb45")?.value||0), sb55: Number($("#q_sb55")?.value||0),
-                sb65: Number($("#q_sb65")?.value||0),
-            },
-        };
-        if (!data.dojo || !data.master || !data.contact || !data.address || !data.pw) {
-            btn.disabled = false; btn.textContent = "신청 등록";
-            return alert("모든 필수 항목을 입력해주세요.");
-        }
-        if (Object.values(data.items).reduce((a, b) => a + b, 0) === 0) {
-            btn.disabled = false; btn.textContent = "신청 등록";
-            return alert("최소 1개 이상 신청해주세요.");
-        }
-
-        try {
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify({ action: 'create', data: data })
-            });
-            if (!res.ok) throw new Error('서버 응답 오류');
-            alert('신청이 성공적으로 등록되었습니다!');
-            $('#postForm').reset();
-            recalcTotal();
-            loadPublicOrders();
-        } catch (err) {
-            alert('신청 중 오류가 발생했습니다: ' + err.message);
-        } finally {
-            btn.disabled = false; btn.textContent = "신청 등록";
-        }
-    });
-
-    const loadPublicOrders = async () => {
+    
+    const loadApplications = async () => {
         try {
             const res = await fetch(`${API_URL}?action=list`);
-            if (!res.ok) throw new Error('서버 응답 오류');
-            const orders = await res.json();
-            const mask = (name) => name.length > 2 ? name[0] + '*'.repeat(name.length - 2) + name.slice(-1) : (name.length > 1 ? name[0] + '*' : name);
-            $('#boardList').innerHTML = orders.length ? orders.map(order => `
+            if (!res.ok) throw new Error("서버 오류");
+            const posts = await res.json();
+            $('#boardList').innerHTML = posts.length ? posts.map(p => `
                 <div class="p-4 rounded-lg border border-slate-700 bg-slate-800/40">
-                    <p><strong>도장명:</strong> ${mask(order.dojo)}</p>
-                    <p><strong>관장님:</strong> ${mask(order.master)}</p>
-                    <p><strong>신청일:</strong> ${new Date(order.ts).toLocaleString()}</p>
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p><strong>도장명:</strong> ${mask(p.dojo, 'name')}</p>
+                            <p><strong>관장님:</strong> ${mask(p.master, 'name')}</p>
+                            <p><strong>연락처:</strong> ${mask(p.contact, 'contact')}</p>
+                        </div>
+                        <button data-id="${p.id}" class="view-details-btn text-sm bg-slate-600 hover:bg-slate-500 px-3 py-1.5 rounded-lg whitespace-nowrap">상세보기</button>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-2">${fmt(p.ts)}</p>
                 </div>
             `).join('') : '<p>아직 등록된 신청이 없습니다.</p>';
-        } catch (err) {
+        } catch (e) {
             $('#boardList').innerHTML = '<p>목록을 불러오는 데 실패했습니다.</p>';
         }
     };
+
+    const recalcTotal = () => {
+        const total = $$('input[id^="q_sb"]').reduce((sum, el) => sum + (Number(el.value) || 0), 0);
+        $('#sumBoxes').textContent = `총 ${total}개`;
+        $('#totalBoxes').value = total;
+    };
+    $$('input[id^="q_sb"]').forEach(el => el.addEventListener('input', recalcTotal));
     
-    loadPublicOrders();
+    const submitForm = async () => {
+        const data = {
+            dojo: $('#dojo').value.trim(), master: $('#master').value.trim(),
+            contact: $('#contact').value.trim(), address: $('#address').value.trim(),
+            pw: $('#pw').value.trim(),
+            items: {
+                sb35: Number($('#q_sb35').value||0), sb45: Number($('#q_sb45').value||0),
+                sb55: Number($('#q_sb55').value||0), sb65: Number($('#q_sb65').value||0),
+            },
+        };
+        if (!data.dojo || !data.master || !data.contact || !data.address || !data.pw) return alert("모든 항목을 입력해주세요.");
+        if (data.pw.length < 4) return alert("비밀번호는 4자리 이상으로 입력해주세요.");
+
+        const agreeBtn = $('#consentAgree');
+        agreeBtn.disabled = true; agreeBtn.textContent = '제출 중...';
+        
+        try {
+            await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({ action: 'create', data })
+            });
+            alert('신청이 성공적으로 등록되었습니다.');
+            $('#postForm').reset();
+            recalcTotal();
+            loadApplications();
+            $('#consentModal').classList.add('opacity-0', 'hidden');
+        } catch (e) {
+            alert('오류가 발생했습니다: ' + e.message);
+        } finally {
+            agreeBtn.disabled = false; agreeBtn.textContent = '동의하고 제출';
+        }
+    };
+
+    $('#openConsent').addEventListener('click', () => {
+        $('#consentModal').classList.remove('hidden');
+        setTimeout(() => $('#consentModal').classList.remove('opacity-0'), 10);
+    });
+    $('#consentCancel').addEventListener('click', () => {
+        $('#consentModal').classList.add('opacity-0');
+        setTimeout(() => $('#consentModal').classList.add('hidden'), 300);
+    });
+    $('#consentCheck').addEventListener('change', (e) => {
+        const agreeBtn = $('#consentAgree');
+        const isChecked = e.target.checked;
+
+        agreeBtn.disabled = !isChecked;
+        
+        if (isChecked) {
+            // 동의했을 때 버튼 스타일
+            agreeBtn.className = 'px-5 py-2 rounded-xl bg-sky-500 text-white hover:bg-sky-400';
+        } else {
+            // 동의하지 않았을 때 버튼 스타일
+            agreeBtn.className = 'px-5 py-2 rounded-xl bg-slate-600 text-slate-400 cursor-not-allowed';
+        }
+    });
+    $('#consentAgree').addEventListener('click', submitForm);
     
-    const heroModal = { thumb: $("#heroVideoThumb"), modal: $("#heroModal"), player: $("#heroPlayer"), close: $("#heroClose") };
-    heroModal.thumb?.addEventListener("click", () => { heroModal.player.src=`https://www.youtube.com/embed/${heroModal.thumb.dataset.ytid}?autoplay=1`; heroModal.modal.classList.replace('hidden','flex'); });
-    heroModal.close?.addEventListener("click", () => { heroModal.player.src=""; heroModal.modal.classList.replace('flex','hidden'); });
-    const ytModal = { modal: $("#ytModal"), player: $("#ytPlayer"), close: $("#ytClose") };
-    $$('.yt-thumb').forEach(el => el.addEventListener('click', () => { ytModal.player.src=`https://www.youtube.com/embed/${el.dataset.vid}?autoplay=1`; ytModal.modal.classList.replace('hidden','flex'); }));
-    ytModal.close?.addEventListener('click', () => { ytModal.player.src=""; ytModal.modal.classList.replace('flex','hidden'); });
+    $('#boardList').addEventListener('click', async (e) => {
+        if (e.target.classList.contains('view-details-btn')) {
+            const id = e.target.dataset.id;
+            const pw = prompt('신청 시 등록한 비밀번호를 입력하세요.');
+            if (!pw) return;
+
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ action: 'getPost', id, pw })
+                });
+                const result = await res.json();
+                if (result.status !== 'success') throw new Error(result.message);
+                
+                const post = result.data;
+                const itemsHTML = Object.entries(post.items).filter(([,v])=>v>0).map(([k,v])=>`<li>${k.replace('sb','SPOBAND ')}: ${v}개</li>`).join('');
+                const repliesHTML = post.replies.map(r => `<div class="mt-2 p-2 bg-slate-700 rounded-lg"><p class="text-sm">${esc(r.content)}</p><p class="text-xs text-slate-400 text-right">${fmt(r.ts)}</p></div>`).join('');
+                
+                $('#detailsContent').innerHTML = `
+                    <div class="space-y-3">
+                        <p><strong>도장명:</strong> ${esc(post.dojo)}</p><p><strong>관장님:</strong> ${esc(post.master)}</p>
+                        <p><strong>연락처:</strong> ${esc(post.contact)}</p><p><strong>주소:</strong> ${esc(post.address)}</p>
+                        <p><strong>신청일:</strong> ${fmt(post.ts)}</p>
+                        <div><strong>신청 내역:</strong><ul class="list-disc pl-5 mt-1">${itemsHTML}</ul></div>
+                        <hr class="border-slate-600">
+                        <div><strong>관리자 답변:</strong> ${repliesHTML || '<p class="text-sm text-slate-400">아직 답변이 없습니다.</p>'}</div>
+                    </div>`;
+                
+                $('#detailsModal').classList.remove('hidden');
+                setTimeout(() => $('#detailsModal').classList.remove('opacity-0'), 10);
+            } catch (err) {
+                alert('오류: ' + err.message);
+            }
+        }
+    });
+
+    const closeDetailsModal = () => {
+        $('#detailsModal').classList.add('opacity-0');
+        setTimeout(() => $('#detailsModal').classList.add('hidden'), 300);
+    };
+    $('#detailsCloseBtn').addEventListener('click', closeDetailsModal);
+    $('#detailsModalBg').addEventListener('click', closeDetailsModal);
+
+    loadApplications();
+    recalcTotal();
 });
 </script>
 </body>
