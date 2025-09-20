@@ -1,553 +1,392 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SPOBAND Admin</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        /* 폰트 및 기본 설정 */
-        body { 
-            font-family: 'Noto Sans KR', sans-serif; 
-            background-color: #0d1117; /* 더 어두운 배경 */
-            color: #c9d1d9; /* 밝은 텍스트 색상 */
-            margin: 0; 
-            padding: 20px;
-            line-height: 1.6;
-        }
-        h1 { font-size: 28px; margin: 0; font-weight: 700; color: #f0f6fc; }
-        button, input, select, textarea { 
-            font-family: inherit; 
-            font-size: 14px; 
-            padding: 10px 15px; /* 패딩 증가 */
-            border-radius: 8px; /* 둥근 모서리 */
-            border: 1px solid #30363d; /* 테두리 색상 */
-            background-color: #21262d; /* 배경 색상 */
-            color: #c9d1d9; 
-            cursor: pointer; 
-            box-sizing: border-box; 
-            transition: all 0.2s ease; /* 부드러운 전환 효과 */
-        }
-        button:hover { background-color: #30363d; border-color: #586069; }
-        a { color: #58a6ff; text-decoration: none; }
-        a:hover { text-decoration: underline; }
-
-        /* 헤더 */
-        .admin-header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            margin-bottom: 30px; 
-            padding-bottom: 15px;
-            border-bottom: 1px solid #30363d;
-        }
-        .version-text { font-size: 16px; color: #8b949e; font-weight: 400; margin-left: 10px; }
-        .header-buttons button { margin-left: 10px; background-color: #21262d; }
-        #logout-btn { background-color: #da3633; border-color: #da3633; color: white; }
-        #logout-btn:hover { background-color: #f85149; }
-        #refresh-btn i { margin-right: 5px; }
-
-        /* 툴바 */
-        .toolbar { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            margin-bottom: 25px; 
-            flex-wrap: wrap; 
-            gap: 15px; 
-        }
-        .toolbar-left, .toolbar-right { display: flex; align-items: center; gap: 10px; }
-        #search-input { width: 280px; padding: 10px 12px; }
-        #search-input::placeholder { color: #8b949e; }
-        #status-filter { width: 150px; }
-        
-        #csv-export-btn { background-color: #2ea043; border-color: #2ea043; color: white; }
-        #csv-export-btn:hover { background-color: #3fb950; }
-        #bulk-status-change-btn { background-color: #0ea5e9; border-color: #0ea5e9; color: white; }
-        #bulk-status-change-btn:hover { background-color: #38bdf8; }
-        #bulk-delete-btn { background-color: #da3633; border-color: #da3633; color: white; }
-        #bulk-delete-btn:hover { background-color: #f85149; }
-        #selection-counter { font-size: 14px; margin-left: 10px; color: #8b949e; font-weight: 500; }
-
-        /* 테이블 컨테이너 (스크롤) */
-        .table-container { 
-            overflow-x: auto; /* 가로 스크롤 */
-            border: 1px solid #30363d; 
-            border-radius: 8px; 
-        }
-
-        /* 테이블 */
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            font-size: 13px; /* 폰트 사이즈 살짝 작게 */
-            table-layout: fixed; /* 고정 너비 테이블 */
-            min-width: 1500px; /* 테이블 최소 너비 설정 (가로 스크롤 위함) */
-        }
-        th, td { 
-            padding: 12px 10px; 
-            text-align: left; 
-            border-bottom: 1px solid #21262d; /* 줄 색상 변경 */
-            vertical-align: top; /* 상단 정렬 */
-            word-break: break-word; /* 긴 단어 강제 줄바꿈 */
-        }
-        thead th { 
-            background-color: #161b22; 
-            color: #f0f6fc; 
-            font-weight: 500; 
-            position: sticky; top: 0; /* 헤더 고정 */
-        }
-        tbody tr:hover { background-color: #1f2937; }
-        .row-checkbox { margin: 0; transform: scale(1.2); } /* 체크박스 크기 조절 */
-
-        /* 컬럼별 너비 조정 */
-        table colgroup col:nth-child(1) { width: 3%; } /* 체크박스 */
-        table colgroup col:nth-child(2) { width: 7%; } /* 신청비번 */
-        table colgroup col:nth-child(3) { width: 9%; } /* 신청일 */
-        table colgroup col:nth-child(4) { width: 10%; } /* 도장명 */
-        table colgroup col:nth-child(5) { width: 9%; } /* 관장명 */
-        table colgroup col:nth-child(6) { width: 10%; } /* 연락처 */
-        table colgroup col:nth-child(7) { width: 12%; } /* 신청항목 */
-        table colgroup col:nth-child(8) { width: 15%; } /* 답변 */
-        table colgroup col:nth-child(9) { width: 8%; } /* 견적서 */
-        table colgroup col:nth-child(10) { width: 12%; } /* 주소 */
-        table colgroup col:nth-child(11) { width: 8%; } /* 최종상태 */
-        table colgroup col:nth-child(12) { width: 10%; } /* 작업 */
-        
-        /* 작업 버튼 */
-        .action-buttons { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 5px; 
-            min-width: 80px; /* 최소 너비 */
-        }
-        .action-buttons button { 
-            width: 100%; 
-            padding: 5px 8px; 
-            font-size: 12px; 
-            background-color: #30363d; 
-            border-color: #4b5563; 
-        }
-        .action-buttons button:hover { background-color: #4b5563; }
-        .quotation-btn i, .reply-btn i, .delete-btn i { margin-right: 3px; }
-        .delete-btn { background-color: #da3633; border-color: #da3633; color: white; }
-        .delete-btn:hover { background-color: #f85149; }
-
-
-        /* 팝업(모달) 스타일 */
-        .modal { 
-            display: none; 
-            position: fixed; 
-            z-index: 1000; 
-            left: 0; top: 0; 
-            width: 100%; height: 100%; 
-            overflow: auto; 
-            background-color: rgba(0,0,0,0.7); 
-            display: flex; /* 중앙 정렬을 위해 flex 사용 */
-            align-items: center; 
-            justify-content: center;
-        }
-        .modal-content { 
-            background-color: #161b22; 
-            padding: 30px; 
-            border: 1px solid #30363d; 
-            width: 90%; 
-            max-width: 550px; /* 최대 너비 증가 */
-            border-radius: 10px; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-        .modal-header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            border-bottom: 1px solid #30363d; 
-            padding-bottom: 15px; 
-            margin-bottom: 25px; 
-        }
-        .modal-header h2 { margin: 0; color: #f0f6fc; font-weight: 600; font-size: 22px; }
-        .close-btn { 
-            color: #8b949e; 
-            font-size: 32px; 
-            font-weight: bold; 
-            cursor: pointer; 
-            transition: color 0.2s ease;
-        }
-        .close-btn:hover, .close-btn:focus { color: #c9d1d9; }
-        .modal-body p { margin-bottom: 15px; color: #8b949e; font-size: 14px; }
-        .modal-body input, .modal-body textarea { 
-            width: 100%; 
-            margin-bottom: 20px; 
-            padding: 12px; 
-            background-color: #0d1117; 
-            border-color: #30363d; 
-            color: #c9d1d9; 
-            font-size: 14px;
-        }
-        .modal-body textarea { min-height: 120px; resize: vertical; }
-        .modal-footer { text-align: right; margin-top: 20px; }
-        #save-quotation-btn, #save-reply-btn { background-color: #0ea5e9; border-color: #0ea5e9; color: white; }
-        #save-quotation-btn:hover, #save-reply-btn:hover { background-color: #38bdf8; }
-
-        /* 미디어 쿼리 (반응형) */
-        @media (max-width: 768px) {
-            .admin-header { flex-direction: column; align-items: flex-start; gap: 15px; }
-            .toolbar { flex-direction: column; align-items: flex-start; }
-            .toolbar-left, .toolbar-right { width: 100%; flex-wrap: wrap; gap: 10px; }
-            #search-input, #status-filter { width: 100%; }
-            .header-buttons { margin-top: 10px; width: 100%; display: flex; justify-content: flex-end; }
-            .table-container { border-radius: 0; margin: 0 -20px; } /* 모바일에서 좌우 여백 제거 */
-            body { padding: 10px; }
-            table { min-width: 1000px; } /* 모바일에서도 최소 너비 유지 */
-            th, td { padding: 8px 5px; }
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SPOBAND Admin (Final)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Apple SD Gothic Neo,Noto Sans KR,Malgun Gothic,sans-serif}
+    .container-fluid{width:98%; margin: 0 auto;}
+    .grid-wrap{border-radius:16px;overflow:auto;border:1px solid #1f2937;background:#0f172a; height: calc(100vh - 190px);}
+    table.grid{width:100%;border-collapse:separate;border-spacing:0;min-width:1400px}
+    .grid thead th{
+      position:sticky;top:0;z-index:1;background:#0b1220;color:#cbd5e1;font-weight:700;
+      border-bottom:1px solid #1f2937; padding:10px 12px; text-align:left; white-space:nowrap; cursor: default;
+    }
+    .grid tbody td{padding:8px 12px;border-bottom:1px solid #1f2937;color:#e2e8f0; vertical-align: top; font-size: 13px;}
+    .grid tbody tr:nth-child(even){background:#0b1220}
+    .grid tbody tr:hover{background:#122137}
+    .td-pre { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; white-space: pre-wrap; max-width: 360px; min-width:200px; box-sizing: border-box; line-height: 1.35; }
+    .status-select { background-color: #1f2937; color: #cbd5e1; border: 1px solid #334155; border-radius: 8px; padding: 4px 8px; font-size: 12px; }
+    .btn { padding: 6px 10px; border-radius: 8px; font-size: 12px; }
+    .btn-slate { background:#334155; color:white; }
+    .btn-slate:hover{ background:#475569; }
+    .btn-red{ background:#dc2626; color:white; } .btn-red:hover{ background:#b91c1c; }
+    .btn-sky{ background:#0284c7; color:white; } .btn-sky:hover{ background:#0369a1; }
+    .loading-overlay { position: fixed; inset: 0; background: rgba(2,6,23,.5); display: none; align-items: center; justify-content: center; z-index: 60; color: white; font-size: 1.1rem;}
+    .loading-overlay.show{ display:flex; }
+  </style>
 </head>
-<body>
+<body class="bg-slate-900 text-white">
+<div id="loading" class="loading-overlay"><span>처리 중...</span></div>
 
-    <header class="admin-header">
-        <h1>SPOBAND Admin <span class="version-text">Final Ver.</span></h1>
-        <div class="header-buttons">
-            <button id="refresh-btn"><i class="fas fa-sync-alt"></i> 새로고침</button>
-            <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> 로그아웃</button>
-        </div>
-    </header>
-
-    <nav class="toolbar">
-        <div class="toolbar-left">
-            <input type="text" id="search-input" placeholder="검색 (도장명/관장명/연락처/주소/비고)">
-            <select id="status-filter">
-                <option value="all">상태(전체)</option>
-                <option value="신규">신규</option>
-                <option value="확인">확인</option>
-                <option value="배송준비">배송준비</option>
-                <option value="배송완료">배송완료</option>
-                <option value="보류">보류</option>
-            </select>
-        </div>
-        <div class="toolbar-right">
-            <button id="csv-export-btn"><i class="fas fa-file-csv"></i> CSV 내보내기</button>
-            <button id="bulk-status-change-btn"><i class="fas fa-edit"></i> 선택 상태변경</button>
-            <button id="bulk-delete-btn"><i class="fas fa-trash-alt"></i> 선택 삭제</button>
-            <span id="selection-counter">선택: 0</span>
-        </div>
-    </nav>
-
-    <div class="table-container">
-        <table>
-            <colgroup>
-                <col> <col> <col> <col> <col> <col> <col> <col> <col> <col> <col> <col> </colgroup>
-            <thead>
-                <tr>
-                    <th><input type="checkbox" id="select-all-checkbox"></th>
-                    <th>신청비번</th>
-                    <th>신청일</th>
-                    <th>도장명</th>
-                    <th>관장명</th>
-                    <th>연락처</th>
-                    <th>신청항목</th>
-                    <th>답변</th>
-                    <th>견적서</th>
-                    <th>주소</th>
-                    <th>최종상태</th>
-                    <th>작업</th>
-                </tr>
-            </thead>
-            <tbody id="application-list">
-                </tbody>
-        </table>
+<header class="sticky top-0 z-40 bg-slate-950/70 border-b border-slate-800 backdrop-blur">
+  <div class="container-fluid mx-auto h-16 px-4 flex items-center justify-between">
+    <h1 class="text-xl font-black">SPOBAND <span class="text-sky-400">Admin</span> <span class="text-sm font-normal text-slate-400">Final Ver.</span></h1>
+    <div class="flex items-center gap-2">
+      <button id="btnReload" class="btn btn-sky">새로고침</button>
+      <button id="btnLogout" class="btn btn-slate">로그아웃</button>
     </div>
+  </div>
+</header>
 
-    <div id="quotation-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>견적서 URL 관리</h2>
-                <span class="close-btn">&times;</span>
-            </div>
-            <div class="modal-body">
-                <p>견적서 링크(URL)를 입력하거나 수정하세요.</p>
-                <input type="url" id="quotation-url-input" placeholder="https://..." class="full-width-input">
-                <input type="hidden" id="quotation-modal-id">
-            </div>
-            <div class="modal-footer">
-                <button id="save-quotation-btn"><i class="fas fa-save"></i> 저장</button>
-            </div>
-        </div>
+<main class="container-fluid mx-auto px-4 py-5">
+  <div class="mb-4 flex flex-wrap gap-3 items-center">
+    <input id="searchInput" class="px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 w-[320px]" placeholder="검색 (도장명/관장명/연락처/주소/비고)" />
+    <select id="statusFilter" class="px-3 py-2 rounded-lg bg-slate-800 border border-slate-700">
+      <option value="">상태(전체)</option>
+      <option>신규</option><option>배송준비</option><option>배송중</option><option>배송완료</option><option>반품</option>
+    </select>
+
+    <button id="btnExport" class="btn btn-slate ml-auto">CSV 내보내기</button>
+    <button id="btnBulkStatus" class="btn btn-sky">선택 상태변경</button>
+    <button id="btnBulkDelete" class="btn btn-red">선택 삭제</button>
+    <span id="selCount" class="text-slate-400 text-sm">선택: 0</span>
+  </div>
+
+  <div class="grid-wrap">
+    <table class="grid" id="grid">
+      <thead>
+        <tr>
+          <th style="width:40px"><input id="checkAll" type="checkbox"></th>
+          <th>신청비번</th>
+          <th>신청일</th>
+          <th>도장명</th>
+          <th>관장명</th>
+          <th>연락처</th>
+          <th>신청항목</th>
+          <th>답변</th>
+          <th>견적서</th>
+          <th>주소</th>
+          <th>최종상태</th>
+          <th>비고</th>
+          <th style="width:180px">작업</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</main>
+
+<!-- 견적서 업로드 모달 -->
+<div id="quoteModal" class="fixed inset-0 hidden items-center justify-center bg-black/60 z-50">
+  <div class="bg-slate-800 rounded-xl p-5 w-[min(520px,92vw)] shadow-xl">
+    <h3 class="text-lg font-bold mb-3">견적서 파일 업로드</h3>
+    <input id="quoteFile" type="file" accept=".pdf,image/*" class="w-full bg-slate-900 border border-slate-700 rounded-md p-2">
+    <p class="text-xs text-slate-400 mt-2">PDF 또는 이미지 파일을 선택하세요.</p>
+    <div class="mt-4 flex justify-end gap-2">
+      <button id="quoteCancel" class="px-4 py-2 border border-slate-600 rounded-md">취소</button>
+      <button id="quoteUpload" class="px-4 py-2 bg-sky-600 rounded-md">업로드 및 저장</button>
     </div>
-
-    <div id="reply-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>답변 작성</h2>
-                <span class="close-btn">&times;</span>
-            </div>
-            <div class="modal-body">
-                <p>신청자에게 보낼 답변을 작성하세요.</p>
-                <textarea id="reply-content-input" placeholder="답변 내용..." class="full-width-input"></textarea>
-                <input type="hidden" id="reply-modal-id">
-            </div>
-            <div class="modal-footer">
-                <button id="save-reply-btn"><i class="fas fa-save"></i> 저장</button>
-            </div>
-        </div>
-    </div>
-
+  </div>
+</div>
 
 <script>
-// ================== 설정 필수! ==================
-const API_URL = "https://script.google.com/macros/s/AKfycbwJIXRV0e0QRBIaYrwsJv5c5Rsht-HgrFARht9kiriOkdBXn0wkGdQnR3cZr3pnbNmK/exec";
-const ADMIN_SECRET = "1234";
-// ==============================================
+/* ================== CONFIG ================== */
+// !!! 여기에 당신의 웹앱 URL (…/exec) 넣기 !!!
+const API_URL = "https://script.google.com/macros/s/AKfycbz8lDZJBRxRRYJwm4dUo-vnrM8tSPj8AOMnZlL3Oe6nIxMRR0FluU26V69RwsvYMgM_/exec";
 
+const STATUS_OPTIONS = ["신규","배송준비","배송중","배송완료","반품"];
 
-// --- 데이터 렌더링 함수 ---
-function renderApplications(applications) {
-    const tbody = document.getElementById('application-list');
-    tbody.innerHTML = ''; 
-    applications.forEach(app => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td><input type="checkbox" class="row-checkbox" data-id="${app.id}"></td>
-            <td>${app.id || ''}</td>
-            <td>${formatDate(app.ts)}</td>
-            <td>${app.dojo || ''}</td>
-            <td>${app.master || ''}</td>
-            <td>${app.contact || ''}</td>
-            <td>${formatItems(app.items)}</td>
-            <td>${formatReplies(app.replies)}</td>
-            <td>${app.quotationUrl ? `<a href="${app.quotationUrl}" target="_blank"><i class="fas fa-external-link-alt"></i> 보기</a>` : '없음'}</td>
-            <td>${app.address || ''}</td>
-            <td><select class="status-select" data-id="${app.id}">${generateStatusOptions(app.status)}</select></td>
-            <td class="action-buttons">
-                <button class="quotation-btn" data-id="${app.id}" data-url="${app.quotationUrl || ''}"><i class="fas fa-file-alt"></i> 견적서</button>
-                <button class="reply-btn" data-id="${app.id}"><i class="fas fa-reply"></i> 답변</button>
-                <button class="delete-btn" data-id="${app.id}"><i class="fas fa-trash-alt"></i> 삭제</button>
-            </td>
-        `;
-        tbody.appendChild(tr);
+/* ============= STATE & UTILS ============= */
+const $  = (s, el=document)=>el.querySelector(s);
+const $$ = (s, el=document)=>Array.from(el.querySelectorAll(s));
+const fmt = ts => ts ? new Date(ts).toLocaleString('ko-KR',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}) : "";
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const showLoading=()=>$("#loading").classList.add("show");
+const hideLoading=()=>$("#loading").classList.remove("show");
+const alertErr = e => { hideLoading(); alert("오류: " + (e?.message || e)); };
+
+let POSTS = [];
+let filtered = [];
+let selectedIds = new Set();
+let sortKey = 'ts', sortAsc=false;
+let currentUploadId = null;
+
+const ADMIN_SECRET = localStorage.getItem("ADMIN_SECRET") || "";
+
+/* ============= HELPERS ============= */
+function formatItems(items){
+  if(!items || typeof items !== 'object') return '';
+  const keys = ["sb30","sb35","sb45","sb55","sb65"];
+  const labels = {sb30:"30",sb35:"35",sb45:"45",sb55:"55",sb65:"65"};
+  const lines=[];
+  for(const k of keys){
+    const v = Number(items[k]||0);
+    if(v>0) lines.push(`SPOBAND ${labels[k]}: ${v}개`);
+  }
+  return lines.join('\n');
+}
+function formatReplies(rs){
+  if(!Array.isArray(rs) || rs.length===0) return '';
+  return rs.map(r=>`[${fmt(r.ts)}] ${esc(r.content)}`).join('\n\n');
+}
+function applyFilter(){
+  const q = $("#searchInput").value.trim();
+  const st = $("#statusFilter").value;
+  filtered = POSTS.filter(r=>{
+    if(st && r.status!==st) return false;
+    if(!q) return true;
+    const hay = [r.pw,r.dojo,r.master,r.contact,r.address,r.notes].map(x=>String(x||'')).join(' ').toLowerCase();
+    return hay.includes(q.toLowerCase());
+  });
+  sortAndRender();
+}
+function sortAndRender(){
+  filtered.sort((a,b)=>{
+    let av=a[sortKey], bv=b[sortKey];
+    if(sortKey==='pw'){ av=Number(av); bv=Number(bv); }
+    if(av<bv) return sortAsc?-1:1;
+    if(av>bv) return sortAsc?1:-1;
+    return 0;
+  });
+  renderGrid();
+}
+
+/* ============= API ============= */
+async function apiPost(payload){
+  showLoading();
+  try{
+    const res = await fetch(API_URL, {
+      method:"POST",
+      headers:{ "Content-Type":"text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
     });
-    updateSelectionCounter(); // 체크박스 카운터 업데이트
+    const json = await res.json();
+    if(!res.ok || json.status==="error") throw new Error(json.message || `HTTP ${res.status}`);
+    return json;
+  } finally { hideLoading(); }
+}
+async function fetchList(){
+  showLoading();
+  try{
+    const res = await fetch(`${API_URL}?action=list`);
+    if(!res.ok) throw new Error("목록 불러오기 실패");
+    POSTS = await res.json();
+    // 기본 정렬: 최신 먼저
+    sortKey='ts'; sortAsc=false;
+    selectedIds.clear();
+    updateSelectedCounter();
+    applyFilter();
+  } catch(e){ alertErr(e); }
+  finally{ hideLoading(); }
 }
 
-/* 헬퍼 함수들은 이전과 동일 (생략) */
-function formatDate(timestamp) { if (!timestamp) return ''; const d = new Date(timestamp); return `${d.getFullYear()}. ${String(d.getMonth() + 1).padStart(2, '0')}. ${String(d.getDate()).padStart(2, '0')}. ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`; }
-function formatItems(items) { if (!items || typeof items !== 'object') return ''; let total = 0; const itemEntries = Object.entries(items).map(([key, value]) => { const numValue = parseInt(value, 10) || 0; total += numValue; return `${key}: ${numValue}개`; }); return `${itemEntries.join('<br>')}<br><b>합계: ${total}개</b>`; }
-function formatReplies(replies) { 
-    if (!Array.isArray(replies) || replies.length === 0) return ''; 
-    // 최신 답변이 위로 오도록 역순으로 정렬 후 표시
-    return [...replies].reverse().map(reply => `[${formatDate(reply.ts).slice(0, 12)}] ${reply.content}`).join('<br>'); 
+/* ============= RENDER ============= */
+function renderGrid(){
+  const tbody = $("#tbody");
+  tbody.innerHTML = filtered.map(r => `
+    <tr data-id="${r.id}">
+      <td><input type="checkbox" class="row-check" ${selectedIds.has(String(r.id))?'checked':''}></td>
+      <td>${esc(r.pw)}</td>
+      <td><span class="whitespace-nowrap">${fmt(r.ts)}</span></td>
+      <td>${esc(r.dojo)}</td>
+      <td>${esc(r.master)}</td>
+      <td>${esc(r.contact)}</td>
+      <td><pre class="td-pre">${formatItems(r.items)}</pre></td>
+      <td><pre class="td-pre">${formatReplies(r.replies)}</pre></td>
+      <td>
+        ${r.quotationUrl
+          ? `<a href="${esc(r.quotationUrl)}" target="_blank" class="text-sky-400 underline hover:text-sky-300">다운로드</a>`
+          : `<span class="text-slate-500">없음</span>`}
+      </td>
+      <td>${esc(r.address)}</td>
+      <td>
+        <select class="status-select row-status">
+          ${STATUS_OPTIONS.map(opt=>`<option ${r.status===opt?'selected':''}>${opt}</option>`).join('')}
+        </select>
+      </td>
+      <td>${esc(r.notes||'')}</td>
+      <td class="whitespace-nowrap">
+        <button class="btn btn-slate btn-quote">견적서</button>
+        <button class="btn btn-slate btn-reply">답변</button>
+        <button class="btn btn-red btn-del">삭제</button>
+      </td>
+    </tr>
+  `).join('');
+
+  // row events
+  $$("#tbody .row-check").forEach(cb=>{
+    cb.addEventListener('change', e=>{
+      const id = e.target.closest('tr').dataset.id;
+      if(e.target.checked) selectedIds.add(String(id));
+      else selectedIds.delete(String(id));
+      updateSelectedCounter();
+    });
+  });
+  $$("#tbody .row-status").forEach(sel=>{
+    sel.addEventListener('change', async e=>{
+      const tr = e.target.closest('tr'), id = tr.dataset.id, status = e.target.value;
+      try{
+        await apiPost({ action:"updateStatus", id, status, secret:getSecret() });
+        const row = POSTS.find(p=>String(p.id)===String(id));
+        if(row) row.status=status;
+      }catch(err){ alertErr(err); fetchList(); }
+    });
+  });
+  $$("#tbody .btn-del").forEach(btn=>{
+    btn.addEventListener('click', async e=>{
+      const id = e.target.closest('tr').dataset.id;
+      if(!confirm(`신청비번 ${id} 항목을 삭제할까요?`)) return;
+      try{
+        await apiPost({ action:"delete", id, secret:getSecret() });
+        await fetchList();
+      }catch(err){ alertErr(err); }
+    });
+  });
+  $$("#tbody .btn-reply").forEach(btn=>{
+    btn.addEventListener('click', async e=>{
+      const id = e.target.closest('tr').dataset.id;
+      const content = prompt("답변 내용을 입력하세요:");
+      if(!content) return;
+      try{
+        await apiPost({ action:"addReply", id, reply:{ content, ts:Date.now(), author:"admin" }, secret:getSecret() });
+        await fetchList();
+      }catch(err){ alertErr(err); }
+    });
+  });
+  $$("#tbody .btn-quote").forEach(btn=>{
+    btn.addEventListener('click', e=>{
+      currentUploadId = e.target.closest('tr').dataset.id;
+      openQuoteModal();
+    });
+  });
 }
-function generateStatusOptions(currentStatus) { const statuses = ['신규', '확인', '배송준비', '배송완료', '보류']; return statuses.map(status => `<option value="${status}" ${status === currentStatus ? 'selected' : ''}>${status}</option>`).join(''); }
 
-
-// --- 페이지 로드 및 데이터 불러오기 ---
-document.addEventListener('DOMContentLoaded', () => {
-    fetchAndRender();
-    setupEventListeners(); // 이벤트 리스너 설정
+/* ============= BULK ============= */
+function updateSelectedCounter(){
+  $("#selCount").textContent = `선택: ${selectedIds.size}`;
+  $("#checkAll").checked = selectedIds.size && selectedIds.size === filtered.length;
+}
+$("#checkAll").addEventListener('change', ()=>{
+  if($("#checkAll").checked){ filtered.forEach(r=>selectedIds.add(String(r.id))); }
+  else selectedIds.clear();
+  renderGrid(); updateSelectedCounter();
+});
+$("#btnBulkDelete").addEventListener('click', async ()=>{
+  if(selectedIds.size===0) return alert("선택된 항목이 없습니다.");
+  if(!confirm(`총 ${selectedIds.size}건 삭제할까요?`)) return;
+  try{
+    await apiPost({ action:"bulkDelete", ids:[...selectedIds], secret:getSecret() });
+    await fetchList();
+  }catch(err){ alertErr(err); }
+});
+$("#btnBulkStatus").addEventListener('click', async ()=>{
+  if(selectedIds.size===0) return alert("선택된 항목이 없습니다.");
+  const status = prompt("새 상태(신규/배송준비/배송중/배송완료/반품):", "배송준비");
+  if(!status) return;
+  try{
+    await apiPost({ action:"bulkUpdateStatus", ids:[...selectedIds], status, secret:getSecret() });
+    await fetchList();
+  }catch(err){ alertErr(err); }
 });
 
-async function fetchAndRender() {
-    try {
-        const res = await fetch(`${API_URL}?action=list`);
-        if (!res.ok) throw new Error('데이터를 불러오는 데 실패했습니다.');
-        const applications = await res.json();
-        renderApplications(applications);
-    } catch (error) {
-        alert(error.message);
-        renderApplications([]); // 오류 발생 시 빈 테이블
-    }
+/* ============= CSV EXPORT ============= */
+$("#btnExport").addEventListener('click', ()=>{
+  const rows = [
+    ["신청비번","신청일","도장명","관장명","연락처","신청항목","주소","최종상태","비고"]
+  ];
+  filtered.forEach(r=>{
+    rows.push([
+      r.pw,
+      fmt(r.ts),
+      r.dojo,
+      r.master,
+      r.contact,
+      formatItems(r.items).replace(/\n/g,' | '),
+      r.address,
+      r.status,
+      r.notes||""
+    ]);
+  });
+  const csv = rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\r\n");
+  const blob = new Blob([csv], {type:"text/csv;charset=utf-8"});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `spoband_admin_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+/* ============= SEARCH / FILTER ============= */
+$("#searchInput").addEventListener('input', applyFilter);
+$("#statusFilter").addEventListener('change', applyFilter);
+
+/* ============= AUTH BUTTONS ============= */
+$("#btnReload").addEventListener('click', fetchList);
+$("#btnLogout").addEventListener('click', ()=>{
+  if(confirm("로그아웃 하시겠습니까?")){
+    localStorage.removeItem("ADMIN_SECRET");
+    location.reload();
+  }
+});
+function getSecret(){
+  let s = localStorage.getItem("ADMIN_SECRET");
+  if(!s){
+    s = prompt("관리자 비밀키를 입력하세요:");
+    if(!s) throw new Error("관리자 키 미입력");
+    localStorage.setItem("ADMIN_SECRET", s);
+  }
+  return s;
 }
 
+/* ============= QUOTATION MODAL (Base64 업로드) ============= */
+const quoteModal = $("#quoteModal");
+function openQuoteModal(){ quoteModal.classList.remove('hidden'); quoteModal.classList.add('flex'); }
+function closeQuoteModal(){ quoteModal.classList.add('hidden'); quoteModal.classList.remove('flex'); currentUploadId = null; $("#quoteFile").value=""; }
+$("#quoteCancel").addEventListener('click', closeQuoteModal);
+$("#quoteModal").addEventListener('click', (e)=>{ if(e.target===quoteModal) closeQuoteModal(); });
 
-// --- 모달 관련 로직 ---
-const quotationModal = document.getElementById('quotation-modal');
-const replyModal = document.getElementById('reply-modal');
-
-document.querySelectorAll('.modal .close-btn').forEach(btn => {
-    btn.onclick = () => {
-        quotationModal.style.display = 'none';
-        replyModal.style.display = 'none';
+$("#quoteUpload").addEventListener('click', async ()=>{
+  try{
+    if(!currentUploadId) return alert("대상 ID가 없습니다.");
+    const file = $("#quoteFile").files[0];
+    if(!file) return alert("파일을 선택해주세요.");
+    const base64 = await fileToBase64(file);
+    await apiPost({
+      action:"uploadQuotationB64",
+      secret:getSecret(),
+      id:String(currentUploadId),
+      filename:file.name,
+      mimeType:file.type || "application/octet-stream",
+      base64
+    });
+    alert("업로드 완료! (신청자 상세에서 다운로드 가능)");
+    closeQuoteModal();
+    await fetchList();
+  }catch(e){ alertErr(e); }
+});
+function fileToBase64(file){
+  return new Promise((resolve,reject)=>{
+    const fr = new FileReader();
+    fr.onload = ()=>{
+      const dataUrl = fr.result;
+      const i = String(dataUrl).indexOf("base64,");
+      if(i<0) return reject(new Error("Base64 파싱 실패"));
+      resolve(dataUrl.substring(i+7));
     };
-});
-window.onclick = (event) => {
-    if (event.target == quotationModal || event.target == replyModal) {
-        quotationModal.style.display = 'none';
-        replyModal.style.display = 'none';
-    }
-};
-
-
-// --- 이벤트 리스너 (버튼 클릭 처리) ---
-function setupEventListeners() {
-    const applicationList = document.getElementById('application-list');
-    const selectAllCheckbox = document.getElementById('select-all-checkbox');
-    const refreshBtn = document.getElementById('refresh-btn');
-    const bulkStatusChangeBtn = document.getElementById('bulk-status-change-btn');
-    const bulkDeleteBtn = document.getElementById('bulk-delete-btn');
-
-    // 새로고침 버튼
-    refreshBtn.addEventListener('click', fetchAndRender);
-
-    // 테이블 내 이벤트 (견적서, 답변, 삭제, 상태 변경)
-    applicationList.addEventListener('click', async (e) => {
-        const target = e.target;
-        const id = target.dataset.id || target.closest('button')?.dataset.id; // 아이콘 클릭 시도 처리
-
-        if (!id) return; // ID가 없으면 처리 안 함
-
-        // 견적서 버튼
-        if (target.classList.contains('quotation-btn') || target.closest('.quotation-btn')) {
-            document.getElementById('quotation-modal-id').value = id;
-            document.getElementById('quotation-url-input').value = target.dataset.url || target.closest('.quotation-btn')?.dataset.url || '';
-            quotationModal.style.display = 'flex'; // flex로 변경하여 중앙 정렬
-        }
-
-        // 답변 버튼
-        if (target.classList.contains('reply-btn') || target.closest('.reply-btn')) {
-            document.getElementById('reply-modal-id').value = id;
-            document.getElementById('reply-content-input').value = ''; 
-            replyModal.style.display = 'flex'; // flex로 변경하여 중앙 정렬
-        }
-
-        // 단일 삭제 버튼
-        if (target.classList.contains('delete-btn') || target.closest('.delete-btn')) {
-            if (confirm(`신청 비번 ${id}번 항목을 정말 삭제하시겠습니까?`)) {
-                await postData({ action: 'delete', secret: ADMIN_SECRET, id });
-            }
-        }
-    });
-
-    // 상태 변경 드롭다운
-    applicationList.addEventListener('change', async (e) => {
-        const target = e.target;
-        if (target.classList.contains('status-select')) {
-            const id = target.dataset.id;
-            const newStatus = target.value;
-            await postData({ action: 'updateStatus', secret: ADMIN_SECRET, id, status: newStatus });
-        }
-    });
-
-    // 전체 선택 체크박스
-    selectAllCheckbox.addEventListener('change', (e) => {
-        document.querySelectorAll('.row-checkbox').forEach(checkbox => {
-            checkbox.checked = e.target.checked;
-        });
-        updateSelectionCounter();
-    });
-
-    // 개별 체크박스 변경 시
-    applicationList.addEventListener('change', (e) => {
-        if (e.target.classList.contains('row-checkbox')) {
-            updateSelectionCounter();
-            // 모든 개별 체크박스가 선택되면 전체 선택 체크박스도 선택
-            const allChecked = Array.from(document.querySelectorAll('.row-checkbox')).every(cb => cb.checked);
-            selectAllCheckbox.checked = allChecked;
-        }
-    });
-
-    // 선택 상태변경 버튼
-    bulkStatusChangeBtn.addEventListener('click', async () => {
-        const selectedIds = getSelectedApplicationIds();
-        if (selectedIds.length === 0) {
-            alert('변경할 항목을 선택해주세요.');
-            return;
-        }
-        const newStatus = prompt('선택된 항목들을 어떤 상태로 변경하시겠습니까? (예: 확인, 배송준비, 배송완료, 보류)');
-        if (newStatus && ['신규', '확인', '배송준비', '배송완료', '보류'].includes(newStatus)) {
-            await postData({ action: 'bulkUpdateStatus', secret: ADMIN_SECRET, ids: selectedIds, status: newStatus });
-        } else if (newStatus !== null) { // 취소 버튼이 아니면
-            alert('유효하지 않은 상태 값입니다.');
-        }
-    });
-
-    // 선택 삭제 버튼
-    bulkDeleteBtn.addEventListener('click', async () => {
-        const selectedIds = getSelectedApplicationIds();
-        if (selectedIds.length === 0) {
-            alert('삭제할 항목을 선택해주세요.');
-            return;
-        }
-        if (confirm(`선택된 ${selectedIds.length}개 항목을 정말 삭제하시겠습니까?`)) {
-            await postData({ action: 'bulkDelete', secret: ADMIN_SECRET, ids: selectedIds });
-        }
-    });
+    fr.onerror = ()=>reject(fr.error || new Error("파일 읽기 실패"));
+    fr.readAsDataURL(file);
+  });
 }
 
-
-// 견적서 저장 버튼 클릭
-document.getElementById('save-quotation-btn').addEventListener('click', async () => {
-    const id = document.getElementById('quotation-modal-id').value;
-    const url = document.getElementById('quotation-url-input').value;
-    
-    if (!url.trim()) {
-        alert('견적서 URL을 입력해주세요.');
-        return;
-    }
-
-    await postData({ action: 'setQuotationUrl', secret: ADMIN_SECRET, id, url });
-    quotationModal.style.display = 'none';
+/* ============= INIT ============= */
+document.addEventListener('DOMContentLoaded', ()=>{
+  // 비밀키가 없으면 한번 물어보기
+  try{ getSecret(); } catch(_) {}
+  fetchList();
 });
-
-// 답변 저장 버튼 클릭
-document.getElementById('save-reply-btn').addEventListener('click', async () => {
-    const id = document.getElementById('reply-modal-id').value;
-    const content = document.getElementById('reply-content-input').value;
-    if (!content.trim()) {
-        alert('답변 내용을 입력하세요.');
-        return;
-    }
-
-    const reply = { content }; 
-    await postData({ action: 'addReply', secret: ADMIN_SECRET, id, reply });
-    replyModal.style.display = 'none';
-});
-
-
-// 선택된 체크박스 ID 가져오기
-function getSelectedApplicationIds() {
-    const selectedIds = [];
-    document.querySelectorAll('.row-checkbox:checked').forEach(checkbox => {
-        selectedIds.push(checkbox.dataset.id);
-    });
-    return selectedIds;
-}
-
-// 선택된 항목 개수 업데이트
-function updateSelectionCounter() {
-    const count = getSelectedApplicationIds().length;
-    document.getElementById('selection-counter').textContent = `선택: ${count}`;
-}
-
-
-// 백엔드 POST 요청 공통 함수
-async function postData(body) {
-    try {
-        const res = await fetch(API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify(body)
-        });
-        const result = await res.json();
-        if (result.status !== 'success') {
-            throw new Error(result.message || '알 수 없는 오류');
-        }
-        alert('성공적으로 처리되었습니다.');
-        fetchAndRender(); // 데이터 새로고침
-        return result;
-    } catch (error) {
-        alert(`오류 발생: ${error.message}`);
-        return { status: 'error', message: error.message };
-    }
-}
-
-// 로그아웃 기능 (필요시 구현)
-document.getElementById('logout-btn').addEventListener('click', () => {
-    alert('로그아웃 기능은 현재 구현되어 있지 않습니다.');
-    // 실제 로그아웃 로직 (예: 세션 삭제, 로그인 페이지로 리다이렉트) 추가
-});
-
-
 </script>
-
 </body>
 </html>
