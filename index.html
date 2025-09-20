@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
   // ✅ 최신 배포 URL로 통일
 
-const API_URL = "https://script.google.com/macros/s/AKfycbztYERcdg7Zf4qHEEaY1Y7LkXCyQ85tcD1Bfk1b3SKBP-d6EG5Lv1W-Bqfg1pngLifR/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwJIXRV0e0QRBIaYrwsJv5c5Rsht-HgrFARht9kiriOkdBXn0wkGdQnR3cZr3pnbNmK/exec";
 
   const esc = (s) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]));
   const fmt = (ts) => new Date(ts).toLocaleString();

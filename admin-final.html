@@ -1,229 +1,147 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>SPOBAND Admin (Final)</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<style>
-  body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Apple SD Gothic Neo,Noto Sans KR,Malgun Gothic,sans-serif}
-  .container-fluid{width:98%; margin: 0 auto;}
-  .grid-wrap{border-radius:16px;overflow:auto;border:1px solid #1f2937;background:#0f172a; height: calc(100vh - 150px);}
-  table.grid{width:100%;border-collapse:separate;border-spacing:0;min-width:2000px}
-  .grid thead th{
-    position:sticky;top:0;z-index:1;background:#0b1220;color:#cbd5e1;font-weight:700;
-    border-bottom:1px solid #1f2937; padding:10px 12px; text-align:left; white-space:nowrap; cursor: pointer;
-  }
-  .grid thead th:hover { background: #1e2b3b; }
-  .grid tbody td{padding:8px 12px;border-bottom:1px solid #1f2937;color:#e2e8f0; vertical-align: top; font-size: 13px;}
-  .grid tbody tr:nth-child(even){background:#0b1220}
-  .grid tbody tr:hover{background:#122137}
-  .td-pre { 
-    font-family: monospace; white-space: pre-wrap; max-width: 300px;
-    min-width:200px; box-sizing: border-box; line-height: 1.4;
-  }
-  .status-select {
-    background-color: #1f2937; color: #cbd5e1; border: 1px solid #334155;
-    border-radius: 8px; padding: 4px 8px; font-size: 12px;
-  }
-  .loading-overlay {
-    position: fixed; inset: 0; background: rgba(2,6,23,.5); backdrop-filter: blur(1px);
-    display: none; align-items: center; justify-content: center; z-index: 60; color: white; font-size: 1.2rem;
-  }
-  .loading-overlay.show { display: flex; }
-</style>
+    <title>SPOBAND Admin</title>
+    <style>
+        body { font-family: sans-serif; background-color: #111827; color: #e5e7eb; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th, td { padding: 12px 8px; text-align: left; border-bottom: 1px solid #374151; }
+        thead { background-color: #1f2937; }
+        select, button { padding: 6px; border-radius: 4px; border: 1px solid #4b5563; background-color: #374151; color: #e5e7eb; cursor: pointer; }
+        .delete-btn { background-color: #dc2626; color: white; }
+        a { color: #38bdf8; text-decoration: none; }
+    </style>
 </head>
-<body class="bg-slate-900 text-white">
+<body>
 
-<div id="loading" class="loading-overlay"><span>처리 중...</span></div>
-
-<header class="sticky top-0 z-40 bg-slate-950/70 border-b border-slate-800 backdrop-blur">
-  <div class="container-fluid mx-auto h-16 px-4 flex items-center justify-between">
-    <h1 class="text-xl font-black">SPOBAND <span class="text-sky-400">Admin</span> <span class="text-sm font-normal text-slate-400">Final Ver.</span></h1>
-    <div class="flex items-center gap-3">
-      <button id="btnReload" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded">새로고침</button>
-      <button id="btnLogout" class="bg-slate-700 hover:bg-slate-800 text-white font-bold py-2 px-4 rounded">로그아웃</button>
-    </div>
-  </div>
-</header>
-
-<main class="container-fluid mx-auto px-4 py-6">
-  <div class="grid-wrap">
-    <table class="grid" id="grid">
-      <thead>
-        <tr>
-          <th class="sortable" data-sort="pw">신청비번</th>
-          <th class="sortable" data-sort="ts">신청일</th>
-          <th class="sortable" data-sort="dojo">도장명</th>
-          <th class="sortable" data-sort="master">관장명</th>
-          <th class="sortable" data-sort="contact">연락처</th>
-          <th>신청항목</th>
-          <th>답변</th>
-          <th>견적서</th>
-          <th class="sortable" data-sort="address">주소</th>
-          <th class="sortable" data-sort="status">최종상태</th>
-          <th class="sortable" data-sort="notes">비고</th>
-          <th style="width:100px">작업</th>
-        </tr>
-      </thead>
-      <tbody id="tbody"></tbody>
+    <table>
+        <thead>
+            <tr>
+                <th>신청비번</th>
+                <th>신청일</th>
+                <th>도장명</th>
+                <th>관장명</th>
+                <th>연락처</th>
+                <th>신청항목</th>
+                <th>답변</th>
+                <th>견적서</th>
+                <th>주소</th>
+                <th>최종상태</th>
+                <th>비고</th>
+                <th>작업</th>
+            </tr>
+        </thead>
+        <tbody id="application-list">
+            </tbody>
     </table>
-  </div>
-</main>
 
 <script>
-/* ================== CONFIG ================== */
-const API_URL = "https://script.google.com/macros/s/AKfycbw5_Q2KXlG5EhJiqjfv3SDfutRU6-_DnYmJmwqte_SS2H30-nQMVBcM4KHqbHevblwj/exec"; // ❗❗❗ 새 버전으로 재배포한 새 URL로 꼭 교체해주세요 ❗❗❗
-const ADMIN_SECRET = localStorage.getItem("ADMIN_SECRET") || "";
-let POSTS = [];
-let sortState = { key: 'ts', asc: false }; // Default sort by date descending
-const STATUS_OPTIONS = ["신규", "배송준비", "배송중", "배송완료", "반품"];
+// --- 데이터 렌더링 함수 ---
+// 이 함수가 백엔드에서 받은 데이터를 기반으로 테이블 내용을 그립니다.
+function renderApplications(applications) {
+    const tbody = document.getElementById('application-list');
+    tbody.innerHTML = ''; // 기존 내용을 초기화합니다.
 
-/* ============= UTILS ================== */
-const $ = (s, el = document) => el.querySelector(s);
-const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
-const fmt = ts => ts ? new Date(ts).toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : "";
-const esc = s => String(s || "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[c]));
-const showLoading = () => $("#loading").classList.add("show");
-const hideLoading = () => $("#loading").classList.remove("show");
-function alertErr(e) { hideLoading(); alert("오류: " + (e?.message || e)); }
+    // 각 신청 건에 대해 반복하며 테이블 행(tr)을 생성합니다.
+    applications.forEach(app => {
+        const tr = document.createElement('tr');
 
-/* ============= CUSTOM FORMATTERS ============= */
+        // 각 행에 들어갈 HTML 내용을 정의합니다.
+        // 여기에 누락되었던 `formatDate(app.ts)` (신청일)을 추가하여 밀림 현상을 해결했습니다.
+        tr.innerHTML = `
+            <td>${app.id || ''}</td>
+            <td>${formatDate(app.ts)}</td>
+            <td>${app.dojo || ''}</td>
+            <td>${app.master || ''}</td>
+            <td>${app.contact || ''}</td>
+            <td>${formatItems(app.items)}</td>
+            <td>${formatReplies(app.replies)}</td>
+            <td>${app.quotationUrl ? `<a href="${app.quotationUrl}" target="_blank">보기</a>` : '없음'}</td>
+            <td>${app.address || ''}</td>
+            <td>
+                <select data-id="${app.id}">
+                    ${generateStatusOptions(app.status)}
+                </select>
+            </td>
+            <td>${app.notes || ''}</td>
+            <td><button class="delete-btn" data-id="${app.id}">삭제</button></td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+
+// --- 헬퍼(Helper) 함수들 ---
+// 데이터를 화면에 예쁘게 표시하기 위한 보조 함수들입니다.
+
+// 1. 날짜 형식 변환 (예: 1695123456789 -> '2025. 09. 19. 20:37')
+function formatDate(timestamp) {
+    if (!timestamp) return '날짜 없음';
+    const d = new Date(timestamp);
+    const YYYY = d.getFullYear();
+    const MM = String(d.getMonth() + 1).padStart(2, '0');
+    const DD = String(d.getDate()).padStart(2, '0');
+    const hh = String(d.getHours()).padStart(2, '0');
+    const mm = String(d.getMinutes()).padStart(2, '0');
+    return `${YYYY}. ${MM}. ${DD}. ${hh}:${mm}`;
+}
+
+// 2. 신청 항목 객체를 HTML 문자열로 변환
 function formatItems(items) {
-    if (!items || typeof items !== 'object' || Object.keys(items).length === 0) return '';
-    if (items.error) return items.error;
-    return Object.entries(items)
-        .map(([key, value]) => `${esc(key)}: ${esc(value)}개`)
-        .join('\n');
+    if (!items || typeof items !== 'object') return '';
+    // 예: {sb30: 50, sb65: 90} -> "sb30: 50개<br>sb65: 90개<br>합계: 140개"
+    let total = 0;
+    const itemEntries = Object.entries(items).map(([key, value]) => {
+        const numValue = parseInt(value, 10) || 0;
+        total += numValue;
+        return `${key}: ${numValue}개`;
+    });
+    return `${itemEntries.join('<br>')}<br><b>합계: ${total}개</b>`;
 }
 
+// 3. 답변 배열을 HTML 문자열로 변환
 function formatReplies(replies) {
-    if (!replies || !Array.isArray(replies) || replies.length === 0) return '';
-    return replies.map(reply => `[${fmt(reply.ts)}] ${esc(reply.content)}`)
-        .join('\n\n');
+    if (!Array.isArray(replies) || replies.length === 0) return '';
+    // 예: [{ts: ..., content: "첫 번째 답변"}, ...] -> "[2025.09.19] 첫 번째 답변<br>..."
+    return replies.map(reply => {
+        const d = new Date(reply.ts);
+        const dateStr = `[${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}]`;
+        return `${dateStr} ${reply.content}`;
+    }).join('<br>');
 }
 
-/* ============= DATA & RENDER ============= */
-async function apiCall(payload) {
-    showLoading();
-    try {
-        const res = await fetch(API_URL, {
-            method: "POST",
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify({ ...payload, secret: ADMIN_SECRET })
-        });
-        const json = await res.json();
-        if (!res.ok || json.status !== "success") throw new Error(json.message || `HTTP ${res.status}`);
-        return json;
-    } finally {
-        hideLoading();
+// 4. 최종상태 드롭다운(<select>) 메뉴 생성
+function generateStatusOptions(currentStatus) {
+    const statuses = ['신규', '확인', '배송준비', '배송완료', '보류'];
+    return statuses.map(status =>
+        `<option value="${status}" ${status === currentStatus ? 'selected' : ''}>${status}</option>`
+    ).join('');
+}
+
+
+// --- 테스트용 예시 데이터 ---
+// 실제로는 fetch를 통해 이와 같은 형식의 데이터를 받아옵니다.
+const mockData = [
+    {
+        id: '1234',
+        ts: 1758259342000, // 2025년 9월 19일 오후 10:22
+        dojo: '서대문태권도',
+        master: '정관식',
+        contact: '010-9796-1234',
+        items: { sb30: 50, sb65: 90 },
+        replies: [{ ts: 1758259342000, content: "첫 번째 답변입니다." }],
+        quotationUrl: '',
+        address: '서울 서대문구 북가좌동 321',
+        status: '신규',
+        notes: ''
     }
-}
+];
 
-async function fetchList() {
-    showLoading();
-    try {
-        const res = await fetch(`${API_URL}?action=list`);
-        if (!res.ok) throw new Error("목록 불러오기 실패 (HTTP " + res.status + ")");
-        POSTS = await res.json();
-        sortData(sortState.key, false);
-    } catch (e) {
-        alertErr(e);
-    } finally {
-        hideLoading();
-    }
-}
+// 페이지 로드 시 예시 데이터로 테이블을 그립니다.
+// 실제 코드에서는 fetch 성공 후 받은 데이터로 이 함수를 호출해야 합니다.
+renderApplications(mockData);
 
-function sortData(key, toggle = true) {
-    if (toggle) {
-        if (sortState.key === key) sortState.asc = !sortState.asc;
-        else { sortState.key = key; sortState.asc = true; }
-    }
-    POSTS.sort((a, b) => {
-        let valA = a[key] || '';
-        let valB = b[key] || '';
-        if (key === 'pw') { valA = Number(valA); valB = Number(valB); }
-        if (valA < valB) return sortState.asc ? -1 : 1;
-        if (valA > valB) return sortState.asc ? 1 : -1;
-        return 0;
-    });
-    renderGrid();
-}
-
-function renderGrid() {
-    $("#tbody").innerHTML = POSTS.map(r => `
-    <tr>
-      <td>${esc(r.pw)}</td>
-      <td><span class="whitespace-nowrap">${fmt(r.ts)}</span></td>
-      <td>${esc(r.dojo)}</td>
-      <td>${esc(r.master)}</td>
-      <td>${esc(r.contact)}</td>
-      <td><pre class="td-pre">${formatItems(r.items)}</pre></td>
-      <td><pre class="td-pre">${formatReplies(r.replies)}</pre></td>
-      <td>
-        ${r.quotationUrl ? `<a href="${esc(r.quotationUrl)}" target="_blank" class="text-sky-400 underline hover:text-sky-300">다운로드</a>` : `<span class="text-slate-500">없음</span>`}
-      </td>
-      <td>${esc(r.address)}</td>
-      <td>
-        <select class="status-select" data-id="${r.id}" onchange="onStatusChange(this)">
-          ${STATUS_OPTIONS.map(opt => `<option value="${opt}" ${r.status === opt ? 'selected' : ''}>${opt}</option>`).join('')}
-        </select>
-      </td>
-      <td>${esc(r.notes)}</td>
-      <td>
-        <button class="text-xs bg-red-600 hover:bg-red-700 text-white py-1 px-2 rounded" onclick="onDelete('${r.id}')">삭제</button>
-      </td>
-    </tr>
-  `).join("");
-}
-
-/* ============= ACTIONS ============= */
-async function onStatusChange(selectElement) {
-    const id = selectElement.dataset.id;
-    const newStatus = selectElement.value;
-    try {
-        await apiCall({ action: "updateStatus", id, status: newStatus });
-        const post = POSTS.find(p => p.id == id);
-        if (post) post.status = newStatus;
-    } catch(e) {
-        alertErr(e);
-        fetchList(); // Revert on error
-    }
-}
-
-async function onDelete(id) {
-    if (!confirm(`신청비번 ${id} 항목을 정말 삭제하시겠습니까?`)) return;
-    try {
-        await apiCall({ action: "delete", id });
-        fetchList();
-    } catch (e) { alertErr(e); }
-}
-
-/* ============= EVENT BINDING & INITIAL LOAD ============= */
-document.addEventListener('DOMContentLoaded', () => {
-    $("#btnReload").addEventListener("click", fetchList);
-    $("#btnLogout").addEventListener("click", () => {
-        if (confirm("로그아웃 하시겠습니까?")) {
-            localStorage.removeItem("ADMIN_SECRET");
-            alert("로그아웃 되었습니다. 페이지를 새로고침합니다.");
-            location.reload();
-        }
-    });
-    
-    $$(".sortable").forEach(th => th.addEventListener("click", () => sortData(th.dataset.sort)));
-    
-    if (!ADMIN_SECRET) {
-        const secret = prompt("관리자 비밀키를 입력하세요:");
-        if (secret) {
-            localStorage.setItem("ADMIN_SECRET", secret);
-            location.reload();
-        } else {
-            document.body.innerHTML = `<div class="text-center p-8">관리자 키가 없어 페이지를 표시할 수 없습니다.</div>`;
-        }
-    } else {
-        fetchList().catch(alertErr);
-    }
-});
 </script>
+
 </body>
 </html>
