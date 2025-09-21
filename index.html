@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>SPOBAND Pro | 태권도 관장님 특별구매</title>
 
-  <!-- GA -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-RTMS0KZWPX"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -14,33 +13,36 @@
     gtag('config', 'G-RTMS0KZWPX');
   </script>
 
-  <!-- UI/FX libs -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.16/typed.min.js"></script>
 
   <style>
-    .text-balance{ text-wrap:balance; }
-    body{
+    .text-balance { text-wrap: balance; }
+    body {
       font-family: system-ui, -apple-system, "Segoe UI", Roboto,
-      "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+                   "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
     }
-    .container-narrow{ max-width:1100px; }
-    .bg-hero{
+    .container-narrow { max-width: 1100px; }
+    .bg-hero {
       background:
-        radial-gradient(1200px 600px at 10% 10%, rgba(56,189,248,.1), transparent 60%),
-        radial-gradient(1000px 500px at 95% 5%, rgba(59,130,246,.2), transparent 60%),
-        linear-gradient(180deg,#020617 0%, #0f172a 100%);
+        radial-gradient(1200px 600px at 10% 10%, rgba(56, 189, 248, 0.1), transparent 60%),
+        radial-gradient(1000px 500px at 95% 5%, rgba(59,130,246,0.2), transparent 60%),
+        linear-gradient(180deg, #020617 0%, #0f172a 100%);
     }
-    .nav-active{ color:#7dd3fc!important; font-weight:600; }
-    input[type="number"]::-webkit-outer-spin-button,
-    input[type="number"]::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
-    input[type="number"]{ -moz-appearance:textfield; }
+    .nav-item { transition: color .2s ease; }
+    .nav-active { color:#7dd3fc !important; font-weight:600; }
 
-    /* modal */
+    /* 숫자 스피너 제거 */
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type="number"] { -moz-appearance: textfield; }
+
+    /* 유튜브 모달 */
     .modal{ background:rgba(2,6,23,.75); backdrop-filter: blur(2px); }
-    .modal-box{ width:min(1024px,92vw); aspect-ratio:16/9; }
+    .modal-box{ width:min(1024px, 92vw); aspect-ratio:16/9; }
     .yt-thumb img{ transition: transform .2s ease; }
     .yt-thumb:hover img{ transform: scale(1.02); }
   </style>
@@ -50,7 +52,6 @@
 
 <canvas id="particles-canvas"></canvas>
 
-<!-- Header -->
 <header class="sticky top-0 z-50 bg-slate-950/70 backdrop-blur border-b border-slate-800">
   <div class="container-narrow mx-auto px-4 md:px-6">
     <div class="flex items-center justify-between h-16">
@@ -66,13 +67,16 @@
       </nav>
 
       <div class="hidden md:block">
-        <a href="#apply" class="bg-sky-500 hover:bg-sky-600 text-white px-5 py-2 rounded-full font-semibold shadow">관장님 전용 신청</a>
+        <a href="#apply" class="bg-sky-500 hover:bg-sky-600 text-white px-5 py-2 rounded-full font-semibold shadow">
+          관장님 전용 신청
+        </a>
       </div>
 
       <button type="button" aria-label="메뉴 열기"
               class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-sky-500"
               onclick="toggleNav()">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-200" fill="none" viewBox="0 0 24 24"
+             stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
         </svg>
       </button>
@@ -84,17 +88,20 @@
         <a href="pages/taekwondo-letter.html" class="px-2 py-2 rounded-lg text-slate-200 hover:bg-white/10">“관장님께 드립니다”</a>
         <a href="#kits" class="px-2 py-2 rounded-lg text-slate-200 hover:bg-white/10">스포밴드</a>
         <a href="#faq" class="px-2 py-2 rounded-lg text-slate-200 hover:bg-white/10">참고영상 등</a>
-        <a href="#apply" class="mt-2 px-3 py-3 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-semibold text-center shadow">관장님 전용 신청</a>
+        <a href="#apply" class="mt-2 px-3 py-3 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-semibold text-center shadow">
+          관장님 전용 신청
+        </a>
       </nav>
     </div>
   </div>
 </header>
 
-<!-- Hero -->
 <section class="relative">
   <div class="container mx-auto grid lg:grid-cols-2 items-center gap-10 lg:gap-16 px-6 py-16 lg:py-20">
     <div class="max-w-[760px]">
-      <span class="inline-block px-4 py-2 rounded-xl bg-sky-500/15 border border-sky-400 text-sky-200 font-bold">태권도 관장님 전용 프로모션</span>
+      <span class="inline-block px-4 py-2 rounded-xl bg-sky-500/15 border border-sky-400 text-sky-200 font-bold">
+        태권도 관장님 전용 프로모션
+      </span>
 
       <h1 class="mt-6 text-4xl md:text-6xl xl:text-7xl 2xl:text-8xl font-black leading-[1.1] text-white drop-shadow-[0_6px_24px_rgba(2,6,23,.4)] text-balance">
         <span class="block">10분 루틴으로</span>
@@ -104,7 +111,9 @@
         <span class="block mt-2 md:mt-3 xl:mt-4">눈에 보입니다.</span>
       </h1>
 
-      <p class="mt-5 md:mt-6 text-slate-300 md:text-xl leading-relaxed">탄성 저항이라 안전하게. 초보도 단계별로.</p>
+      <p class="mt-5 md:mt-6 text-slate-300 md:text-xl leading-relaxed">
+        탄성 저항이라 안전하게. 초보도 단계별로.
+      </p>
 
       <div class="mt-8 flex flex-wrap gap-3">
         <a href="#apply" class="px-7 py-3.5 rounded-2xl bg-sky-500 hover:bg-sky-400 text-white font-bold shadow-lg shadow-sky-500/20">관장님 전용 신청</a>
@@ -119,17 +128,18 @@
     </div>
 
     <figure id="heroVideoThumb" class="relative mx-auto w-full max-w-[820px] cursor-pointer" data-ytid="cVr-vf1aMR8">
-      <img src="https://i.ytimg.com/vi/cVr-vf1aMR8/hqdefault.jpg" alt="스포밴드 태권도 훈련 영상"
+      <img src="https://i.ytimg.com/vi/cVr-vf1aMR8/hqdefault.jpg"
+           alt="스포밴드 태권도 훈련 영상"
            class="w-full h-[260px] sm:h-[320px] md:h-[380px] lg:h-[520px] xl:h-[580px] rounded-2xl object-cover shadow-2xl"
            loading="lazy" decoding="async" />
       <div class="absolute inset-0 flex items-center justify-center">
         <span class="bg-white/85 text-black font-bold px-6 py-3 rounded-full shadow-lg">▶ 영상 보기</span>
       </div>
     </figure>
+
   </div>
 </section>
 
-<!-- Hero Modal -->
 <div id="heroModal" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
   <div class="w-[min(960px,90vw)] aspect-video bg-black rounded-2xl overflow-hidden relative">
     <button id="heroClose" class="absolute top-2 right-2 bg-slate-800/80 text-white px-3 py-1.5 rounded-lg">닫기</button>
@@ -139,7 +149,6 @@
   </div>
 </div>
 
-<!-- Kits -->
 <section id="kits" class="py-20">
   <div class="mx-auto container-narrow px-5">
     <h2 class="text-3xl font-extrabold">스포밴드(제품구성)</h2>
@@ -185,7 +194,6 @@
   </div>
 </section>
 
-<!-- 참고영상 -->
 <section id="faq" class="py-20">
   <div class="mx-auto container-narrow px-5">
     <h2 class="text-3xl font-extrabold">참고영상 등</h2>
@@ -229,7 +237,6 @@
   </div>
 </section>
 
-<!-- 신청 폼 & 목록 -->
 <section id="apply" class="py-20">
   <div class="mx-auto container-narrow px-5">
     <h2 class="text-3xl md:text-4xl font-extrabold">태권도관장님 특별구매 게시판</h2>
@@ -261,6 +268,9 @@
               <svg id="pwIconClosed" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                    stroke="currentColor" stroke-width="2" class="h-5 w-5 text-slate-300">
                 <path d="M3 3l18 18" />
+                <path d="M10.58 10.58A2 2 0 0112 10c1.1 0 2 .9 2 2 0 .42-.13.81-.35 1.13" />
+                <path d="M9.88 5.09A10.44 10.44 0 0112 5c5 0 9 4 10 7- .28.69-.7 1.38-1.24 2.02a11.58 11.58 0 01-3.14 2.57" />
+                <path d="M6.18 6.18A11.58 11.58 0 002 12c.28.69.7 1.38 1.24 2.02A11.58 11.58 0 006.38 16.6" />
               </svg>
               <svg id="pwIconOpen" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                    stroke="currentColor" stroke-width="2" class="h-5 w-5 text-slate-300 hidden">
@@ -279,13 +289,13 @@
                   class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></textarea>
       </div>
 
-      <!-- 품목 -->
       <div>
         <div class="flex items-end justify-between">
           <label class="block text-sm">구매 희망 품목</label>
           <div class="flex items-center gap-3">
             <small class="text-slate-400">단위: 개 (수량)</small>
-            <span id="sumBoxes" class="inline-flex items-center px-2 py-1 rounded-lg bg-sky-500/10 text-sky-300 text-xs font-semibold">
+            <span id="sumBoxes"
+                  class="inline-flex items-center px-2 py-1 rounded-lg bg-sky-500/10 text-sky-300 text-xs font-semibold">
               총 0 개
             </span>
           </div>
@@ -301,31 +311,36 @@
             <div class="grid grid-cols-12 items-center px-4 py-3">
               <div class="col-span-8 md:col-span-9">spoband 30 / (주니어용)</div>
               <div class="col-span-4 md:col-span-3">
-                <input id="q_sb30" type="number" min="0" value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
+                <input id="q_sb30" type="number" min="0" value="0"
+                       class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
               </div>
             </div>
             <div class="grid grid-cols-12 items-center px-4 py-3">
               <div class="col-span-8 md:col-span-9">spoband 35 / (운동부하량:아령 또는 모레주머니 2.5kg)</div>
               <div class="col-span-4 md:col-span-3">
-                <input id="q_sb35" type="number" min="0" value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
+                <input id="q_sb35" type="number" min="0" value="0"
+                       class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
               </div>
             </div>
             <div class="grid grid-cols-12 items-center px-4 py-3">
               <div class="col-span-8 md:col-span-9">spoband 45 / (운동부하량:아령 또는 모레주머니 5kg)</div>
               <div class="col-span-4 md:col-span-3">
-                <input id="q_sb45" type="number" min="0" value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
+                <input id="q_sb45" type="number" min="0" value="0"
+                       class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
               </div>
             </div>
             <div class="grid grid-cols-12 items-center px-4 py-3">
               <div class="col-span-8 md:col-span-9">spoband 55 / (운동부하량:아령 또는 모레주머니 10kg)</div>
               <div class="col-span-4 md:col-span-3">
-                <input id="q_sb55" type="number" min="0" value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
+                <input id="q_sb55" type="number" min="0" value="0"
+                       class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
               </div>
             </div>
             <div class="grid grid-cols-12 items-center px-4 py-3">
               <div class="col-span-8 md:col-span-9">spoband 65 / (운동부하량:아령 또는 모레주머니 15kg)</div>
               <div class="col-span-4 md:col-span-3">
-                <input id="q_sb65" type="number" min="0" value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
+                <input id="q_sb65" type="number" min="0" value="0"
+                       class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
               </div>
             </div>
 
@@ -342,42 +357,44 @@
         </div>
       </div>
 
-      <!-- 제출/문의 -->
       <div class="flex items-center mt-4 flex-wrap">
-        <button type="submit" class="px-5 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-white">신청 등록</button>
+        <button type="submit" class="px-5 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-white">
+          신청 등록
+        </button>
+
         <span class="ml-auto text-yellow-400 font-extrabold text-2xl tracking-wide drop-shadow">
           ※ 문의: 스포밴드연구소 소장 / 010-5214-1492 / simboom@hanmail.net
         </span>
       </div>
 
-      <!-- 허니팟 -->
-      <div aria-hidden="true" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;">
+      <div aria-hidden="true"
+           style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;">
         <label>Leave this field empty</label>
-        <input type="text" name="hp_field" tabindex="-1" autocomplete="new-password" inputmode="none" />
+        <input type="text" name="hp_field" tabindex="-1"
+               autocomplete="new-password" inputmode="none" />
       </div>
 
       <input type="hidden" name="ts" id="ts">
     </form>
 
-    <!-- 신청 목록 -->
+   <!-- 신청 목록 -->
     <div class="mt-10">
       <div class="flex items-center justify-between mb-6">
         <h3 class="text-2xl font-extrabold">신청 목록</h3>
         <p class="text-yellow-300 font-semibold text-sm md:text-base">
-       
+ 
         </p>
       </div>
 
       <div id="boardTop"></div>
-      <div id="boardList" class="mx-auto max-w-4xl flex flex-col gap-6">
-        <!-- 카드 목록이 JS에서 삽입 -->
-      </div>
+      <div id="boardList" class="mx-auto max-w-4xl flex flex-col gap-6"></div>
     </div>
+
   </div>
 </section>
 
-<!-- 개인정보 동의 모달 -->
-<div id="consentModal" class="fixed inset-0 z-[999] hidden items-center justify-center bg-black/60 backdrop-blur-sm">
+<div id="consentModal"
+     class="fixed inset-0 z-[999] hidden items-center justify-center bg-black/60 backdrop-blur-sm">
   <div class="w-[min(720px,90vw)] max-h-[86vh] rounded-2xl border border-slate-700 bg-slate-900 text-slate-100 shadow-2xl overflow-hidden flex flex-col">
     <div class="px-5 py-4 border-b border-slate-800 flex items-center justify-between">
       <h3 class="text-lg font-bold">개인정보 수집·이용 동의</h3>
@@ -396,7 +413,9 @@
         </ul>
       </div>
 
-      <a href="privacy.html" target="_blank" rel="noopener" class="underline decoration-dotted">개인정보 처리방침 전문 보기</a>
+      <a href="privacy.html" target="_blank" rel="noopener" class="underline decoration-dotted">
+        개인정보 처리방침 전문 보기
+      </a>
 
       <label class="flex items-start gap-3 mt-2">
         <input id="consentCheck" type="checkbox" class="mt-0.5 accent-sky-400">
@@ -406,48 +425,30 @@
 
     <div class="px-5 py-4 border-t border-slate-800 flex items-center justify-end gap-2">
       <button id="consentCancel" class="px-4 py-2 rounded-xl border border-slate-700 hover:bg-slate-800">취소</button>
-      <button id="consentAgree" class="px-5 py-2 rounded-xl bg-slate-600 text-slate-300 cursor-not-allowed" disabled>동의하고 제출</button>
+      <button id="consentAgree" class="px-5 py-2 rounded-xl bg-slate-600 text-slate-300 cursor-not-allowed" disabled>
+        동의하고 제출
+      </button>
     </div>
   </div>
 </div>
 
 <script>
 /* ===============================
-   설정/헬퍼
+    공통 헬퍼/상수
 ================================= */
-const API_URL = "https://script.google.com/macros/s/AKfycbwO24CZs2KFkX5KZK5wMjtQlNdoKYvKBPmSTDTBg3gYn2m10sFOPMBbFZJHbtZXYyUS/exec"; // 반드시 본인의 URL로 교체
 const FORM_ID = "postForm";
+let adminToken = sessionStorage.getItem('spobandAdminToken');
 const FORM_MIN_SECONDS = 3;
 let pageLoadedAt = Date.now();
 
-const $ = (s, el=document)=>el.querySelector(s);
-const $$ = (s, el=document)=>Array.from(el.querySelectorAll(s));
-const esc = (s)=>String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]));
-const fmt = (ts)=>{ if(!ts || isNaN(new Date(ts).getTime())) return "날짜 정보 없음"; return new Date(ts).toLocaleString(); };
+// ✅ 새 GAS 웹앱 URL (네가 준 값으로 세팅)
+const API_URL = "https://script.google.com/macros/s/AKfycbwO24CZs2KFkX5KZK5wMjtQlNdoKYvKBPmSTDTBg3gYn2m10sFOPMBbFZJHbtZXYyUS/exec";
+
+// preflight 회피용 헤더
+const PLAIN_HEADERS = { 'Content-Type': 'text/plain;charset=utf-8' };
 
 /* ===============================
-   마스킹
-================================= */
-function maskName(name=""){
-  const str = String(name).trim();
-  if (str.length <= 1) return str;
-  if (str.length === 2) return `${str[0]}*`;
-  return `${str[0]}${'*'.repeat(str.length-2)}${str[str.length-1]}`;
-}
-const maskDojo = maskName;
-function maskContact(raw=""){
-  const s = String(raw).trim();
-  const digits = s.replace(/\D/g,'');
-  if (digits.length >= 8) return `${digits.slice(0,3)}-****-${digits.slice(-4)}`;
-  if (s.includes('@')) {
-    const [id, host] = s.split('@');
-    return `${id.slice(0,3)}***@${host}`;
-  }
-  return "***-****-****";
-}
-
-/* ===============================
-   정규화
+    정규화 유틸
 ================================= */
 function normalizeItems(raw = {}) {
   const items = raw.items || {};
@@ -460,117 +461,193 @@ function normalizeItems(raw = {}) {
   };
 }
 function computeTotalCount(items) {
-  return Object.values(items).reduce((a,b)=>a+(Number(b)||0),0);
+  return Object.values(items).reduce((a, b) => a + (Number(b) || 0), 0);
 }
 function normalizePost(raw = {}) {
   const n = (v, ...alts) => {
-    for (const k of [v, ...alts]) if (k!==undefined && k!==null && String(k).trim()!=='') return k;
+    for (const k of [v, ...alts]) if (k !== undefined && k !== null && String(k).trim() !== '') return k;
     return '';
   };
   const items = normalizeItems(raw);
   return {
-    id: String(n(raw.id, raw.pw, raw._id, raw.ID)),
-    dojo: String(n(raw.dojo, raw.dojoName)),
-    master: String(n(raw.master, raw.owner)),
-    contact: String(n(raw.contact, raw.phone)),
+    id: String(n(raw.id, raw._id, raw.ID, raw.rowId)),
+    dojo: String(n(raw.dojo, raw.dojoName, raw.dojo_name, raw.gym)),
+    master: String(n(raw.master, raw.masterName, raw.owner)),
+    contact: String(n(raw.contact, raw.phone, raw.contact_info)),
     address: String(n(raw.address, raw.addr)),
-    ts: n(raw.ts, raw.timestamp, raw.createdAt),
+    pw: String(n(raw.pw, raw.password)),
+    ts: n(raw.ts, raw.timestamp, raw.createdAt, raw.created_at),
     items,
     totalCount: computeTotalCount(items),
     replies: Array.isArray(raw.replies) ? raw.replies : [],
-    status: raw.status || '신규',
   };
 }
 function normalizeListResponse(data) {
-  // backend GET list → array (ok([...]))
   const arr = Array.isArray(data) ? data : (data.items || []);
   return arr.map(normalizePost);
 }
-function normalizeDetailsResponse(payload) {
-  // backend getPost → {status:"success", data:{...}}
-  if (payload.status === 'error') throw new Error(payload.message || '오류');
-  const p = payload.data || payload;
-  return normalizePost(p || {});
+function normalizeDetailsResponse(data) {
+  return normalizePost(data || {});
 }
 
 /* ===============================
-   API
+    API 응답 파서
 ================================= */
-async function loadApplications() {
-  const res = await fetch(`${API_URL}?action=list`, { method:'GET' });
-  if (!res.ok) throw new Error('데이터를 불러오는데 실패했습니다.');
-  const json = await res.json();
-  return normalizeListResponse(json);
-}
-// 신청 등록
-async function submitApplication(applicationData) {
-  const res = await fetch(API_URL, {
-    method: 'POST',
-    // ✅ preflight 방지: text/plain 사용
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify({ action: 'create', data: applicationData })
-  });
-  if (!res.ok) throw new Error('신청 등록에 실패했습니다.');
-  const json = await res.json();
-  if (json.status === 'error') throw new Error(json.message || '신청 등록에 실패했습니다.');
-  return { id: json.id || applicationData.id };
+function parseJsonSafely(res) {
+  if (!res.ok) throw new Error(`서버 오류(${res.status})`);
+  return res.json();
 }
 
-// 상세 조회 (비밀번호 확인)
+/* ===============================
+    Google Apps Script API 함수들
+================================= */
+
+// 🔵 목록 불러오기 (GET)
+async function loadApplications() {
+  const res = await fetch(`${API_URL}?action=list`, { method: 'GET' });
+  const json = await parseJsonSafely(res);
+  if (json.status === 'error') throw new Error(json.message || '목록 로드 실패');
+  const arr = Array.isArray(json) ? json : (json.items || json.data || []);
+  return normalizeListResponse(arr);
+}
+
+// 🔵 신규 등록 (POST)
+async function submitApplication(applicationData) {
+  const payload = {
+    action: 'create',
+    data: {
+      ...applicationData,
+      id: applicationData.id || applicationData.pw || applicationData.password
+    }
+  };
+  const res = await fetch(API_URL, {
+    method: 'POST',
+    headers: PLAIN_HEADERS,
+    body: JSON.stringify(payload)
+  });
+  const json = await parseJsonSafely(res);
+  if (json.status === 'error') throw new Error(json.message || '신청 등록 실패');
+  return normalizeDetailsResponse(json.data || { id: payload.data.id, ...payload.data });
+}
+
+// 🔵 상세 보기 (POST, 비밀번호 확인)
 async function fetchPostDetails(id, pw) {
   const res = await fetch(API_URL, {
     method: 'POST',
-    // ✅ preflight 방지
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    headers: PLAIN_HEADERS,
     body: JSON.stringify({ action: 'getPost', id, pw })
   });
-  if (!res.ok) throw new Error('정보를 열람할 수 없습니다. 비밀번호를 확인해주세요.');
-  const json = await res.json();
-  if (json.status === 'error') throw new Error(json.message || '열람 실패');
-  return normalizeDetailsResponse(json);
+  const json = await parseJsonSafely(res);
+  if (json.status === 'error') throw new Error(json.message || '정보를 열람할 수 없습니다.');
+  const data = json.data || json;
+  return normalizeDetailsResponse(data);
 }
 
+// (UI 테스트용 임시 관리자 인증 — 보안상 실제 운영 전 서버 검증으로 되돌리세요)
+async function verifyAdminToken(token) {
+  return token === '1234';
+}
 
 /* ===============================
-   합계/폼 유틸
+    DOM/렌더 유틸
 ================================= */
+const $  = (s,el=document)=>el.querySelector(s);
+const $$ = (s,el=document)=>Array.from(el.querySelectorAll(s));
+const esc= (s)=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]));
+const fmt =(ts)=>{ if (!ts || isNaN(new Date(ts).getTime())) { return "날짜 정보 없음"; } return new Date(ts).toLocaleString(); };
+const isAdmin = () => adminToken !== null;
+
+function setAdminMode(on){
+  if (on) { sessionStorage.setItem('spobandAdminToken', adminToken); } 
+  else { adminToken = null; sessionStorage.removeItem('spobandAdminToken'); }
+  $$(".admin-only").forEach(el => el.classList.toggle("hidden", !on));
+  $("#btnAdminLogin")?.classList.toggle("hidden", on);
+  $("#btnAdminLogout")?.classList.toggle("hidden", !on);
+}
+function toggleNav(){ $('#mobile-nav')?.classList.toggle('hidden'); }
+(function(){
+  function setActive(key){ $$('[data-nav]').forEach(a=>a.classList.remove('nav-active')); $(`[data-nav="${key}"]`)?.classList.add('nav-active'); }
+  const file = location.pathname.split('/').pop(), hash = location.hash.replace('#','');
+  if (['kits','faq','apply'].includes(hash)) setActive(hash); else if (file === 'taekwondo-benefits.html') setActive('benefits'); else if (file === 'taekwondo-letter.html') setActive('letter'); else setActive('home');
+  window.addEventListener('hashchange', ()=>{ const h = location.hash.replace('#',''); setActive(['kits','faq','apply'].includes(h)?h:'home'); });
+})();
+(function(){
+  const thumb = $("#heroVideoThumb"), modal = $("#heroModal"), player = $("#heroPlayer"), close = $("#heroClose");
+  if(thumb){ thumb.addEventListener("click", ()=>{ const videoId = thumb.getAttribute("data-ytid") || "cVr-vf1aMR8"; player.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&playsinline=1&modestbranding=1`; modal.classList.remove("hidden"); modal.classList.add("flex"); }); }
+  function closeModal(){ player.src=""; modal.classList.add("hidden"); modal.classList.remove("flex"); }
+  close?.addEventListener("click", closeModal); modal?.addEventListener("click",(e)=>{ if(e.target===modal) closeModal(); });
+})();
+(function(){
+  const ytModal = $('#ytModal'), ytPlayer = $('#ytPlayer'), ytClose = $('#ytClose');
+  $$('.yt-thumb').forEach(el=>{ el.addEventListener('click', ()=>{ const vid = el.getAttribute('data-vid'); ytPlayer.src = `https://www.youtube.com/embed/${vid}?autoplay=1&rel=0&playsinline=1&modestbranding=1`; ytModal.classList.remove('hidden'); ytModal.classList.add('flex'); }); });
+  function closeYt(){ ytModal.classList.add('hidden'); ytModal.classList.remove('flex'); ytPlayer.src = ""; }
+  ytClose?.addEventListener('click', closeYt); ytModal?.addEventListener('click', (e)=>{ if(e.target===ytModal) closeYt(); });
+})();
+
+/* ===============================
+    게시판 상태/합계/템플릿
+================================= */
+let posts = [];
+
+// 합계 계산
 function recalcTotal(){
   const n = id => Math.max(0, Number(($(`#${id}`)?.value || 0)) || 0);
   const total = n("q_sb30")+n("q_sb35")+n("q_sb45")+n("q_sb55")+n("q_sb65");
-  $("#sumBoxes").textContent = `총 ${total} 개`;
+  const badge = $("#sumBoxes");
+  if (badge) badge.textContent = `총 ${total} 개`;
   $("#totalBoxes").value = String(total);
 }
 
-/* ===============================
-   카드 템플릿 & 상세 렌더
-================================= */
+// 도장명/이름 마스킹
+function maskName(name = ""){
+  const str = String(name).trim();
+  if (str.length <= 1) return str;
+  if (str.length === 2) return `${str[0]}*`;
+  const mid = '*'.repeat(str.length - 2);
+  return `${str[0]}${mid}${str[str.length - 1]}`;
+}
+const maskDojo = maskName;
+
+// 연락처 마스킹
+function maskContact(raw = ""){
+  const contact = String(raw).trim();
+  const digits = contact.replace(/\D/g, "");
+  if (digits.length > 7) {
+    const start = digits.slice(0, 3);
+    const end = digits.slice(-4);
+    return `${start}-****-${end}`;
+  }
+  if (contact.includes('@')) {
+    const parts = contact.split('@');
+    return `${parts[0].slice(0,3)}***@${parts[1]}`;
+  }
+  return "***-****-****";
+}
+
+// 카드 템플릿
 function cardHTML(p){
   const totalCount = Number(p.totalCount || 0);
   return `
-  <article class="p-5 rounded-2xl border border-slate-700/50 bg-slate-800/40" data-id="${esc(p.id)}">
+  <article class="p-5 rounded-2xl border border-slate-700/50 bg-slate-800/40" data-id="${p.id}">
     <div class="grid md:grid-cols-2 gap-x-4 gap-y-2">
       <div><div class="text-xs text-slate-400">도장명</div><div class="font-semibold">${esc(maskDojo(p.dojo))}</div></div>
       <div><div class="text-xs text-slate-400">관장님</div><div class="font-semibold">${esc(maskName(p.master))}</div></div>
       <div><div class="text-xs text-slate-400">연락처</div><div class="font-semibold">${esc(maskContact(p.contact))}</div></div>
       <div><div class="text-xs text-slate-400">등록일</div><div class="font-semibold">${fmt(p.ts)}</div></div>
-      <div class="md:col-span-2">
-        <div class="text-xs text-slate-400">신청 품목</div>
-        <div class="inline-flex items-center gap-2 text-slate-300">
-          <span class="text-xs px-2 py-0.5 rounded bg-sky-500/10 text-sky-300 border border-sky-700/40">총 ${totalCount} 개</span>
-          <span class="text-slate-500 text-sm">(상세 내역은 비공개)</span>
-        </div>
-      </div>
+      <div class="md:col-span-2"><div class="text-xs text-slate-400">신청 품목</div><div class="inline-flex items-center gap-2 text-slate-300"><span class="text-xs px-2 py-0.5 rounded bg-sky-500/10 text-sky-300 border border-sky-700/40">총 ${totalCount} 개</span><span class="text-slate-500 text-sm">(상세 내역은 비공개)</span></div></div>
       <div class="md:col-span-2 flex flex-wrap gap-2 mt-2">
         <button class="btn-view px-3 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-sm">상세보기</button>
+        <button class="btn-admin-reply admin-only hidden px-3 py-2 rounded-lg bg-sky-700 hover:bg-sky-600 text-sm text-white">관리자 답변</button>
+        <button class="btn-delete admin-only hidden px-3 py-2 rounded-lg bg-rose-700 hover:bg-rose-600 text-sm text-white">삭제</button>
       </div>
-      <div id="details-${esc(p.id)}" class="hidden md:col-span-2 p-3 mt-2 rounded-lg bg-slate-900/40 border border-slate-800">
-        <p class="text-center text-slate-400 p-4">상세 정보를 불러오는 중...</p>
-      </div>
+      <div id="details-${p.id}" class="hidden md:col-span-2 p-3 mt-2 rounded-lg bg-slate-900/40 border border-slate-800"><p class="text-center text-slate-400 p-4">상세 정보를 불러오는 중...</p></div>
     </div>
   </article>`;
 }
 
-function renderPostDetails(container, details) {
+// 상세 렌더러
+function renderPostDetails(container, detailsRaw) {
+  const details = normalizeDetailsResponse(detailsRaw);
   const safe = (v, fb='미입력') => (String(v||'').trim() ? esc(v) : fb);
 
   const itemsFullHTML =
@@ -588,11 +665,12 @@ function renderPostDetails(container, details) {
       }).join("\n") || "-";
 
   const repliesHTML = (details.replies||[])
-    .map(r=>`
+    .map(r=> `
       <div class="mt-2 p-2 rounded-lg bg-slate-800/40 border border-slate-700/50">
         <div class="text-xs text-slate-400">${fmt(r.ts)}</div>
         <div class="text-sky-300 font-semibold">${esc(r.content)}</div>
-      </div>`).join("");
+      </div>
+    `).join("");
 
   container.innerHTML = `
     <div class="text-xs text-slate-400 mb-1">상세 정보</div>
@@ -601,237 +679,256 @@ function renderPostDetails(container, details) {
       연락처: ${safe(details.contact)}<br>
       주소: ${safe(details.address)}
     </div>
+    ${isAdmin() && details.pw ? `
+      <div class="mb-2 inline-flex items-center gap-2 text-xs px-2 py-1 rounded bg-amber-900/15 border border-amber-700/30">
+        <span class="text-amber-300">비밀번호</span>
+        <span class="font-semibold text-amber-400 tracking-wider select-all">${esc(details.pw)}</span>
+      </div><br>` : ""
+    }
     <div class="text-xs text-slate-400 mb-1">신청 품목(모델별)</div>
     <div class="whitespace-pre-wrap">${itemsFullHTML}</div>
     ${repliesHTML ? `<div class="mt-3"><div class="text-xs text-slate-400 mb-1">관리자 답변</div>${repliesHTML}</div>` : ""}
     <button class="btn-close mt-4 px-3 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-sm">닫기</button>
   `;
 
-  container.querySelector('.btn-close').addEventListener('click', ()=>{
+  container.querySelector('.btn-close').addEventListener('click',()=>{
     container.classList.add('hidden');
     container.innerHTML = `<p class="text-center text-slate-400 p-4">상세 정보를 불러오는 중...</p>`;
   });
 }
 
-/* ===============================
-   목록 렌더
-================================= */
-let posts = [];
+// 목록 렌더
 function render(){
   const list = $("#boardList");
-  if (!list) return;
-  list.innerHTML = posts.length ? posts.map(cardHTML).join("") :
-    '<p class="text-slate-400 text-sm p-4 text-center">아직 등록된 신청이 없습니다.</p>';
-  // 버튼 바인딩
-  $$("#boardList .btn-view").forEach(btn=>{
-    btn.addEventListener("click", async (e)=>{
-      const article = e.currentTarget.closest("article");
-      const id = String(article.dataset.id);
-      const detailsContainer = $(`#details-${CSS.escape(id)}`, article);
-      if (!detailsContainer) return;
-      // pw 입력
-      const pw = prompt("작성 시 설정한 비밀번호(신청비번)를 입력하세요.");
-      if (pw === null) return;
-      detailsContainer.classList.remove("hidden");
-      detailsContainer.scrollIntoView({behavior:"smooth", block:"center"});
-      try{
-        const details = await fetchPostDetails(id, pw);
-        renderPostDetails(detailsContainer, details);
-      }catch(err){
-        alert(err.message || '열람 실패');
-        detailsContainer.classList.add("hidden");
-      }
-    });
-  });
+  if(!list) return;
+  list.innerHTML = posts.length
+    ? posts.map(p => `
+      <article class="p-5 rounded-2xl shadow-lg bg-slate-800/70" data-id="${esc(p.id)}">
+        <div class="flex flex-col md:flex-row justify-between gap-4">
+          <div>
+            <p class="font-bold text-lg text-white">${esc(maskDojo(p.dojo))}</p>
+            <p class="text-slate-300">관장님: ${esc(maskName(p.master))}</p>
+            <p class="text-slate-400 text-sm">연락처: ${esc(maskContact(p.contact))}</p>
+            <p class="text-xs text-slate-500 mt-1">${fmt(p.ts) || '날짜 정보 없음'}</p>
+          </div>
+          <div class="flex items-center justify-end md:justify-start gap-3">
+            <span class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-700 text-slate-300">
+              ${p.status || '신규'}
+            </span>
+            <button
+              class="view-details px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-sm">
+              상세보기
+            </button>
+          </div>
+        </div>
+        <div id="details-${esc(p.id)}" class="hidden p-3 mt-3 rounded-lg bg-slate-900/40 border border-slate-800">
+          <p class="text-center text-slate-400 p-4">상세 정보를 불러오는 중...</p>
+        </div>
+      </article>
+    `).join("")
+    : '<p class="text-slate-400 text-sm p-4 text-center">아직 등록된 신청이 없습니다.</p>';
+
+  $$(".view-details").forEach(b=>b.addEventListener("click",onView));
 }
 
-/* ===============================
-   네비/모달/비주얼
-================================= */
-function toggleNav(){ $('#mobile-nav')?.classList.toggle('hidden'); }
-(function(){
-  const thumb = $("#heroVideoThumb"), modal = $("#heroModal"), player = $("#heroPlayer"), close = $("#heroClose");
-  if(thumb){
-    thumb.addEventListener("click", ()=>{
-      const videoId = thumb.getAttribute("data-ytid") || "cVr-vf1aMR8";
-      player.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&playsinline=1&modestbranding=1`;
-      modal.classList.remove("hidden"); modal.classList.add("flex");
-    });
-  }
-  function closeModal(){ player.src=""; modal.classList.add("hidden"); modal.classList.remove("flex"); }
-  close?.addEventListener("click", closeModal);
-  modal?.addEventListener("click",(e)=>{ if(e.target===modal) closeModal(); });
-})();
-(function(){
-  const ytModal = $('#ytModal'), ytPlayer = $('#ytPlayer'), ytClose = $('#ytClose');
-  $$('.yt-thumb').forEach(el=>{
-    el.addEventListener('click', ()=>{
-      const vid = el.getAttribute('data-vid');
-      ytPlayer.src = `https://www.youtube.com/embed/${vid}?autoplay=1&rel=0&playsinline=1&modestbranding=1`;
-      ytModal.classList.remove('hidden'); ytModal.classList.add('flex');
-    });
-  });
-  function closeYt(){ ytModal.classList.add('hidden'); ytModal.classList.remove('flex'); ytPlayer.src = ""; }
-  ytClose?.addEventListener('click', closeYt);
-  ytModal?.addEventListener('click', (e)=>{ if(e.target===ytModal) closeYt(); });
-})();
+// 관리자 로그인
+async function adminLoginFlow(){
+  const pw = prompt("관리자 비밀번호를 입력하세요.");
+  if (pw===null) return;
+  if (await verifyAdminToken(pw)) {
+    adminToken = pw; alert("관리자 모드가 켜졌습니다.");
+    setAdminMode(true); render();
+  } else { alert("비밀번호가 올바르지 않습니다."); }
+}
 
-/* ===============================
-   DOM 로드
-================================= */
+// 상세 보기
+async function onView(e){
+  const article = e.currentTarget.closest("article"),
+        id = String(article.dataset.id),
+        detailsContainer = $(`#details-${CSS.escape(id)}`, article.parentElement) || $(`#details-${CSS.escape(id)}`);
+  if (!detailsContainer) return;
+  detailsContainer.classList.remove("hidden");
+  detailsContainer.scrollIntoView({behavior:"smooth", block:"center"});
+  let pw=null;
+  if (!isAdmin()){
+    pw = prompt("작성 시 설정한 비밀번호를 입력하세요.");
+    if (pw === null) { detailsContainer.classList.add('hidden'); return; }
+  }
+  try {
+    const postDetails = await fetchPostDetails(id, pw);
+    renderPostDetails(detailsContainer, postDetails);
+  } catch(err) {
+    alert(err.message || 'Failed to fetch');
+    detailsContainer.classList.add('hidden');
+  }
+}
+
+// DOM 로드
 document.addEventListener('DOMContentLoaded', async function () {
   $('#ts').value = Date.now();
   ["q_sb30","q_sb35","q_sb45","q_sb55","q_sb65"].forEach(id => $(`#${id}`)?.addEventListener("input", recalcTotal));
   recalcTotal();
 
-  // 개인정보 동의 모달 제어
-  const consentModal = $('#consentModal'),
-        agreeBtn = $('#consentAgree'),
-        cancelBtn = $('#consentCancel'),
-        closeBtn = $('#consentClose'),
-        consentChk = $('#consentCheck');
+  const openBtn = $('#openConsent'), consentModal = $('#consentModal'),
+        agreeBtn = $('#consentAgree'), cancelBtn = $('#consentCancel'),
+        closeBtn = $('#consentClose'), consentChk = $('#consentCheck');
 
-  function showConsent(){
+  function showModal(){
     if(!consentModal) return;
     consentChk.checked = false;
     agreeBtn.disabled = true;
     agreeBtn.className = 'px-5 py-2 rounded-xl bg-slate-600 text-slate-300 cursor-not-allowed';
-    consentModal.classList.remove('hidden'); consentModal.classList.add('flex');
+    consentModal.classList.remove('hidden');
+    consentModal.classList.add('flex');
   }
-  function hideConsent(){ consentModal.classList.add('hidden'); consentModal.classList.remove('flex'); }
-  [cancelBtn, closeBtn].forEach(b=>b?.addEventListener('click', hideConsent));
-  consentChk?.addEventListener('change', ()=>{
+  function hideModal(){
+    consentModal.classList.add('hidden');
+    consentModal.classList.remove('flex');
+  }
+  openBtn?.addEventListener('click', showModal);
+  [cancelBtn, closeBtn].forEach(btn => btn?.addEventListener('click', hideModal));
+  consentChk?.addEventListener('change', () => {
     const ok = consentChk.checked;
     agreeBtn.disabled = !ok;
     agreeBtn.className = ok
       ? 'px-5 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-white'
       : 'px-5 py-2 rounded-xl bg-slate-600 text-slate-300 cursor-not-allowed';
   });
+  agreeBtn?.addEventListener('click', ()=>{
+    if (!consentChk.checked) return;
+    hideModal();
+    const formEl = $(`#${FORM_ID}`);
+    if (formEl?.requestSubmit) formEl.requestSubmit(); else formEl?.submit();
+  });
 
-  // 폼 제출
-  const formEl = $(`#${FORM_ID}`);
-  formEl?.addEventListener("submit", async (e)=>{
+  // 비밀번호 보기 토글
+  const pwInput = $('#pw'), pwToggle = $('#pwToggle');
+  pwToggle?.addEventListener('click', ()=>{
+    const isHidden = pwInput.type === 'password';
+    pwInput.type = isHidden ? 'text' : 'password';
+    $('#pwIconOpen')?.classList.toggle('hidden', !isHidden);
+    $('#pwIconClosed')?.classList.toggle('hidden', isHidden);
+  });
+
+  try {
+    posts = await loadApplications();
+  } catch (e) {
+    console.warn('초기 로드 오류:', e);
+    $("#boardList").innerHTML = `<p class="text-slate-400 text-center p-4 rounded-lg bg-red-900/20 border border-red-500/30">${e.message || 'Failed to fetch'} 잠시 후 새로고침 해주세요.</p>`;
+  }
+
+  $(`#${FORM_ID}`)?.addEventListener("submit", async (e)=>{
     e.preventDefault();
+    const formEl = e.target;
 
-    // 허니팟 & 최소 체류
     if ((formEl.querySelector('input[name="hp_field"]')?.value || '').trim() !== ''
         || (Date.now() - pageLoadedAt) < FORM_MIN_SECONDS*1000) {
       alert("제출이 너무 빠릅니다. 몇 초 뒤 다시 시도해주세요.");
       return;
     }
     if (($("#pw")?.value || "").trim().length < 4) {
-      alert("비밀번호(신청비번)는 4자 이상으로 입력해주세요.");
+      alert("비밀번호는 4자 이상으로 입력해주세요.");
       return;
     }
 
-    // 동의 모달 → 동의 후 실제 제출
-    showConsent();
-    agreeBtn.onclick = async ()=>{
-      if (!consentChk.checked) return;
-      hideConsent();
-
-      const data = {
-        // ✅ 백엔드 규칙: id = pw (동일 값)
-        id: $("#pw")?.value.trim(),
-        dojo: $("#dojo")?.value.trim(),
-        master: $("#master")?.value.trim(),
-        contact: $("#contact")?.value.trim(),
-        address: $("#address")?.value.trim(),
-        ts: Date.now(),
-        items: {
-          sb30: Number($("#q_sb30")?.value||0),
-          sb35: Number($("#q_sb35")?.value||0),
-          sb45: Number($("#q_sb45")?.value||0),
-          sb55: Number($("#q_sb55")?.value||0),
-          sb65: Number($("#q_sb65")?.value||0),
-        }
-      };
-
-      const anyQty = Object.values(data.items).some(v=>v>0);
-      if(!data.dojo || !data.master || !data.contact || !data.address){
-        alert("필수 칸을 모두 입력해주세요."); return;
-      }
-      if(!anyQty){ alert("신청 개수를 1개 이상 입력해주세요."); return; }
-
-      try{
-        await submitApplication(data);
-        // 최신 목록
-        posts = await loadApplications();
-        formEl.reset(); recalcTotal(); render();
-        alert("신청이 등록되었습니다. 견적서는 연락처로 보내드릴게요!");
-        $('#boardTop')?.scrollIntoView({behavior:'smooth'});
-      }catch(err){
-        alert(err.message || '등록 실패');
+    const data = {
+      dojo: $("#dojo")?.value.trim(),
+      master: $("#master")?.value.trim(),
+      contact: $("#contact")?.value.trim(),
+      address: $("#address")?.value.trim(),
+      pw: $("#pw")?.value.trim(),
+      ts: Date.now(),
+      items: {
+        sb30: Number($("#q_sb30")?.value||0),
+        sb35: Number($("#q_sb35")?.value||0),
+        sb45: Number($("#q_sb45")?.value||0),
+        sb55: Number($("#q_sb55")?.value||0),
+        sb65: Number($("#q_sb65")?.value||0),
       }
     };
+
+    const anyQty = Object.values(data.items).some(v=>v>0);
+    if(!data.dojo || !data.master || !data.contact || !data.address){
+      alert("필수 칸을 모두 입력해주세요."); return;
+    }
+    if(!anyQty){
+      alert("신청 개수를 1개 이상 입력해주세요."); return;
+    }
+
+    try {
+      const newPost = await submitApplication(data);
+      posts.unshift(newPost);
+      formEl.reset(); recalcTotal(); render();
+      alert("신청이 등록되었습니다. 견적서는 연락처로 보내드릴게요!");
+      $('#boardTop')?.scrollIntoView({behavior:'smooth'});
+    } catch (err) {
+      alert(err.message || 'Failed to fetch');
+    }
   });
 
-  // 목록 최초 로드
-  try{
-    posts = await loadApplications();
-  }catch(e){
-    console.warn('초기 로드 오류:', e);
-    $("#boardList").innerHTML =
-      `<p class="text-slate-400 text-center p-4 rounded-lg bg-red-900/20 border border-red-500/30">${e.message || '목록 로드 실패'} · 잠시 후 새로고침 해주세요.</p>`;
-  }
-  render();
+  render(); setAdminMode(isAdmin());
 });
 </script>
 
-<!-- 배경 파티클 -->
 <script>
 (() => {
   const canvas = document.getElementById('particles-canvas');
   if (!canvas || !window.THREE) return;
 
-  Object.assign(canvas.style, { position:'fixed', top:0, left:0, width:'100%', height:'100%', zIndex:'-1', pointerEvents:'none' });
+  Object.assign(canvas.style, { position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: '-1', pointerEvents: 'none' });
+
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 1000);
   camera.position.z = 80;
-  const renderer = new THREE.WebGLRenderer({canvas, alpha:true, antialias:true});
+
+  const renderer = new THREE.WebGLRenderer({canvas, alpha: true, antialias: true});
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 
   const resize = () => { renderer.setSize(innerWidth, innerHeight); camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix(); };
   resize(); addEventListener('resize', resize);
 
   const count = 800;
-  const pos = new Float32Array(count*3);
-  const colors = new Float32Array(count*3);
-  for (let i=0;i<count;i++){
-    const r = 40 + Math.random()*80;
-    const a = Math.random()*Math.PI*2;
-    const h = (Math.random()-0.5)*60;
-    pos[i*3]   = Math.cos(a)*r + (Math.random()-0.5)*30;
-    pos[i*3+1] = h;
-    pos[i*3+2] = Math.sin(a)*r + (Math.random()-0.5)*30;
-    const t = Math.random();
-    if (t<0.4) [colors[i*3],colors[i*3+1],colors[i*3+2]] = [1.0,0.2,0.2];
-    else if (t<0.7) [colors[i*3],colors[i*3+1],colors[i*3+2]] = [0.2,0.5,1.0];
-    else [colors[i*3],colors[i*3+1],colors[i*3+2]] = [0.9,0.9,1.0];
+  const pos = new Float32Array(count * 3);
+  const colors = new Float32Array(count * 3);
+
+  for (let i = 0; i < count; i++) {
+    const r = 40 + Math.random() * 80;
+    const a = Math.random() * Math.PI * 2;
+    const height = (Math.random() - 0.5) * 60;
+    pos[i*3] = Math.cos(a) * r + (Math.random() - 0.5) * 30;
+    pos[i*3+1] = height;
+    pos[i*3+2] = Math.sin(a) * r + (Math.random() - 0.5) * 30;
+    const colorType = Math.random();
+    if (colorType < 0.4) { [colors[i*3], colors[i*3+1], colors[i*3+2]] = [1.0, 0.2, 0.2]; }
+    else if (colorType < 0.7) { [colors[i*3], colors[i*3+1], colors[i*3+2]] = [0.2, 0.5, 1.0]; }
+    else { [colors[i*3], colors[i*3+1], colors[i*3+2]] = [0.9, 0.9, 1.0]; }
   }
+
   const geo = new THREE.BufferGeometry();
-  geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
-  geo.setAttribute('color', new THREE.BufferAttribute(colors,3));
-  const mat = new THREE.PointsMaterial({ vertexColors:true, size:0.4, sizeAttenuation:true, transparent:true, opacity:0.3 });
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+  const mat = new THREE.PointsMaterial({ vertexColors: true, size: 0.4, sizeAttenuation: true, transparent: true, opacity: 0.3 });
   const points = new THREE.Points(geo, mat);
   scene.add(points);
 
-  let mx=0,my=0,tx=0,ty=0;
-  addEventListener('mousemove', e=>{ mx=(e.clientX/innerWidth-0.5)*2; my=(e.clientY/innerHeight-0.5)*2; });
+  let mx = 0, my = 0, tx = 0, ty = 0;
+  addEventListener('mousemove', e => { mx = (e.clientX / innerWidth - 0.5) * 2; my = (e.clientY / innerHeight - 0.5) * 2; });
 
-  (function animate(){
-    tx += (mx-tx)*0.08; ty += (my-ty)*0.08;
+  (function animate() {
+    tx += (mx - tx) * 0.08; ty += (my - ty) * 0.08;
     points.rotation.y += 0.008; points.rotation.x += 0.003;
-    scene.rotation.x = ty*0.25; scene.rotation.y = tx*0.35;
+    scene.rotation.x = ty * 0.25; scene.rotation.y = tx * 0.35;
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
   })();
 
-  if (window.gsap) gsap.to(mat, { opacity:0.15, duration:1.2, yoyo:true, repeat:-1, ease:'power2.inOut' });
+  if (window.gsap) {
+    gsap.to(mat, { opacity: 0.15, duration: 1.2, yoyo: true, repeat: -1, ease: 'power2.inOut' });
+  }
 })();
 </script>
 
-<!-- 마우스 배경 라이트 -->
 <script>
 (() => {
   const body = document.getElementById('enhanced-body');
@@ -839,43 +936,45 @@ document.addEventListener('DOMContentLoaded', async function () {
   document.addEventListener('mousemove', (e) => {
     const x = (e.clientX / window.innerWidth) * 100;
     const y = (e.clientY / window.innerHeight) * 100;
-    body.style.background =
-      `radial-gradient(circle at ${x}% ${y}%, rgba(56, 189, 248, 0.3), transparent 60%),
-       radial-gradient(1200px 600px at 10% 10%, rgba(56, 189, 248, 0.1), transparent 60%),
-       radial-gradient(1000px 500px at 95% 5%, rgba(59,130,246,0.2), transparent 60%),
-       linear-gradient(180deg, #020617 0%, #0f172a 100%)`;
+    body.style.background = `radial-gradient(circle at ${x}% ${y}%, rgba(56, 189, 248, 0.3), transparent 60%), radial-gradient(1200px 600px at 10% 10%, rgba(56, 189, 248, 0.1), transparent 60%), radial-gradient(1000px 500px at 95% 5%, rgba(59,130,246,0.2), transparent 60%), linear-gradient(180deg, #020617 0%, #0f172a 100%)`;
   });
 })();
 </script>
 
-<!-- 버튼/카드 호버 -->
 <script>
 (() => {
   if (!window.gsap) return;
   document.querySelectorAll('a, button').forEach(el => {
-    el.addEventListener('mouseenter', () => gsap.to(el, { scale:1.05, duration:0.3, ease:"power2.out" }));
-    el.addEventListener('mouseleave', () => gsap.to(el, { scale:1, x:0, y:0, duration:0.3, ease:"power2.out" }));
+    el.addEventListener('mouseenter', () => gsap.to(el, { scale: 1.05, duration: 0.3, ease: "power2.out" }));
+    el.addEventListener('mouseleave', () => gsap.to(el, { scale: 1, x: 0, y: 0, duration: 0.3, ease: "power2.out" }));
     el.addEventListener('mousemove', (e) => {
       const rect = el.getBoundingClientRect();
-      gsap.to(el, { x:(e.clientX - rect.left - rect.width/2)*0.1, y:(e.clientY - rect.top - rect.height/2)*0.1, duration:0.3, ease:"power2.out" });
+      const x = e.clientX - rect.left - rect.width / 2, y = e.clientY - rect.top - rect.height / 2;
+      gsap.to(el, { x: x * 0.1, y: y * 0.1, duration: 0.3, ease: "power2.out" });
     });
   });
+})();
+</script>
 
+<script>
+(() => {
+  if (!window.gsap) return;
   document.querySelectorAll('article img[src*="model"]').forEach(img => {
     const article = img.closest('article');
     article.addEventListener('mouseenter', () => {
-      gsap.to(img, { scale:1.15, duration:0.5, ease:"power2.out", transformOrigin:"center center" });
-      gsap.to(article, { y:-8, scale:1.02, duration:0.4, ease:"power2.out", boxShadow:"0 20px 40px rgba(0,0,0,.3)" });
+      gsap.to(img, { scale: 1.15, duration: 0.5, ease: "power2.out", transformOrigin: "center center" });
+      gsap.to(article, { y: -8, scale: 1.02, duration: 0.4, ease: "power2.out", boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3)" });
     });
     article.addEventListener('mouseleave', () => {
-      gsap.to(img, { scale:1, duration:0.4, ease:"power2.out" });
-      gsap.to(article, { y:0, scale:1, duration:0.4, ease:"power2.out", boxShadow:"0 0 0 rgba(0,0,0,0)", rotationX:0, rotationY:0 });
+      gsap.to(img, { scale: 1, duration: 0.4, ease: "power2.out" });
+      gsap.to(article, { y: 0, scale: 1, duration: 0.4, ease: "power2.out", boxShadow: "0 0px 0px rgba(0, 0, 0, 0)", rotationX: 0, rotationY: 0 });
     });
     article.addEventListener('mousemove', (e) => {
       const rect = article.getBoundingClientRect();
-      const rotateX = ( (e.clientY-rect.top) - rect.height/2 ) / (rect.height/2) * -10;
-      const rotateY = ( (e.clientX-rect.left) - rect.width/2 ) / (rect.width/2) * 10;
-      gsap.to(article, { rotationX: rotateX, rotationY: rotateY, duration:0.3, ease:"power2.out", transformPerspective:1000 });
+      const x = e.clientX - rect.left, y = e.clientY - rect.top;
+      const rotateX = (y - rect.height / 2) / (rect.height / 2) * -10;
+      const rotateY = (x - rect.width / 2) / (rect.width / 2) * 10;
+      gsap.to(article, { rotationX: rotateX, rotationY: rotateY, duration: 0.3, ease: "power2.out", transformPerspective: 1000 });
     });
   });
 })();
