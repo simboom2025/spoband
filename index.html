@@ -4,224 +4,290 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>SPOBAND Pro | 관장님 전용 신청</title>
+
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
+
   <style>
     body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Apple SD Gothic Neo,Noto Sans KR,Malgun Gothic,sans-serif}
     .container-narrow{max-width:1100px}
     .card{border:1px solid #233047;background:#0f172a;border-radius:16px}
     .btn{border-radius:12px;padding:.6rem 1rem;font-weight:700}
-    .btn-primary{background:#0ea5e9} .btn-primary:hover{background:#0284c7}
-    .btn-ghost{background:#1f2937} .btn-ghost:hover{background:#374151}
+    .btn-primary{background:#0ea5e9;color:#fff} .btn-primary:hover{background:#0284c7}
+    .btn-ghost{background:#1f2937;color:#fff} .btn-ghost:hover{background:#374151}
     .modal{position:fixed;inset:0;background:rgba(2,6,23,.7);display:none;align-items:center;justify-content:center}
     .modal.show{display:flex}
+    .field{width:100%;border-radius:12px;background:#0b1220;border:1px solid #334155;padding:.55rem .75rem}
   </style>
 </head>
 <body class="text-white bg-slate-900">
 
-<header class="sticky top-0 z-50 bg-slate-950/70 backdrop-blur border-b border-slate-800">
-  <div class="container-narrow mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
-    <a href="#" class="text-white font-extrabold">SPOBAND <span class="text-sky-400">Pro</span></a>
-    <a href="#apply" class="btn btn-primary">관장님 전용 신청</a>
-  </div>
-</header>
-
-<main class="container-narrow mx-auto px-5 py-10">
-  <!-- 신청 폼 -->
-  <section id="apply" class="mb-14">
-    <h2 class="text-2xl md:text-3xl font-extrabold mb-6">태권도관장님 특별구매 신청</h2>
-    <form id="postForm" class="grid gap-4 card p-5" autocomplete="off" novalidate>
-      <div class="grid md:grid-cols-2 gap-4">
-        <div>
-          <label class="block text-sm mb-1">도장명</label>
-          <input id="dojo" class="w-full rounded-xl bg-slate-900/60 border border-slate-700 px-3 py-2" required>
-        </div>
-        <div>
-          <label class="block text-sm mb-1">관장명</label>
-          <input id="master" class="w-full rounded-xl bg-slate-900/60 border border-slate-700 px-3 py-2" required>
-        </div>
-        <div>
-          <label class="block text-sm mb-1">연락처(전화/카톡/이메일)</label>
-          <input id="contact" class="w-full rounded-xl bg-slate-900/60 border border-slate-700 px-3 py-2" required>
-        </div>
-        <div>
-          <label class="block text-sm mb-1">비밀번호(4자리 이상)</label>
-          <input id="pw" type="password" minlength="4" class="w-full rounded-xl bg-slate-900/60 border border-slate-700 px-3 py-2" required>
-        </div>
-      </div>
-      <div>
-        <label class="block text-sm mb-1">주소</label>
-        <textarea id="address" rows="2" class="w-full rounded-xl bg-slate-900/60 border border-slate-700 px-3 py-2" required></textarea>
-      </div>
-
-      <div class="border border-slate-700 rounded-xl">
-        <div class="px-4 py-3 bg-slate-900/60 font-semibold">구매 희망 품목 (단위: 개)</div>
-        <div class="divide-y divide-slate-700/60">
-          <div class="grid grid-cols-12 gap-3 px-4 py-3">
-            <div class="col-span-8 md:col-span-9">SPOBAND 30</div>
-            <div class="col-span-4 md:col-span-3"><input id="q_sb30" type="number" min="0" step="1" value="0" class="w-full text-right rounded-lg bg-slate-900/60 border border-slate-700 px-3 py-2"></div>
-          </div>
-          <div class="grid grid-cols-12 gap-3 px-4 py-3">
-            <div class="col-span-8 md:col-span-9">SPOBAND 35</div>
-            <div class="col-span-4 md:col-span-3"><input id="q_sb35" type="number" min="0" step="1" value="0" class="w-full text-right rounded-lg bg-slate-900/60 border border-slate-700 px-3 py-2"></div>
-          </div>
-          <div class="grid grid-cols-12 gap-3 px-4 py-3">
-            <div class="col-span-8 md:col-span-9">SPOBAND 45</div>
-            <div class="col-span-4 md:col-span-3"><input id="q_sb45" type="number" min="0" step="1" value="0" class="w-full text-right rounded-lg bg-slate-900/60 border border-slate-700 px-3 py-2"></div>
-          </div>
-          <div class="grid grid-cols-12 gap-3 px-4 py-3">
-            <div class="col-span-8 md:col-span-9">SPOBAND 55</div>
-            <div class="col-span-4 md:col-span-3"><input id="q_sb55" type="number" min="0" step="1" value="0" class="w-full text-right rounded-lg bg-slate-900/60 border border-slate-700 px-3 py-2"></div>
-          </div>
-          <div class="grid grid-cols-12 gap-3 px-4 py-3">
-            <div class="col-span-8 md:col-span-9">SPOBAND 65</div>
-            <div class="col-span-4 md:col-span-3"><input id="q_sb65" type="number" min="0" step="1" value="0" class="w-full text-right rounded-lg bg-slate-900/60 border border-slate-700 px-3 py-2"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="pt-2">
-        <button type="submit" class="btn btn-primary w-full">신청 등록</button>
-      </div>
-    </form>
-  </section>
-
-  <!-- 목록 -->
-  <section class="mb-4">
-    <div class="flex items-center justify-between mb-3">
-      <h3 class="text-2xl font-extrabold">신청 목록</h3>
-      <p class="text-yellow-300 font-semibold">
-        ※ 문의: 스포밴드연구소 010-5214-1492 / simboom@hanmail.net
-      </p>
+  <!-- 헤더 -->
+  <header class="sticky top-0 z-50 bg-slate-950/70 backdrop-blur border-b border-slate-800">
+    <div class="container-narrow mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
+      <a href="/" class="text-white font-extrabold tracking-tight">SPOBAND <span class="text-sky-400">Pro</span></a>
+      <a href="#apply" class="btn btn-primary">관장님 전용 신청</a>
     </div>
-    <div id="boardList" class="grid md:grid-cols-2 gap-4"></div>
-  </section>
-</main>
+  </header>
 
-<footer class="py-5 border-t border-slate-800 text-center text-sm text-slate-500">
-  <p>&copy; 2024 SPOBAND. All Rights Reserved.
-    &nbsp; <a href="#" id="adminLoginLink" class="hover:text-white">Admin Login</a>
-  </p>
-</footer>
+  <main class="container-narrow mx-auto px-5 py-10">
+    <!-- 신청 폼 -->
+    <section id="apply" class="mb-14">
+      <h2 class="text-2xl md:text-3xl font-extrabold mb-6">태권도관장님 특별구매 신청</h2>
 
-<!-- 상세 모달 -->
-<div id="detailsModal" class="modal">
-  <div class="bg-slate-800 rounded-2xl shadow-xl max-w-2xl w-[92vw] max-h-[80vh] overflow-auto">
-    <div class="flex items-center justify-between p-4 border-b border-slate-700">
-      <h4 class="font-bold">신청 내역 상세</h4>
-      <button id="detailsClose" class="text-2xl">&times;</button>
-    </div>
-    <div id="detailsContent" class="p-5"></div>
-  </div>
-</div>
-
-<script>
-/* ====== 상수 ====== */
-const API_URL     = "https://script.google.com/macros/s/AKfycbxQMW3IenOpiLG5mmYLBE2ksPnJFs0yX-vGSkvJI--neeAQ9RyWpaWos3pCGLO0h5Tq/exec";
-const STORAGE_KEY = "1234"; // localStorage 키 "이름" (비밀키 값이 아님)
-
-const $ = (s, el=document)=>el.querySelector(s);
-const $$ = (s, el=document)=>Array.from(el.querySelectorAll(s));
-const fmt = ts => ts ? new Date(ts).toLocaleString('ko-KR') : '';
-const esc = s => String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]));
-const mask = (text, type)=>{
-  const s = String(text||'').trim();
-  if (type==='name')   return s.length>2 ? s[0] + '*'.repeat(s.length-2) + s.slice(-1) : (s.length>1 ? s[0]+'*' : s);
-  if (type==='contact'){ const d = s.replace(/\D/g,''); return d.length>=10 ? `${d.slice(0,3)}-****-${d.slice(-4)}` : s; }
-  return s;
-};
-
-/* ====== 공개 목록 ====== */
-async function loadList(){
-  try{
-    $('#boardList').innerHTML = `<div class="text-slate-400">불러오는 중...</div>`;
-    const res = await fetch(`${API_URL}?action=list`);
-    if(!res.ok) throw new Error('서버 연결 실패');
-    const posts = await res.json();
-    $('#boardList').innerHTML = posts.map(p => `
-      <article class="card p-5">
-        <div class="flex justify-between items-start">
+      <form id="postForm" class="grid gap-4 card p-5" autocomplete="off" novalidate>
+        <div class="grid md:grid-cols-2 gap-4">
           <div>
-            <p><b>도장명:</b> ${mask(p.dojo,'name')}</p>
-            <p><b>관장님:</b> ${mask(p.master,'name')}</p>
-            <p><b>연락처:</b> ${mask(p.contact,'contact')}</p>
-            <p class="text-xs text-slate-400 mt-2">${fmt(p.ts) || 'Invalid Date'}</p>
+            <label class="block text-sm mb-1">도장명</label>
+            <input id="dojo" class="field" placeholder="예) 스포밴드태권도관" required>
           </div>
-          <button data-id="${esc(p.id)}" class="view-details btn btn-ghost text-sm">상세보기</button>
+          <div>
+            <label class="block text-sm mb-1">관장명</label>
+            <input id="master" class="field" placeholder="예) 홍길동" required>
+          </div>
+          <div>
+            <label class="block text-sm mb-1">연락처(전화/카톡/이메일)</label>
+            <input id="contact" class="field" placeholder="예) 010-0000-0000, 카톡ID, 이메일 중 택1" required>
+          </div>
+          <div>
+            <label class="block text-sm mb-1">비밀번호(4자리 이상)</label>
+            <input id="pw" type="password" minlength="4" class="field" placeholder="상세보기용 본인 확인 비번" required>
+          </div>
         </div>
-      </article>
-    `).join('');
-  }catch(e){
-    $('#boardList').innerHTML = `<div class="text-red-400">오류: ${esc(e.message)}</div>`;
-  }
-}
 
-/* ====== 상세 조회 ====== */
-$('#boardList').addEventListener('click', async (e)=>{
-  const btn = e.target.closest('.view-details'); if(!btn) return;
-  const id = btn.dataset.id;
-  const pw = prompt('신청 시 등록한 비밀번호를 입력하세요.');
-  if(!pw) return;
-  try{
-    const res = await fetch(API_URL, {
-      method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
-      body: JSON.stringify({ action:'getPost', id, pw })
-    });
-    const json = await res.json();
-    if(json.status!=='success') throw new Error(json.message||'조회 실패');
-
-    const post = json.data;
-    const items = Object.entries(post.items||{}).filter(([,v])=>v>0)
-      .map(([k,v])=>`<li>${k.replace('sb','SPOBAND ')}: ${v}개</li>`).join('') || '<li>신청 내역 없음</li>';
-    const replies = (post.replies||[]).map(r =>
-      `<div class="mt-2 p-2 bg-slate-700 rounded-lg">
-        <p class="text-sm">${esc(r.content)}</p>
-        <p class="text-xs text-slate-400 text-right">${fmt(r.ts)}</p>
-      </div>`).join('') || '<p class="text-sm text-slate-400">아직 답변이 없습니다.</p>';
-
-    $('#detailsContent').innerHTML = `
-      <div class="space-y-2">
-        <p><b>도장명:</b> ${esc(post.dojo)}</p>
-        <p><b>관장명:</b> ${esc(post.master)}</p>
-        <p><b>연락처:</b> ${esc(post.contact)}</p>
-        <p><b>주소:</b> ${esc(post.address)}</p>
-        <p><b>신청일:</b> ${fmt(post.ts)||'-'}</p>
-        <div><b>견적서:</b>
-          ${post.quotationUrl ? `<a class="text-sky-400 underline ml-2" target="_blank" href="${esc(post.quotationUrl)}">다운로드</a>` : '<span class="ml-2 text-slate-400">관리자가 준비 중입니다.</span>'}
+        <div>
+          <label class="block text-sm mb-1">주소</label>
+          <textarea id="address" rows="2" class="field" placeholder="도로명 주소" required></textarea>
         </div>
-        <div class="pt-2"><b>신청 내역:</b><ul class="list-disc pl-5 mt-1">${items}</ul></div>
-        <hr class="border-slate-700 my-3">
-        <div><b>관리자 답변</b>${replies}</div>
-      </div>`;
-    $('#detailsModal').classList.add('show');
-  }catch(err){
-    alert('오류: ' + err.message);
-  }
-});
-$('#detailsClose').addEventListener('click', ()=>$('#detailsModal').classList.remove('show'));
-$('#detailsModal').addEventListener('click', (e)=>{ if(e.target===e.currentTarget) e.currentTarget.classList.remove('show'); });
 
-/* ====== Admin Login (반드시 서버 검증 후 이동) ====== */
-async function authCheck(secret){
-  const res = await fetch(API_URL, {
-    method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
-    body: JSON.stringify({ action:'authCheck', secret })
+        <div class="border border-slate-700 rounded-xl overflow-hidden">
+          <div class="px-4 py-3 bg-slate-900/60 font-semibold">구매 희망 품목 (단위: 개)</div>
+          <div class="divide-y divide-slate-700/60">
+            <div class="grid grid-cols-12 gap-3 px-4 py-3">
+              <div class="col-span-8 md:col-span-9">SPOBAND 30</div>
+              <div class="col-span-4 md:col-span-3"><input id="q_sb30" type="number" min="0" step="1" value="0" class="field text-right"></div>
+            </div>
+            <div class="grid grid-cols-12 gap-3 px-4 py-3">
+              <div class="col-span-8 md:col-span-9">SPOBAND 35</div>
+              <div class="col-span-4 md:col-span-3"><input id="q_sb35" type="number" min="0" step="1" value="0" class="field text-right"></div>
+            </div>
+            <div class="grid grid-cols-12 gap-3 px-4 py-3">
+              <div class="col-span-8 md:col-span-9">SPOBAND 45</div>
+              <div class="col-span-4 md:col-span-3"><input id="q_sb45" type="number" min="0" step="1" value="0" class="field text-right"></div>
+            </div>
+            <div class="grid grid-cols-12 gap-3 px-4 py-3">
+              <div class="col-span-8 md:col-span-9">SPOBAND 55</div>
+              <div class="col-span-4 md:col-span-3"><input id="q_sb55" type="number" min="0" step="1" value="0" class="field text-right"></div>
+            </div>
+            <div class="grid grid-cols-12 gap-3 px-4 py-3">
+              <div class="col-span-8 md:col-span-9">SPOBAND 65</div>
+              <div class="col-span-4 md:col-span-3"><input id="q_sb65" type="number" min="0" step="1" value="0" class="field text-right"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-2">
+          <button type="submit" class="btn btn-primary w-full">신청 등록</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- 목록 -->
+    <section class="mb-4">
+      <div class="flex items-center justify-between mb-3 gap-3">
+        <h3 class="text-2xl font-extrabold">신청 목록</h3>
+        <p class="text-yellow-300 font-semibold text-sm md:text-base">
+          ※ 문의: 스포밴드연구소 010-5214-1492 / simboom@hanmail.net
+        </p>
+      </div>
+      <div id="boardList" class="grid md:grid-cols-2 gap-4"></div>
+    </section>
+  </main>
+
+  <footer class="py-6 border-t border-slate-800 text-center text-sm text-slate-500">
+    <p>&copy; 2024 SPOBAND. All Rights Reserved.
+      &nbsp; <a href="#" id="adminLoginLink" class="hover:text-white underline-offset-4 hover:underline">Admin Login</a>
+    </p>
+  </footer>
+
+  <!-- 상세 모달 -->
+  <div id="detailsModal" class="modal">
+    <div class="bg-slate-800 rounded-2xl shadow-xl max-w-2xl w-[92vw] max-h-[80vh] overflow-auto">
+      <div class="flex items-center justify-between p-4 border-b border-slate-700">
+        <h4 class="font-bold">신청 내역 상세</h4>
+        <button id="detailsClose" class="text-2xl leading-none px-2">&times;</button>
+      </div>
+      <div id="detailsContent" class="p-5"></div>
+    </div>
+  </div>
+
+  <script>
+  /* ====== 연결 상수 ====== */
+  const API_URL     = "https://script.google.com/macros/s/AKfycbxQMW3IenOpiLG5mmYLBE2ksPnJFs0yX-vGSkvJI--neeAQ9RyWpaWos3pCGLO0h5Tq/exec";
+  const STORAGE_KEY = "sb_admin_secret"; // 로컬스토리지 키 이름(비밀키 값 아님)
+
+  /* ====== 유틸 ====== */
+  const $  = (s, el=document)=>el.querySelector(s);
+  const $$ = (s, el=document)=>Array.from(el.querySelectorAll(s));
+  const fmt = ts => ts ? new Date(ts).toLocaleString('ko-KR') : '';
+  const esc = s => String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]));
+  const mask = (text, type)=>{
+    const s = String(text||'').trim();
+    if (type==='name')   return s.length>2 ? s[0] + '*'.repeat(s.length-2) + s.slice(-1) : (s.length>1 ? s[0]+'*' : s);
+    if (type==='contact'){ const d = s.replace(/\D/g,''); return d.length>=10 ? \`\${d.slice(0,3)}-****-\${d.slice(-4)}\` : s; }
+    return s;
+  };
+
+  /* ====== 목록 불러오기(공개) ====== */
+  async function loadList(){
+    $('#boardList').innerHTML = '<div class="text-slate-400">불러오는 중...</div>';
+    try{
+      const res = await fetch(\`\${API_URL}?action=list\`);
+      if(!res.ok) throw new Error('서버 연결 실패');
+      const posts = await res.json();
+      if(!Array.isArray(posts)) throw new Error('데이터 형식 오류');
+
+      $('#boardList').innerHTML = posts.map(p => `
+        <article class="card p-5">
+          <div class="flex justify-between items-start gap-3">
+            <div>
+              <p><b>도장명:</b> ${mask(p.dojo,'name')}</p>
+              <p><b>관장님:</b> ${mask(p.master,'name')}</p>
+              <p><b>연락처:</b> ${mask(p.contact,'contact')}</p>
+              <p class="text-xs text-slate-400 mt-2">${fmt(p.ts) || 'Invalid Date'}</p>
+            </div>
+            <button data-id="${esc(p.id)}" class="view-details btn btn-ghost text-sm shrink-0">상세보기</button>
+          </div>
+        </article>
+      `).join('');
+    }catch(e){
+      $('#boardList').innerHTML = '<div class="text-red-400">오류: '+esc(e.message)+'</div>';
+    }
+  }
+
+  /* ====== 상세보기(본인 비번 확인) ====== */
+  $('#boardList').addEventListener('click', async (e)=>{
+    const btn = e.target.closest('.view-details'); if(!btn) return;
+    const id = btn.dataset.id;
+    const pw = prompt('신청 시 등록한 비밀번호를 입력하세요.');
+    if(!pw) return;
+
+    try{
+      const res = await fetch(API_URL, {
+        method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+        body: JSON.stringify({ action:'getPost', id, pw })
+      });
+      const json = await res.json();
+      if(json.status!=='success') throw new Error(json.message||'조회 실패');
+
+      const post = json.data;
+      const items = Object.entries(post.items||{})
+                      .filter(([,v])=>Number(v)>0)
+                      .map(([k,v])=>\`<li>\${k.replace('sb','SPOBAND ')}: \${v}개</li>\`)
+                      .join('') || '<li>신청 내역 없음</li>';
+
+      const replies = (post.replies||[]).map(r => `
+        <div class="mt-2 p-2 bg-slate-700 rounded-lg">
+          <p class="text-sm">${esc(r.content)}</p>
+          <p class="text-xs text-slate-400 text-right">${fmt(r.ts)}</p>
+        </div>
+      `).join('') || '<p class="text-sm text-slate-400">아직 답변이 없습니다.</p>';
+
+      $('#detailsContent').innerHTML = `
+        <div class="space-y-2">
+          <p><b>도장명:</b> ${esc(post.dojo)}</p>
+          <p><b>관장명:</b> ${esc(post.master)}</p>
+          <p><b>연락처:</b> ${esc(post.contact)}</p>
+          <p><b>주소:</b> ${esc(post.address)}</p>
+          <p><b>신청일:</b> ${fmt(post.ts)||'-'}</p>
+          <div><b>견적서:</b>
+            ${post.quotationUrl
+              ? \`<a class="text-sky-400 underline ml-2" target="_blank" href="\${esc(post.quotationUrl)}">다운로드</a>\`
+              : '<span class="ml-2 text-slate-400">관리자가 준비 중입니다.</span>'}
+          </div>
+          <div class="pt-2"><b>신청 내역:</b><ul class="list-disc pl-5 mt-1">${items}</ul></div>
+          <hr class="border-slate-700 my-3">
+          <div><b>관리자 답변</b>${replies}</div>
+        </div>`;
+      $('#detailsModal').classList.add('show');
+    }catch(err){
+      alert('오류: ' + err.message);
+    }
   });
-  const json = await res.json().catch(()=>({status:'error'}));
-  return json.status !== 'error';
-}
-$('#adminLoginLink').addEventListener('click', async (e)=>{
-  e.preventDefault();
-  let cur = localStorage.getItem(STORAGE_KEY) || '';
-  const s = prompt('관리자 비밀키를 입력하세요:', cur || '');
-  if(!s) return;
-  const ok = await authCheck(s);
-  if(!ok){ alert('비밀키가 일치하지 않습니다.'); return; }
-  localStorage.setItem(STORAGE_KEY, s);
-  location.href = 'admin-final.html';
-});
 
-/* 초기 */
-document.addEventListener('DOMContentLoaded', loadList);
-</script>
+  $('#detailsClose').addEventListener('click', ()=>$('#detailsModal').classList.remove('show'));
+  $('#detailsModal').addEventListener('click', (e)=>{ if(e.target===e.currentTarget) e.currentTarget.classList.remove('show'); });
+
+  /* ====== 신청 등록 ====== */
+  $('#postForm').addEventListener('submit', async (e)=>{
+    e.preventDefault();
+
+    const data = {
+      action: 'create',
+      dojo: $('#dojo').value.trim(),
+      master: $('#master').value.trim(),
+      contact: $('#contact').value.trim(),
+      address: $('#address').value.trim(),
+      pw: $('#pw').value,
+      items: {
+        sb30: Number($('#q_sb30').value||0),
+        sb35: Number($('#q_sb35').value||0),
+        sb45: Number($('#q_sb45').value||0),
+        sb55: Number($('#q_sb55').value||0),
+        sb65: Number($('#q_sb65').value||0),
+      }
+    };
+
+    // 간단 검증
+    if(!data.dojo || !data.master || !data.contact || !data.address || (data.pw||'').length<4){
+      alert('필수 항목을 올바르게 입력해 주세요. (비밀번호 4자리 이상)'); return;
+    }
+
+    try{
+      const res = await fetch(API_URL, {
+        method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+        body: JSON.stringify(data)
+      });
+      const json = await res.json();
+      if(json.status!=='success') throw new Error(json.message||'등록 실패');
+
+      alert('신청이 등록되었습니다.');
+      e.target.reset();
+      loadList();
+      // 스크롤 목록 위치로
+      document.getElementById('boardList')?.scrollIntoView({behavior:'smooth', block:'start'});
+    }catch(err){
+      alert('오류: ' + err.message);
+    }
+  });
+
+  /* ====== Admin Login (서버 검증 후 이동) ====== */
+  async function authCheck(secret){
+    try{
+      const res = await fetch(API_URL, {
+        method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+        body: JSON.stringify({ action:'authCheck', secret })
+      });
+      const json = await res.json();
+      return json.status === 'success';
+    }catch{ return false; }
+  }
+
+  $('#adminLoginLink').addEventListener('click', async (e)=>{
+    e.preventDefault();
+    const cur = localStorage.getItem(STORAGE_KEY) || '';
+    const s = prompt('관리자 비밀키를 입력하세요:', cur || '');
+    if(!s) return;
+
+    const ok = await authCheck(s);
+    if(!ok){ alert('비밀키가 일치하지 않습니다.'); return; }
+
+    localStorage.setItem(STORAGE_KEY, s);
+    location.href = 'admin-final.html';
+  });
+
+  /* 초기 로드 */
+  document.addEventListener('DOMContentLoaded', loadList);
+  </script>
 </body>
 </html>
