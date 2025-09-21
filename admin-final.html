@@ -2,196 +2,247 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>SPOBAND Admin (Final)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>SPOBAND Admin Dashboard</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-  body { font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Noto Sans KR, Malgun Gothic, sans-serif; }
-  .container-fluid { width: 96%; margin: 0 auto; }
-  .grid-wrap { margin-top: 8px; border-radius: 16px; overflow: auto; border: 1px solid #1f2937; background: #0f172a; height: calc(100vh - 160px); }
-  .thead .row { position: sticky; top: 0; z-index: 1; background: #0b1220; border-bottom: 1px solid #1f2937; font-weight: bold; font-size: 14px; }
-  .row { display: grid; grid-template-columns: minmax(50px, 70px) minmax(100px, 130px) minmax(120px, 150px) minmax(120px, 140px) minmax(120px, 150px) minmax(200px, 1.1fr) minmax(180px, 220px) minmax(100px, 120px) minmax(200px, 1fr) minmax(100px, 120px) minmax(100px, 120px); gap: 12px; align-items: center; transition: background 0.2s; }
-  .cell { padding: 12px 16px; font-size: 14px; line-height: 1.5; word-break: break-word; }
-  .cell.text-right { text-align: right; }
-  .cell.text-center { text-align: center; }
-  .tbody .row { border-bottom: 1px solid #1f2937; }
-  .tbody .row:nth-child(even) { background: #0b1322; }
-  .tbody .row:hover { background: #1e293b; }
-  .badge { background: #1f2937; border-radius: 10px; padding: 4px 8px; font-size: 12px; margin-bottom: 4px; display: inline-block; }
-  .toolbar { margin: 18px 0 10px; }
-  .loading { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(2,6,23,.55); z-index: 50; }
-  .loading.show { display: flex; }
+  :root {
+    --color-bg: #020617; --color-bg-secondary: #0f172a; --color-bg-tertiary: #1e293b;
+    --color-border: #334155; --color-text-primary: #e2e8f0; --color-text-secondary: #94a3b8;
+    --color-accent: #38bdf8;
+  }
+  body {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--color-bg); color: var(--color-text-primary);
+  }
+  .table-container {
+    margin-top: 1rem; border-radius: 0.75rem; overflow: auto; border: 1px solid var(--color-border);
+    background-color: var(--color-bg-secondary); height: calc(100vh - 10.5rem);
+  }
+  .table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  .table thead { position: sticky; top: 0; z-index: 10; background-color: #0b1220; border-bottom: 1px solid var(--color-border); }
+  .table th, .table td {
+    padding: 0.8rem 1rem; text-align: left; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis; vertical-align: middle;
+  }
+  .table th { font-weight: 600; font-size: 0.8rem; }
+  .table td { font-size: 0.875rem; border-bottom: 1px solid var(--color-border); }
+  .table tbody tr:last-child td { border-bottom: none; }
+  .table tbody tr { transition: background-color 0.2s; }
+  .table tbody tr:hover { background-color: var(--color-bg-tertiary); cursor: pointer; }
+  .table .text-center { text-align: center; }
+  .status-badge { padding: 0.25rem 0.6rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; display: inline-block; }
+  .loading-overlay, .modal-overlay {
+    position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
+    background-color: rgba(2, 6, 23, 0.7); z-index: 50; transition: opacity 0.3s;
+  }
+  .loading-overlay.show, .modal-overlay.show { display: flex; }
 </style>
 </head>
-<body class="bg-slate-900 text-white">
-<div id="loading" class="loading"><div class="bg-slate-800 px-5 py-3 rounded-xl">처리 중...</div></div>
+<body>
+<div id="loading" class="loading-overlay">
+  <div class="bg-slate-800 text-white px-6 py-4 rounded-lg shadow-xl">로딩 중...</div>
+</div>
 
-<header class="sticky top-0 z-40 bg-slate-950/70 border-b border-slate-800 backdrop-blur">
-  <div class="container-fluid h-16 px-2 md:px-4 flex items-center justify-between">
-    <h1 class="text-xl font-black">SPOBAND <span class="text-sky-400">Admin</span> <span class="text-sm font-normal text-slate-400">Final Ver.</span></h1>
-    <div class="flex items-center gap-2">
-      <button id="btnReload" class="btn px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700">새로고침</button>
-      <button id="btnLogout" class="btn px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-800">로그아웃</button>
+<div id="detail-modal" class="modal-overlay">
+  <div id="modal-backdrop" class="absolute inset-0"></div>
+  <div class="relative bg-slate-800 rounded-lg shadow-xl w-full max-w-3xl border border-slate-700 max-h-[80vh] flex flex-col">
+    <div class="flex items-center justify-between p-4 border-b border-slate-700">
+      <h3 class="text-lg font-bold text-sky-400">신청 상세 정보</h3>
+      <button id="modal-close-btn" class="text-2xl text-slate-400 hover:text-white">&times;</button>
+    </div>
+    <div id="modal-content" class="p-6 overflow-y-auto">
+      </div>
+  </div>
+</div>
+
+<header class="sticky top-0 z-40 bg-slate-950/70 border-b border-slate-800 backdrop-blur-lg">
+  <div class="container mx-auto h-16 px-4 flex items-center justify-between">
+    <h1 class="text-xl font-bold">SPOBAND <span class="text-sky-400">Admin</span></h1>
+    <div class="flex items-center gap-3">
+      <button id="btnReload" class="px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 transition-colors">새로고침</button>
+      <button id="btnLogout" class="px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-800 transition-colors">로그아웃</button>
     </div>
   </div>
 </header>
 
-<main class="container-fluid px-2 md:px-4 py-4">
-  <div id="errorMsg" class="text-red-400 mb-4 hidden"></div>
+<main class="container mx-auto px-4 py-4">
+  <div id="errorMsg" class="text-red-400 mb-4 p-3 bg-red-900/20 border border-red-800 rounded-lg hidden"></div>
   <div class="toolbar flex flex-wrap items-center gap-3">
-    <input id="search" placeholder="검색(도장/관장/연락처/주소/비고)" class="w-[320px] max-w-full rounded-lg bg-slate-900/60 border border-slate-700 px-3 py-2">
-    <select id="statusFilter" class="rounded-lg bg-slate-900/60 border border-slate-700 px-3 py-2">
-      <option value="">상태(전체)</option>
+    <input id="search" placeholder="통합 검색..." class="flex-grow md:flex-grow-0 w-full md:w-80 rounded-lg bg-slate-800 border-slate-700 px-4 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+    <select id="statusFilter" class="rounded-lg bg-slate-800 border-slate-700 px-4 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+      <option value="">상태 (전체)</option>
       <option>신규</option><option>배송준비</option><option>배송중</option><option>배송완료</option><option>반품</option>
     </select>
-    <button id="btnCsv" class="px-4 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-800">CSV 내보내기</button>
-    <button id="btnBulkStatus" class="px-4 py-2 rounded-lg bg-sky-700 hover:bg-sky-800">선택 상태변경</button>
-    <button id="btnBulkDelete" class="px-4 py-2 rounded-lg bg-red-700 hover:bg-red-800">선택 삭제</button>
-    <span class="text-slate-400">선택: <b id="selCount">0</b></span>
+    <div class="ml-auto flex items-center gap-3">
+        <span class="text-slate-400 text-sm">선택: <b id="selCount">0</b></span>
+        <button id="btnBulkStatus" class="px-4 py-2 rounded-lg bg-sky-700 hover:bg-sky-800 transition-colors">선택 상태변경</button>
+        <button id="btnBulkDelete" class="px-4 py-2 rounded-lg bg-red-700 hover:bg-red-800 transition-colors">선택 삭제</button>
+        <button id="btnCsv" class="px-4 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-800 transition-colors">CSV</button>
+    </div>
   </div>
 
-  <div class="grid-wrap">
-    <div class="thead">
-      <div class="row">
-        <div class="cell text-center">선택</div>
-        <div class="cell text-center">신청비번</div>
-        <div class="cell">신청일</div>
-        <div class="cell">도장명</div>
-        <div class="cell">관장명</div>
-        <div class="cell">연락처</div>
-        <div class="cell">신청항목</div>
-        <div class="cell">답변</div>
-        <div class="cell">주소</div>
-        <div class="cell text-center">최종상태</div>
-        <div class="cell text-center">작업</div>
-      </div>
-    </div>
-    <div id="tbody" class="tbody"></div>
+  <div class="table-container">
+    <table class="table">
+      <thead>
+        <tr>
+          <th style="width: 4%;" class="text-center">선택</th><th style="width: 8%;">신청비번</th><th style="width: 13%;">신청일</th>
+          <th style="width: 12%;">도장명</th><th style="width: 8%;">관장명</th><th style="width: 10%;">연락처</th>
+          <th style="width: 14%;">신청항목</th><th style="width: 5%;" class="text-center">답변</th><th>주소</th>
+          <th style="width: 8%;" class="text-center">상태</th><th style="width: 10%;" class="text-center">작업</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
   </div>
 </main>
 
 <script>
-/* ===== 상수 ===== */
-const API_URL = "https://script.google.com/macros/s/AKfycbw1rfPzDs8xI3j_XzmBWxxkeGh-zfPwt8TizbVc93FZ_NrBiBKiKO1EIBVWoCtohxqJ/exec";
-const STORAGE_KEY = "1234"; // 관리자 비밀키 저장 키
-const STATUS_OPTIONS = ["신규","배송준비","배송중","배송완료","반품"];
+const API_URL = "https://script.google.com/macros/s/AKfycbwO24CZs2KFkX5KZK5wMjtQlNdoKYvKBPmSTDTBg3gYn2m10sFOPMBbFZJHbtZXYyUS/exec";
+const STORAGE_KEY = "spoband_admin_secret";
+const STATUS_OPTIONS = ["신규", "배송준비", "배송중", "배송완료", "반품"];
+const STATUS_COLORS = { "신규": "bg-sky-500/20 text-sky-400", "배송준비": "bg-amber-500/20 text-amber-400", "배송중": "bg-blue-500/20 text-blue-400", "배송완료": "bg-green-500/20 text-green-400", "반품": "bg-red-500/20 text-red-400", "default": "bg-slate-500/20 text-slate-400" };
 
-const $ = (s, el=document)=>el.querySelector(s);
-const $$ = (s, el=document)=>Array.from(el.querySelectorAll(s));
-const fmt = ts => ts ? new Date(ts).toLocaleString('ko-KR') : '';
-const esc = s => String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]));
-const showLoading = ()=>$('#loading').classList.add('show');
-const hideLoading = ()=>$('#loading').classList.remove('show');
-const showError = (msg) => { $('#errorMsg').textContent = msg; $('#errorMsg').classList.remove('hidden'); };
-const hideError = () => $('#errorMsg').classList.add('hidden');
+const $ = s => document.querySelector(s);
+let SECRET = null, POSTS = [];
 
-let SECRET = null;
-let POSTS = [];
+const showLoading = () => $('#loading').classList.add('show');
+const hideLoading = () => $('#loading').classList.remove('show');
+const showError = msg => { $('#errorMsg').textContent = msg; $('#errorMsg').classList.remove('hidden'); };
+const esc = s => String(s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": "&#39;" }[c]));
 
-console.log("Script loaded, API_URL:", API_URL);
-
-/* ===== 인증: 비밀키 확보/검증 ===== */
-function ensureSecret(){
-  SECRET = localStorage.getItem(STORAGE_KEY) || '';
-  if(!SECRET){
-    const s = prompt('관리자 비밀키를 입력하세요:');
-    if(!s){
-      alert('비밀키가 없으면 접근할 수 없습니다.');
-      location.href = 'index.html';
-      return false;
-    }
-    localStorage.setItem(STORAGE_KEY, s);
-    SECRET = s;
-  }
-  console.log("Secret ensured:", SECRET);
-  return true;
-}
-
-/* ===== API 헬퍼 ===== */
-async function adminCall(payload){
+async function adminCall(payload) {
   showLoading();
-  console.log("Calling API with payload:", payload);
-  try{
+  try {
     const res = await fetch(API_URL, {
-      method:'POST',
-      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({ ...payload, secret: SECRET })
     });
     const json = await res.json();
-    console.log("API Response:", json);
-    if (!res.ok || json.status==='error'){
-      if(/인증 실패/i.test(json.message||'')){
+    if (!res.ok || json.status === 'error') {
+      if (/인증 실패/i.test(json.message || '')) {
         localStorage.removeItem(STORAGE_KEY);
-        alert('인증 실패. 비밀키를 다시 입력해 주세요.');
+        alert('인증에 실패했습니다. 비밀키를 다시 확인해주세요.');
         location.reload();
-        return { status:'error' };
       }
       throw new Error(json.message || `HTTP ${res.status}`);
     }
     return json;
   } catch (error) {
-    console.error("API Call Error:", error);
-    showError(`오류 발생: ${error.message}`);
-    return { status:'error', message: error.message };
-  } finally {
-    hideLoading();
-  }
+    showError(`오류: ${error.message}`);
+    return { status: 'error', message: error.message };
+  } finally { hideLoading(); }
 }
 
-/* ===== 목록 로드 (보안 전용: adminList) ===== */
-async function loadList(){
-  const result = await adminCall({ action: 'adminList' }); // 명시적으로 action 설정
-  if (result.status==='error') return;
-  POSTS = result;
-  console.log("Loaded Posts:", POSTS);
-  render();
+function getStatusBadge(status) {
+  const colorClass = STATUS_COLORS[status] || STATUS_COLORS['default'];
+  return `<span class="status-badge ${colorClass}">${status || 'N/A'}</span>`;
 }
 
-/* ===== 렌더링 ===== */
-function render(){
-  const q = $('#search').value.trim();
-  const f = $('#statusFilter').value.trim();
+function render() {
+  const q = $('#search').value.trim().toLowerCase();
+  const f = $('#statusFilter').value;
+  const filteredPosts = POSTS.filter(r => 
+    (f ? r.status === f : true) &&
+    (q ? [r.id, r.dojo, r.master, r.contact, r.address].some(v => String(v || '').toLowerCase().includes(q)) : true)
+  );
 
-  let rows = POSTS.slice();
-  if(q){
-    rows = rows.filter(r => [r.pw,r.dojo,r.master,r.contact,r.address,r.notes].some(v=>String(v||'').includes(q)));
-  }
-  if(f){
-    rows = rows.filter(r => (r.status||'')===f);
-  }
-
-  $('#tbody').innerHTML = rows.map(r => `
-    <div class="row">
-      <div class="cell text-center"><input type="checkbox" class="sel" data-id="${esc(r.id)}"></div>
-      <div class="cell text-center font-medium">${esc(r.id)}</div>
-      <div class="cell">${fmt(r.ts)}</div>
-      <div class="cell">${esc(r.dojo)}</div>
-      <div class="cell">${esc(r.master)}</div>
-      <div class="cell">${esc(r.contact)}</div>
-      <div class="cell text-sm flex flex-col gap-1">${Object.entries(r.items||{}).filter(([,v])=>+v>0).map(([k,v])=>`<div>${k.replace('sb','SB')}: <b>${v}</b>개</div>`).join('') || '-'}</div>
-      <div class="cell text-sm flex flex-col gap-1">${(r.replies||[]).map(a=>`<div class="badge">${fmt(a.ts)}<br>${esc(a.content)}</div>`).join('') || '없음'}</div>
-      <div class="cell">${esc(r.address)}</div>
-      <div class="cell text-center"><select class="status w-full rounded-md bg-slate-800 border border-slate-700 px-2 py-1" data-id="${esc(r.id)}">${STATUS_OPTIONS.map(s=>`<option ${r.status===s?'selected':''}>${s}</option>`).join('')}</select></div>
-      <div class="cell text-center"><div class="flex gap-2 justify-center flex-wrap"><button class="reply btn px-3 py-1 rounded-lg bg-slate-700 hover:bg-slate-600" data-id="${esc(r.id)}">답변</button><button class="quote btn px-3 py-1 rounded-lg bg-slate-700 hover:bg-slate-600" data-id="${esc(r.id)}">견적서</button><button class="del btn px-3 py-1 rounded-lg bg-rose-700 hover:bg-rose-800" data-id="${esc(r.id)}">삭제</button></div></div>
-    </div>
-  `).join('');
-
+  $('#tbody').innerHTML = filteredPosts.map(r => {
+    const itemsHtml = Object.entries(r.items || {}).map(([k, v]) => `${k.replace('sb', 'SB')}: ${v}개`).join(', ');
+    const latestReply = (r.replies && r.replies.length > 0) ? r.replies[r.replies.length - 1].content : '답변 없음';
+    return `
+      <tr data-id="${esc(r.id)}">
+        <td class="text-center"><input type="checkbox" class="sel accent-sky-500 bg-slate-700" data-id="${esc(r.id)}"></td>
+        <td>${esc(r.id)}</td><td>${new Date(r.ts).toLocaleString('ko-KR')}</td>
+        <td title="${esc(r.dojo)}">${esc(r.dojo)}</td><td>${esc(r.master)}</td>
+        <td>${esc(r.contact)}</td><td title="${itemsHtml}">${itemsHtml}</td>
+        <td class="text-center" title="${esc(latestReply)}">${(r.replies || []).length}</td>
+        <td title="${esc(r.address)}">${esc(r.address)}</td><td class="text-center">${getStatusBadge(r.status)}</td>
+        <td class="text-center">
+            <div class="flex gap-1 justify-center">
+                <button class="reply text-xs p-1.5 rounded bg-slate-700 hover:bg-slate-600" data-id="${esc(r.id)}">답변</button>
+                <button class="quote text-xs p-1.5 rounded bg-slate-700 hover:bg-slate-600" data-id="${esc(r.id)}">견적</button>
+                <button class="del text-xs p-1.5 rounded bg-rose-800 hover:bg-rose-700" data-id="${esc(r.id)}">삭제</button>
+            </div>
+        </td>
+      </tr>`;
+  }).join('');
   updateSelCount();
 }
 
-/* ===== 선택 수 표시 ===== */
-function updateSelCount(){
-  $('#selCount').textContent = $$('.sel:checked').length;
+/* ===== 상세 정보 모달 관련 ===== */
+function openModal(id) {
+  const post = POSTS.find(p => p.id === id);
+  if (!post) return;
+
+  const itemsHtml = Object.entries(post.items || {}).map(([k, v]) => `
+    <div class="flex justify-between py-1">
+      <span class="text-slate-400">${k.replace('sb','SB')}</span>
+      <span class="font-semibold">${v} 개</span>
+    </div>`).join('');
+
+  const repliesHtml = (post.replies || []).length > 0 ? post.replies.map(reply => `
+    <div class="mt-2 p-3 bg-slate-900 rounded-lg">
+      <div class="flex justify-between items-center text-xs text-slate-400 mb-1">
+        <span>${reply.author || '관리자'}</span>
+        <span>${new Date(reply.ts).toLocaleString('ko-KR')}</span>
+      </div>
+      <p class="text-sm">${esc(reply.content)}</p>
+    </div>`).join('') : '<p class="text-slate-400 text-sm">등록된 답변이 없습니다.</p>';
+
+  $('#modal-content').innerHTML = `
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-sm">
+      <div class="md:col-span-2 p-3 bg-slate-900 rounded-lg">
+        <h4 class="text-base font-bold mb-2">신청 기본 정보</h4>
+        <div class="grid grid-cols-2 gap-2">
+          <div><strong class="text-slate-400 w-20 inline-block">신청비번:</strong> ${esc(post.id)}</div>
+          <div><strong class="text-slate-400 w-20 inline-block">최종상태:</strong> ${getStatusBadge(post.status)}</div>
+          <div><strong class="text-slate-400 w-20 inline-block">신청일:</strong> ${new Date(post.ts).toLocaleString('ko-KR')}</div>
+          <div><strong class="text-slate-400 w-20 inline-block">연락처:</strong> ${esc(post.contact)}</div>
+          <div><strong class="text-slate-400 w-20 inline-block">도장명:</strong> ${esc(post.dojo)}</div>
+          <div><strong class="text-slate-400 w-20 inline-block">관장명:</strong> ${esc(post.master)}</div>
+          <div class="col-span-2"><strong class="text-slate-400 w-20 inline-block">주소:</strong> ${esc(post.address)}</div>
+          <div class="col-span-2"><strong class="text-slate-400 w-20 inline-block">견적서:</strong> <a href="${esc(post.quotationUrl)}" target="_blank" class="text-sky-400 hover:underline">${esc(post.quotationUrl)}</a></div>
+        </div>
+      </div>
+      <div>
+        <h4 class="text-base font-bold mb-2 p-3 bg-slate-900 rounded-lg">신청 항목</h4>
+        <div class="p-3">${itemsHtml}</div>
+      </div>
+      <div>
+        <h4 class="text-base font-bold mb-2 p-3 bg-slate-900 rounded-lg">답변 내역</h4>
+        <div class="p-3">${repliesHtml}</div>
+      </div>
+    </div>
+  `;
+  $('#detail-modal').classList.add('show');
+}
+function closeModal() { $('#detail-modal').classList.remove('show'); }
+
+function updateSelCount() { $('#selCount').textContent = document.querySelectorAll('.sel:checked').length; }
+
+async function initialize() {
+  SECRET = localStorage.getItem(STORAGE_KEY);
+  if (!SECRET) {
+    SECRET = prompt('관리자 비밀키를 입력하세요:');
+    if (!SECRET) {
+      document.body.innerHTML = '<div class="text-center p-8">접근 권한이 없습니다.</div>';
+      return;
+    }
+    localStorage.setItem(STORAGE_KEY, SECRET);
+  }
+  const result = await adminCall({ action: 'adminList' });
+  if (result.status === 'error') return;
+  POSTS = result;
+  render();
 }
 
-/* ===== 이벤트 바인딩 ===== */
-document.addEventListener('DOMContentLoaded', async ()=>{
-  if (!ensureSecret()) return;
-  await loadList();
+document.addEventListener('DOMContentLoaded', () => {
+  initialize();
 
-  $('#btnReload').addEventListener('click', loadList);
-  $('#btnLogout').addEventListener('click', ()=>{
-    if(confirm('로그아웃 하시겠습니까?')){
+  $('#btnReload').addEventListener('click', () => location.reload());
+  $('#btnLogout').addEventListener('click', () => {
+    if (confirm('로그아웃 하시겠습니까?')) {
       localStorage.removeItem(STORAGE_KEY);
       location.reload();
     }
@@ -199,90 +250,72 @@ document.addEventListener('DOMContentLoaded', async ()=>{
 
   $('#search').addEventListener('input', render);
   $('#statusFilter').addEventListener('change', render);
+  $('#tbody').addEventListener('change', e => { if (e.target.classList.contains('sel')) updateSelCount(); });
 
-  $('#tbody').addEventListener('change', async (e)=>{
-    const sel = e.target.closest('.status'); if(!sel) return;
-    const id = sel.dataset.id, status = sel.value;
-    const res = await adminCall({ action:'updateStatus', id, status });
-    if(res.status==='error') return;
-    const p = POSTS.find(x=>String(x.id)===String(id)); if(p) p.status=status;
+  $('#tbody').addEventListener('click', async (e) => {
+    const btn = e.target.closest('button');
+    const checkbox = e.target.closest('input[type="checkbox"]');
+    if (btn || checkbox) return; // 버튼이나 체크박스 클릭 시 모달 열지 않음
+
+    const row = e.target.closest('tr');
+    if (row && row.dataset.id) openModal(row.dataset.id);
   });
+  
+  // 모달 닫기 이벤트
+  $('#modal-close-btn').addEventListener('click', closeModal);
+  $('#modal-backdrop').addEventListener('click', closeModal);
+  document.addEventListener('keydown', (e) => { if (e.key === "Escape") closeModal(); });
 
-  $('#tbody').addEventListener('click', async (e)=>{
-    const replyBtn = e.target.closest('.reply');
-    const quoteBtn = e.target.closest('.quote');
-    const delBtn   = e.target.closest('.del');
-
-    if (replyBtn){
-      const id = replyBtn.dataset.id;
-      const content = prompt('답변 내용을 입력하세요.');
-      if(!content) return;
-      const res = await adminCall({ action:'addReply', id, reply:{ content, ts: Date.now() } });
-      if(res.status==='error') return;
-      await loadList();
-      return;
+  $('#tbody').addEventListener('click', async (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    const id = btn.dataset.id;
+    let action;
+    if (btn.classList.contains('reply')) {
+      const content = prompt('답변 내용 입력:');
+      if (content) action = adminCall({ action: 'addReply', id, reply: { content, ts: Date.now() } });
+    } else if (btn.classList.contains('quote')) {
+      const url = prompt('견적서 URL 입력:');
+      if (url) action = adminCall({ action: 'setQuotationUrl', id, url });
+    } else if (btn.classList.contains('del')) {
+      if (confirm(`'${id}' 항목을 삭제하시겠습니까?`)) action = adminCall({ action: 'delete', id });
     }
-
-    if (quoteBtn){
-      const id = quoteBtn.dataset.id;
-      const url = prompt('견적서(파일/링크)의 URL을 입력하세요.');
-      if(!url) return;
-      const res = await adminCall({ action:'setQuotationUrl', id, url });
-      if(res.status==='error') return;
-      await loadList();
-      return;
-    }
-
-    if (delBtn){
-      const id = delBtn.dataset.id;
-      if(!confirm(`신청비번 ${id} 항목을 삭제할까요?`)) return;
-      const res = await adminCall({ action:'delete', id });
-      if(res.status==='error') return;
-      await loadList();
-      return;
+    if (action) {
+      const res = await action;
+      if (res.status !== 'error') await initialize();
     }
   });
-
-  $('#btnBulkStatus').addEventListener('click', async ()=>{
-    const ids = $$('.sel:checked').map(c=>c.dataset.id);
-    if(ids.length===0){ alert('선택된 항목이 없습니다.'); return; }
-    const status = prompt(`상태를 입력하세요 (${STATUS_OPTIONS.join(', ')})`);
-    if(!status) return;
-    if(!STATUS_OPTIONS.includes(status)){ alert('허용되지 않는 상태입니다.'); return; }
-    const res = await adminCall({ action:'bulkUpdateStatus', ids, status });
-    if(res.status==='error') return;
-    await loadList();
+  
+  $('#btnBulkStatus, #btnBulkDelete').addEventListener('click', async (e) => {
+      const ids = Array.from(document.querySelectorAll('.sel:checked')).map(c => c.dataset.id);
+      if (ids.length === 0) return alert('항목을 선택해주세요.');
+      let action;
+      if (e.target.id === 'btnBulkStatus') {
+          const status = prompt(`변경할 상태 입력 (${STATUS_OPTIONS.join(', ')}):`);
+          if (status && STATUS_OPTIONS.includes(status)) action = adminCall({ action: 'bulkUpdateStatus', ids, status });
+      } else if (e.target.id === 'btnBulkDelete') {
+          if (confirm(`${ids.length}개 항목을 삭제하시겠습니까?`)) action = adminCall({ action: 'bulkDelete', ids });
+      }
+      if (action) {
+          const res = await action;
+          if (res.status !== 'error') await initialize();
+      }
   });
 
-  $('#btnBulkDelete').addEventListener('click', async ()=>{
-    const ids = $$('.sel:checked').map(c=>c.dataset.id);
-    if(ids.length===0){ alert('선택된 항목이 없습니다.'); return; }
-    if(!confirm(`${ids.length}개 항목을 삭제할까요?`)) return;
-    const res = await adminCall({ action:'bulkDelete', ids });
-    if(res.status==='error') return;
-    await loadList();
-  });
-
-  $('#tbody').addEventListener('change', (e)=>{
-    if(e.target.classList.contains('sel')) updateSelCount();
-  });
-
-  $('#btnCsv').addEventListener('click', ()=>{
+  $('#btnCsv').addEventListener('click', () => {
     const header = ["신청비번","신청일","도장명","관장명","연락처","신청항목","답변수","견적서URL","주소","최종상태","비고"];
     const lines = [header.join(',')];
-    POSTS.forEach(r=>{
-      const items = Object.entries(r.items||{}).filter(([,v])=>+v>0).map(([k,v])=>`${k}:${v}`).join('|');
-      const replies = (r.replies||[]).length;
-      const row = [
-        r.id, fmt(r.ts), r.dojo, r.master, r.contact,
-        items, replies, r.quotationUrl||'', r.address, r.status||'', r.notes||''
-      ].map(v=>`"${String(v||'').replace(/"/g,'""')}"`).join(',');
+    POSTS.forEach(r => {
+      const items = Object.entries(r.items || {}).map(([k, v]) => `${k}:${v}`).join('|');
+      const row = [r.id, new Date(r.ts).toLocaleString(), r.dojo, r.master, r.contact, items, (r.replies || []).length, r.quotationUrl || '', r.address, r.status || '', r.notes || ''].map(v => `"${String(v || '').replace(/"/g, '""')}"`).join(',');
       lines.push(row);
     });
-    const blob = new Blob([lines.join('\n')], {type:'text/csv;charset=utf-8;'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url; a.download = `spoband_${Date.now()}.csv`;
-    a.click(); URL.revokeObjectURL(url);
+    const blob = new Blob(['\uFEFF' + lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `spoband_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(a.href);
   });
 });
 </script>
