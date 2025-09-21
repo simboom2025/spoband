@@ -2,15 +2,15 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>SPOBAND Admin (Final)</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-  body { font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Noto Sans KR, Malgun Gothic, sans-serif; }
+  body { font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Noto Sans KR, sans-serif; }
   .container-fluid { width: 96%; margin: 0 auto; }
   .grid-wrap { margin-top: 8px; border-radius: 16px; overflow: auto; border: 1px solid #1f2937; background: #0f172a; height: calc(100vh - 160px); }
   .thead .row { position: sticky; top: 0; z-index: 1; background: #0b1220; border-bottom: 1px solid #1f2937; font-weight: bold; font-size: 14px; }
-  .row { display: grid; grid-template-columns: minmax(50px, 70px) minmax(100px, 130px) minmax(120px, 150px) minmax(120px, 140px) minmax(120px, 150px) minmax(200px, 1.1fr) minmax(180px, 220px) minmax(100px, 120px) minmax(200px, 1fr) minmax(100px, 120px) minmax(100px, 120px); gap: 12px; align-items: center; transition: background 0.2s; }
+  .row { display: grid; grid-template-columns: minmax(50px, 70px) minmax(100px, 130px) minmax(120px, 150px) minmax(120px, 140px) minmax(120px, 150px) minmax(200px, 1fr) minmax(180px, 1fr) minmax(100px, 120px) minmax(200px, 1fr) minmax(100px, 120px) minmax(100px, 120px); gap: 12px; align-items: center; transition: background 0.2s; }
   .cell { padding: 12px 16px; font-size: 14px; line-height: 1.5; word-break: break-word; }
   .cell.text-right { text-align: right; }
   .cell.text-center { text-align: center; }
@@ -21,6 +21,7 @@
   .toolbar { margin: 18px 0 10px; }
   .loading { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(2,6,23,.55); z-index: 50; }
   .loading.show { display: flex; }
+  #status { color: #fff; margin-bottom: 10px; }
 </style>
 </head>
 <body class="bg-slate-900 text-white">
@@ -30,6 +31,7 @@
   <div class="container-fluid h-16 px-2 md:px-4 flex items-center justify-between">
     <h1 class="text-xl font-black">SPOBAND <span class="text-sky-400">Admin</span> <span class="text-sm font-normal text-slate-400">Final Ver.</span></h1>
     <div class="flex items-center gap-2">
+      <button id="btnAuthCheck" class="btn px-4 py-2 rounded-lg bg-yellow-600 hover:bg-yellow-700">인증 재확인</button>
       <button id="btnReload" class="btn px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700">새로고침</button>
       <button id="btnLogout" class="btn px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-800">로그아웃</button>
     </div>
@@ -37,7 +39,8 @@
 </header>
 
 <main class="container-fluid px-2 md:px-4 py-4">
-  <!-- 상단 툴바 -->
+  <div id="status" class="mb-4"></div>
+  <div id="errorMsg" class="text-red-400 mb-4 hidden"></div>
   <div class="toolbar flex flex-wrap items-center gap-3">
     <input id="search" placeholder="검색(도장/관장/연락처/주소/비고)" class="w-[320px] max-w-full rounded-lg bg-slate-900/60 border border-slate-700 px-3 py-2">
     <select id="statusFilter" class="rounded-lg bg-slate-900/60 border border-slate-700 px-3 py-2">
@@ -50,7 +53,6 @@
     <span class="text-slate-400">선택: <b id="selCount">0</b></span>
   </div>
 
-  <!-- 테이블 -->
   <div class="grid-wrap">
     <div class="thead">
       <div class="row">
@@ -74,78 +76,101 @@
 <script>
 /* ===== 상수 ===== */
 const API_URL = "https://script.google.com/macros/s/AKfycbw1rfPzDs8xI3j_XzmBWxxkeGh-zfPwt8TizbVc93FZ_NrBiBKiKO1EIBVWoCtohxqJ/exec";
-const STORAGE_KEY = "1234"; // localStorage에 '관리자 비밀키'를 저장/조회할 "키 이름"
+const STORAGE_KEY = "admin_secret";
 const STATUS_OPTIONS = ["신규","배송준비","배송중","배송완료","반품"];
 
 const $ = (s, el=document)=>el.querySelector(s);
 const $$ = (s, el=document)=>Array.from(el.querySelectorAll(s));
 const fmt = ts => ts ? new Date(ts).toLocaleString('ko-KR') : '';
 const esc = s => String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]));
-const showLoading = ()=>$('#loading').classList.add('show');
-const hideLoading = ()=>$('#loading').classList.remove('show');
+const setStatus = (msg) => $('#status').textContent = msg;
+const showLoading = () => { $('#loading').classList.add('show'); setStatus('처리 중...'); };
+const hideLoading = () => { $('#loading').classList.remove('show'); setStatus(''); };
+const showError = (msg) => { $('#errorMsg').textContent = msg; $('#errorMsg').classList.remove('hidden'); };
+const hideError = () => $('#errorMsg').classList.add('hidden');
 
 let SECRET = null;
 let POSTS = [];
 
 /* ===== 인증: 비밀키 확보/검증 ===== */
-function ensureSecret(){
+async function ensureSecret(force = false) {
+  if (force) localStorage.removeItem(STORAGE_KEY);
   SECRET = localStorage.getItem(STORAGE_KEY) || '';
-  if(!SECRET){
-    const s = prompt('관리자 비밀키를 입력하세요:');
-    if(!s){
-      alert('비밀키가 없으면 접근할 수 없습니다.');
-      location.href = 'index.html';
+  if (!SECRET) {
+    SECRET = prompt('관리자 비밀키를 입력하세요 (테스트: 1234):');
+    if (!SECRET) {
+      alert('비밀키가 필요합니다.');
       return false;
     }
-    localStorage.setItem(STORAGE_KEY, s);
-    SECRET = s;
+    localStorage.setItem(STORAGE_KEY, SECRET);
   }
+  showLoading();
+  const check = await adminCall({ action: 'authCheck' });
+  hideLoading();
+  if (check.status === 'error') {
+    showError('비밀키가 유효하지 않습니다. 다시 입력해 주세요.');
+    localStorage.removeItem(STORAGE_KEY);
+    return ensureSecret(true);
+  }
+  setStatus('인증 성공!');
   return true;
 }
 
 /* ===== API 헬퍼 ===== */
-async function adminCall(payload){
+async function adminCall(payload) {
   showLoading();
-  try{
+  const fullPayload = { ...payload, secret: SECRET };
+  console.log("API 호출:", JSON.stringify(fullPayload));
+  try {
     const res = await fetch(API_URL, {
-      method:'POST',
-      headers:{'Content-Type':'text/plain;charset=utf-8'},
-      body: JSON.stringify({ ...payload, secret: SECRET })
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' }, // Apps Script 호환
+      body: JSON.stringify(fullPayload)
     });
     const json = await res.json();
-    if (!res.ok || json.status==='error'){
-      if(/인증 실패/i.test(json.message||'')){
+    console.log("API 응답:", json);
+    if (!res.ok || json.status === 'error') {
+      const msg = json.message || `HTTP ${res.status}`;
+      if (msg.includes('알 수 없는 action')) {
+        showError(`오류: 'action' 값이 올바르지 않습니다. 확인된 action: ${payload.action || '없음'}`);
+      } else if (/인증 실패/i.test(msg)) {
         localStorage.removeItem(STORAGE_KEY);
-        alert('인증 실패. 비밀키를 다시 입력해 주세요.');
+        showError('인증 실패. 비밀키를 재입력해 주세요.');
         location.reload();
-        return { status:'error' };
+        return { status: 'error' };
+      } else {
+        showError(`오류: ${msg}`);
       }
-      throw new Error(json.message || `HTTP ${res.status}`);
+      return { status: 'error' };
     }
+    hideError();
     return json;
-  }finally{ hideLoading(); }
+  } catch (error) {
+    console.error("API 오류:", error);
+    showError(`네트워크 오류: ${error.message}`);
+    return { status: 'error', message: error.message };
+  } finally {
+    hideLoading();
+  }
 }
 
-/* ===== 목록 로드 (보안 전용: adminList) ===== */
-async function loadList(){
-  const result = await adminCall({ action:'adminList' });
-  if (result.status==='error') return;
-  POSTS = result; // 백엔드에서 ok(rows)로 반환 → 배열
+/* ===== 목록 로드 ===== */
+async function loadList() {
+  const result = await adminCall({ action: 'adminList' });
+  if (result.status === 'error') return;
+  POSTS = result;
+  console.log("불러온 데이터:", POSTS);
   render();
 }
 
 /* ===== 렌더링 ===== */
-function render(){
+function render() {
   const q = $('#search').value.trim();
   const f = $('#statusFilter').value.trim();
 
   let rows = POSTS.slice();
-  if(q){
-    rows = rows.filter(r => [r.pw,r.dojo,r.master,r.contact,r.address,r.notes].some(v=>String(v||'').includes(q)));
-  }
-  if(f){
-    rows = rows.filter(r => (r.status||'')===f);
-  }
+  if (q) rows = rows.filter(r => [r.pw, r.dojo, r.master, r.contact, r.address, r.notes].some(v => String(v || '').includes(q)));
+  if (f) rows = rows.filter(r => (r.status || '') === f);
 
   $('#tbody').innerHTML = rows.map(r => `
     <div class="row">
@@ -155,31 +180,11 @@ function render(){
       <div class="cell">${esc(r.dojo)}</div>
       <div class="cell">${esc(r.master)}</div>
       <div class="cell">${esc(r.contact)}</div>
-
-      <div class="cell text-sm flex flex-col gap-1">
-        ${Object.entries(r.items||{}).filter(([,v])=>+v>0).map(([k,v])=>`<div>${k.replace('sb','SB')}: <b>${v}</b>개</div>`).join('') || '-'}
-        <div class="mt-2 text-slate-400">${r.quotationUrl ? `<a class="text-sky-400 underline" target="_blank" href="${esc(r.quotationUrl)}">다운로드</a>` : '견적서: 없음'}</div>
-      </div>
-
-      <div class="cell text-sm flex flex-col gap-1">
-        ${(r.replies||[]).map(a=>`<div class="badge">${fmt(a.ts)}<br>${esc(a.content)}</div>`).join('') || '없음'}
-      </div>
-
+      <div class="cell text-sm flex flex-col gap-1">${Object.entries(r.items || {}).filter(([, v]) => +v > 0).map(([k, v]) => `<div>${k.replace('sb', 'SB')}: <b>${v}</b>개</div>`).join('') || '-'}</div>
+      <div class="cell text-sm flex flex-col gap-1">${(r.replies || []).map(a => `<div class="badge">${fmt(a.ts)}<br>${esc(a.content)}</div>`).join('') || '없음'}</div>
       <div class="cell">${esc(r.address)}</div>
-
-      <div class="cell text-center">
-        <select class="status w-full rounded-md bg-slate-800 border border-slate-700 px-2 py-1" data-id="${esc(r.id)}">
-          ${STATUS_OPTIONS.map(s=>`<option ${r.status===s?'selected':''}>${s}</option>`).join('')}
-        </select>
-      </div>
-
-      <div class="cell text-center">
-        <div class="flex gap-2 justify-center flex-wrap">
-          <button class="reply btn px-3 py-1 rounded-lg bg-slate-700 hover:bg-slate-600" data-id="${esc(r.id)}">답변</button>
-          <button class="quote btn px-3 py-1 rounded-lg bg-slate-700 hover:bg-slate-600" data-id="${esc(r.id)}">견적서</button>
-          <button class="del btn px-3 py-1 rounded-lg bg-rose-700 hover:bg-rose-800" data-id="${esc(r.id)}">삭제</button>
-        </div>
-      </div>
+      <div class="cell text-center"><select class="status w-full rounded-md bg-slate-800 border border-slate-700 px-2 py-1" data-id="${esc(r.id)}">${STATUS_OPTIONS.map(s => `<option ${r.status === s ? 'selected' : ''}>${s}</option>`).join('')}</select></div>
+      <div class="cell text-center"><div class="flex gap-2 justify-center flex-wrap"><button class="reply btn px-3 py-1 rounded-lg bg-slate-700 hover:bg-slate-600" data-id="${esc(r.id)}">답변</button><button class="quote btn px-3 py-1 rounded-lg bg-slate-700 hover:bg-slate-600" data-id="${esc(r.id)}">견적서</button><button class="del btn px-3 py-1 rounded-lg bg-rose-700 hover:bg-rose-800" data-id="${esc(r.id)}">삭제</button></div></div>
     </div>
   `).join('');
 
@@ -187,19 +192,22 @@ function render(){
 }
 
 /* ===== 선택 수 표시 ===== */
-function updateSelCount(){
+function updateSelCount() {
   $('#selCount').textContent = $$('.sel:checked').length;
 }
 
 /* ===== 이벤트 바인딩 ===== */
-// (기존 스크립트 부분은 변경 없이 유지, 필요 시 hover 등은 CSS로 처리됨)
-document.addEventListener('DOMContentLoaded', async ()=>{
-  if (!ensureSecret()) return;
+document.addEventListener('DOMContentLoaded', async () => {
+  if (!await ensureSecret()) return;
   await loadList();
 
+  $('#btnAuthCheck').addEventListener('click', async () => {
+    if (await ensureSecret(true)) await loadList();
+  });
+
   $('#btnReload').addEventListener('click', loadList);
-  $('#btnLogout').addEventListener('click', ()=>{
-    if(confirm('로그아웃 하시겠습니까?')){
+  $('#btnLogout').addEventListener('click', () => {
+    if (confirm('로그아웃 하시겠습니까?')) {
       localStorage.removeItem(STORAGE_KEY);
       location.reload();
     }
@@ -208,92 +216,83 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   $('#search').addEventListener('input', render);
   $('#statusFilter').addEventListener('change', render);
 
-  // 상태 즉시 변경
-  $('#tbody').addEventListener('change', async (e)=>{
-    const sel = e.target.closest('.status'); if(!sel) return;
+  $('#tbody').addEventListener('change', async (e) => {
+    const sel = e.target.closest('.status'); if (!sel) return;
     const id = sel.dataset.id, status = sel.value;
-    const res = await adminCall({ action:'updateStatus', id, status });
-    if(res.status==='error') return;
-    const p = POSTS.find(x=>String(x.id)===String(id)); if(p) p.status=status;
+    const res = await adminCall({ action: 'updateStatus', id, status });
+    if (res.status === 'error') return;
+    const p = POSTS.find(x => String(x.id) === String(id)); if (p) p.status = status;
   });
 
-  // 답변/견적/삭제
-  $('#tbody').addEventListener('click', async (e)=>{
+  $('#tbody').addEventListener('click', async (e) => {
     const replyBtn = e.target.closest('.reply');
     const quoteBtn = e.target.closest('.quote');
-    const delBtn   = e.target.closest('.del');
+    const delBtn = e.target.closest('.del');
 
-    if (replyBtn){
+    if (replyBtn) {
       const id = replyBtn.dataset.id;
       const content = prompt('답변 내용을 입력하세요.');
-      if(!content) return;
-      const res = await adminCall({ action:'addReply', id, reply:{ content, ts: Date.now() } });
-      if(res.status==='error') return;
+      if (!content) return;
+      const res = await adminCall({ action: 'addReply', id, reply: { content, ts: Date.now() } });
+      if (res.status === 'error') return;
       await loadList();
-      return;
     }
 
-    if (quoteBtn){
+    if (quoteBtn) {
       const id = quoteBtn.dataset.id;
-      const url = prompt('견적서(파일/링크)의 URL을 입력하세요. (예: Google Drive 공유 링크)');
-      if(!url) return;
-      const res = await adminCall({ action:'setQuotationUrl', id, url });
-      if(res.status==='error') return;
+      const url = prompt('견적서(파일/링크)의 URL을 입력하세요.');
+      if (!url) return;
+      const res = await adminCall({ action: 'setQuotationUrl', id, url });
+      if (res.status === 'error') return;
       await loadList();
-      return;
     }
 
-    if (delBtn){
+    if (delBtn) {
       const id = delBtn.dataset.id;
-      if(!confirm(`신청비번 ${id} 항목을 삭제할까요?`)) return;
-      const res = await adminCall({ action:'delete', id });
-      if(res.status==='error') return;
+      if (!confirm(`신청비번 ${id} 항목을 삭제할까요?`)) return;
+      const res = await adminCall({ action: 'delete', id });
+      if (res.status === 'error') return;
       await loadList();
-      return;
     }
   });
 
-  // 일괄 상태변경
-  $('#btnBulkStatus').addEventListener('click', async ()=>{
-    const ids = $$('.sel:checked').map(c=>c.dataset.id);
-    if(ids.length===0){ alert('선택된 항목이 없습니다.'); return; }
+  $('#btnBulkStatus').addEventListener('click', async () => {
+    const ids = $$('.sel:checked').map(c => c.dataset.id);
+    if (ids.length === 0) { alert('선택된 항목이 없습니다.'); return; }
     const status = prompt(`상태를 입력하세요 (${STATUS_OPTIONS.join(', ')})`);
-    if(!status) return;
-    if(!STATUS_OPTIONS.includes(status)){ alert('허용되지 않는 상태입니다.'); return; }
-    const res = await adminCall({ action:'bulkUpdateStatus', ids, status });
-    if(res.status==='error') return;
+    if (!status) return;
+    if (!STATUS_OPTIONS.includes(status)) { alert('허용되지 않는 상태입니다.'); return; }
+    const res = await adminCall({ action: 'bulkUpdateStatus', ids, status });
+    if (res.status === 'error') return;
     await loadList();
   });
 
-  // 일괄 삭제
-  $('#btnBulkDelete').addEventListener('click', async ()=>{
-    const ids = $$('.sel:checked').map(c=>c.dataset.id);
-    if(ids.length===0){ alert('선택된 항목이 없습니다.'); return; }
-    if(!confirm(`${ids.length}개 항목을 삭제할까요?`)) return;
-    const res = await adminCall({ action:'bulkDelete', ids });
-    if(res.status==='error') return;
+  $('#btnBulkDelete').addEventListener('click', async () => {
+    const ids = $$('.sel:checked').map(c => c.dataset.id);
+    if (ids.length === 0) { alert('선택된 항목이 없습니다.'); return; }
+    if (!confirm(`${ids.length}개 항목을 삭제할까요?`)) return;
+    const res = await adminCall({ action: 'bulkDelete', ids });
+    if (res.status === 'error') return;
     await loadList();
   });
 
-  // 체크 수 표시
-  $('#tbody').addEventListener('change', (e)=>{
-    if(e.target.classList.contains('sel')) updateSelCount();
+  $('#tbody').addEventListener('change', (e) => {
+    if (e.target.classList.contains('sel')) updateSelCount();
   });
 
-  // CSV
-  $('#btnCsv').addEventListener('click', ()=>{
-    const header = ["신청비번","신청일","도장명","관장명","연락처","신청항목","답변수","견적서URL","주소","최종상태","비고"];
+  $('#btnCsv').addEventListener('click', () => {
+    const header = ["신청비번", "신청일", "도장명", "관장명", "연락처", "신청항목", "답변수", "견적서URL", "주소", "최종상태", "비고"];
     const lines = [header.join(',')];
-    POSTS.forEach(r=>{
-      const items = Object.entries(r.items||{}).filter(([,v])=>+v>0).map(([k,v])=>`${k}:${v}`).join('|');
-      const replies = (r.replies||[]).length;
+    POSTS.forEach(r => {
+      const items = Object.entries(r.items || {}).filter(([, v]) => +v > 0).map(([k, v]) => `${k}:${v}`).join('|');
+      const replies = (r.replies || []).length;
       const row = [
         r.id, fmt(r.ts), r.dojo, r.master, r.contact,
-        items, replies, r.quotationUrl||'', r.address, r.status||'', r.notes||''
-      ].map(v=>`"${String(v||'').replace(/"/g,'""')}"`).join(',');
+        items, replies, r.quotationUrl || '', r.address, r.status || '', r.notes || ''
+      ].map(v => `"${String(v || '').replace(/"/g, '""')}"`).join(',');
       lines.push(row);
     });
-    const blob = new Blob([lines.join('\n')], {type:'text/csv;charset=utf-8;'});
+    const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a'); a.href = url; a.download = `spoband_${Date.now()}.csv`;
     a.click(); URL.revokeObjectURL(url);

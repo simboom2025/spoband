@@ -6,18 +6,21 @@
 <title>SPOBAND Admin (Final)</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-  body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Apple SD Gothic Neo,Noto Sans KR,Malgun Gothic,sans-serif}
-  .container-fluid{width:96%;margin:0 auto}
-  .grid-wrap{margin-top:8px;border-radius:16px;overflow:auto;border:1px solid #1f2937;background:#0f172a;height:calc(100vh - 160px)}
-  .thead .row{position:sticky;top:0;z-index:1;background:#0b1220;border-bottom:1px solid #1f2937}
-  .row{display:grid;grid-template-columns: 70px 130px 150px 140px 150px 1.1fr 220px 120px 1fr 120px 120px;gap:12px;align-items:flex-start}
-  .cell{padding:10px 12px}
-  .tbody .row{border-bottom:1px solid #1f2937}
-  .tbody .row:nth-child(even){background:#0b1322}
-  .badge{background:#1f2937;border-radius:10px;padding:4px 8px}
-  .toolbar{margin:18px 0 10px}
-  .loading{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,.55);z-index:50}
-  .loading.show{display:flex}
+  body { font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Noto Sans KR, Malgun Gothic, sans-serif; }
+  .container-fluid { width: 96%; margin: 0 auto; }
+  .grid-wrap { margin-top: 8px; border-radius: 16px; overflow: auto; border: 1px solid #1f2937; background: #0f172a; height: calc(100vh - 160px); }
+  .thead .row { position: sticky; top: 0; z-index: 1; background: #0b1220; border-bottom: 1px solid #1f2937; font-weight: bold; font-size: 14px; }
+  .row { display: grid; grid-template-columns: minmax(50px, 70px) minmax(100px, 130px) minmax(120px, 150px) minmax(120px, 140px) minmax(120px, 150px) minmax(200px, 1.1fr) minmax(180px, 220px) minmax(100px, 120px) minmax(200px, 1fr) minmax(100px, 120px) minmax(100px, 120px); gap: 12px; align-items: center; transition: background 0.2s; }
+  .cell { padding: 12px 16px; font-size: 14px; line-height: 1.5; word-break: break-word; }
+  .cell.text-right { text-align: right; }
+  .cell.text-center { text-align: center; }
+  .tbody .row { border-bottom: 1px solid #1f2937; }
+  .tbody .row:nth-child(even) { background: #0b1322; }
+  .tbody .row:hover { background: #1e293b; }
+  .badge { background: #1f2937; border-radius: 10px; padding: 4px 8px; font-size: 12px; margin-bottom: 4px; display: inline-block; }
+  .toolbar { margin: 18px 0 10px; }
+  .loading { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(2,6,23,.55); z-index: 50; }
+  .loading.show { display: flex; }
 </style>
 </head>
 <body class="bg-slate-900 text-white">
@@ -34,6 +37,7 @@
 </header>
 
 <main class="container-fluid px-2 md:px-4 py-4">
+  <div id="errorMsg" class="text-red-400 mb-4 hidden"></div>
   <div class="toolbar flex flex-wrap items-center gap-3">
     <input id="search" placeholder="검색(도장/관장/연락처/주소/비고)" class="w-[320px] max-w-full rounded-lg bg-slate-900/60 border border-slate-700 px-3 py-2">
     <select id="statusFilter" class="rounded-lg bg-slate-900/60 border border-slate-700 px-3 py-2">
@@ -49,8 +53,8 @@
   <div class="grid-wrap">
     <div class="thead">
       <div class="row">
-        <div class="cell">선택</div>
-        <div class="cell">신청비번</div>
+        <div class="cell text-center">선택</div>
+        <div class="cell text-center">신청비번</div>
         <div class="cell">신청일</div>
         <div class="cell">도장명</div>
         <div class="cell">관장명</div>
@@ -58,8 +62,8 @@
         <div class="cell">신청항목</div>
         <div class="cell">답변</div>
         <div class="cell">주소</div>
-        <div class="cell">최종상태</div>
-        <div class="cell">작업</div>
+        <div class="cell text-center">최종상태</div>
+        <div class="cell text-center">작업</div>
       </div>
     </div>
     <div id="tbody" class="tbody"></div>
@@ -67,8 +71,9 @@
 </main>
 
 <script>
-const API_URL     = "https://script.google.com/macros/s/AKfycbxQMW3IenOpiLG5mmYLBE2ksPnJFs0yX-vGSkvJI--neeAQ9RyWpaWos3pCGLO0h5Tq/exec";
-const STORAGE_KEY = "1234"; // localStorage 키 이름
+/* ===== 상수 ===== */
+const API_URL = "https://script.google.com/macros/s/AKfycbw1rfPzDs8xI3j_XzmBWxxkeGh-zfPwt8TizbVc93FZ_NrBiBKiKO1EIBVWoCtohxqJ/exec";
+const STORAGE_KEY = "1234"; // 관리자 비밀키 저장 키
 const STATUS_OPTIONS = ["신규","배송준비","배송중","배송완료","반품"];
 
 const $ = (s, el=document)=>el.querySelector(s);
@@ -77,42 +82,35 @@ const fmt = ts => ts ? new Date(ts).toLocaleString('ko-KR') : '';
 const esc = s => String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]));
 const showLoading = ()=>$('#loading').classList.add('show');
 const hideLoading = ()=>$('#loading').classList.remove('show');
+const showError = (msg) => { $('#errorMsg').textContent = msg; $('#errorMsg').classList.remove('hidden'); };
+const hideError = () => $('#errorMsg').classList.add('hidden');
 
 let SECRET = null;
 let POSTS = [];
 
-/* ---- 인증 ---- */
-async function authCheck(secret){
-  const res = await fetch(API_URL, {
-    method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
-    body: JSON.stringify({ action:'authCheck', secret })
-  });
-  const json = await res.json().catch(()=>({status:'error'}));
-  return json.status !== 'error';
-}
-async function ensureSecret(){
-  let s = localStorage.getItem(STORAGE_KEY) || '';
-  if (s && await authCheck(s)) { SECRET = s; return true; }
+console.log("Script loaded, API_URL:", API_URL);
 
-  while (true){
-    s = prompt('관리자 비밀키를 입력하세요:');
-    if (!s){
-      alert('비밀키가 없어 관리자 화면에 접근할 수 없습니다.');
+/* ===== 인증: 비밀키 확보/검증 ===== */
+function ensureSecret(){
+  SECRET = localStorage.getItem(STORAGE_KEY) || '';
+  if(!SECRET){
+    const s = prompt('관리자 비밀키를 입력하세요:');
+    if(!s){
+      alert('비밀키가 없으면 접근할 수 없습니다.');
       location.href = 'index.html';
       return false;
     }
-    if (await authCheck(s)){
-      localStorage.setItem(STORAGE_KEY, s);
-      SECRET = s;
-      return true;
-    }
-    alert('비밀키가 일치하지 않습니다. 다시 시도하세요.');
+    localStorage.setItem(STORAGE_KEY, s);
+    SECRET = s;
   }
+  console.log("Secret ensured:", SECRET);
+  return true;
 }
 
-/* ---- API ---- */
+/* ===== API 헬퍼 ===== */
 async function adminCall(payload){
   showLoading();
+  console.log("Calling API with payload:", payload);
   try{
     const res = await fetch(API_URL, {
       method:'POST',
@@ -120,19 +118,36 @@ async function adminCall(payload){
       body: JSON.stringify({ ...payload, secret: SECRET })
     });
     const json = await res.json();
-    if (!res.ok || json.status==='error') throw new Error(json.message || `HTTP ${res.status}`);
+    console.log("API Response:", json);
+    if (!res.ok || json.status==='error'){
+      if(/인증 실패/i.test(json.message||'')){
+        localStorage.removeItem(STORAGE_KEY);
+        alert('인증 실패. 비밀키를 다시 입력해 주세요.');
+        location.reload();
+        return { status:'error' };
+      }
+      throw new Error(json.message || `HTTP ${res.status}`);
+    }
     return json;
-  }finally{ hideLoading(); }
+  } catch (error) {
+    console.error("API Call Error:", error);
+    showError(`오류 발생: ${error.message}`);
+    return { status:'error', message: error.message };
+  } finally {
+    hideLoading();
+  }
 }
 
-/* ---- 목록 ---- */
+/* ===== 목록 로드 (보안 전용: adminList) ===== */
 async function loadList(){
-  const result = await adminCall({ action:'adminList' });
-  POSTS = result; // ok(rows)로 배열 반환
+  const result = await adminCall({ action: 'adminList' }); // 명시적으로 action 설정
+  if (result.status==='error') return;
+  POSTS = result;
+  console.log("Loaded Posts:", POSTS);
   render();
 }
 
-/* ---- 렌더 ---- */
+/* ===== 렌더링 ===== */
 function render(){
   const q = $('#search').value.trim();
   const f = $('#statusFilter').value.trim();
@@ -141,72 +156,58 @@ function render(){
   if(q){
     rows = rows.filter(r => [r.pw,r.dojo,r.master,r.contact,r.address,r.notes].some(v=>String(v||'').includes(q)));
   }
-  if(f){ rows = rows.filter(r => (r.status||'')===f); }
+  if(f){
+    rows = rows.filter(r => (r.status||'')===f);
+  }
 
   $('#tbody').innerHTML = rows.map(r => `
     <div class="row">
-      <div class="cell"><input type="checkbox" class="sel" data-id="${esc(r.id)}"></div>
-      <div class="cell">${esc(r.id)}</div>
+      <div class="cell text-center"><input type="checkbox" class="sel" data-id="${esc(r.id)}"></div>
+      <div class="cell text-center font-medium">${esc(r.id)}</div>
       <div class="cell">${fmt(r.ts)}</div>
       <div class="cell">${esc(r.dojo)}</div>
       <div class="cell">${esc(r.master)}</div>
       <div class="cell">${esc(r.contact)}</div>
-      <div class="cell text-sm">
-        ${Object.entries(r.items||{}).filter(([,v])=>+v>0).map(([k,v])=>`<div>${k.replace('sb','SB')}: <b>${v}</b>개</div>`).join('') || '-'}
-        <div class="mt-2 text-slate-400">${r.quotationUrl ? `<a class="text-sky-400 underline" target="_blank" href="${esc(r.quotationUrl)}">다운로드</a>` : '견적서: 없음'}</div>
-      </div>
-      <div class="cell text-sm">
-        ${(r.replies||[]).map(a=>`<div class="mb-2 badge">${fmt(a.ts)}<br>${esc(a.content)}</div>`).join('') || '없음'}
-      </div>
+      <div class="cell text-sm flex flex-col gap-1">${Object.entries(r.items||{}).filter(([,v])=>+v>0).map(([k,v])=>`<div>${k.replace('sb','SB')}: <b>${v}</b>개</div>`).join('') || '-'}</div>
+      <div class="cell text-sm flex flex-col gap-1">${(r.replies||[]).map(a=>`<div class="badge">${fmt(a.ts)}<br>${esc(a.content)}</div>`).join('') || '없음'}</div>
       <div class="cell">${esc(r.address)}</div>
-      <div class="cell">
-        <select class="status" data-id="${esc(r.id)}">
-          ${STATUS_OPTIONS.map(s=>`<option ${r.status===s?'selected':''}>${s}</option>`).join('')}
-        </select>
-      </div>
-      <div class="cell">
-        <div class="flex gap-2 flex-wrap">
-          <button class="reply btn px-3 py-1 rounded-lg bg-slate-700 hover:bg-slate-600" data-id="${esc(r.id)}">답변</button>
-          <button class="quote btn px-3 py-1 rounded-lg bg-slate-700 hover:bg-slate-600" data-id="${esc(r.id)}">견적서</button>
-          <button class="del btn px-3 py-1 rounded-lg bg-rose-700 hover:bg-rose-800" data-id="${esc(r.id)}">삭제</button>
-        </div>
-      </div>
+      <div class="cell text-center"><select class="status w-full rounded-md bg-slate-800 border border-slate-700 px-2 py-1" data-id="${esc(r.id)}">${STATUS_OPTIONS.map(s=>`<option ${r.status===s?'selected':''}>${s}</option>`).join('')}</select></div>
+      <div class="cell text-center"><div class="flex gap-2 justify-center flex-wrap"><button class="reply btn px-3 py-1 rounded-lg bg-slate-700 hover:bg-slate-600" data-id="${esc(r.id)}">답변</button><button class="quote btn px-3 py-1 rounded-lg bg-slate-700 hover:bg-slate-600" data-id="${esc(r.id)}">견적서</button><button class="del btn px-3 py-1 rounded-lg bg-rose-700 hover:bg-rose-800" data-id="${esc(r.id)}">삭제</button></div></div>
     </div>
   `).join('');
 
   updateSelCount();
 }
 
-/* ---- 이벤트 ---- */
-function updateSelCount(){ $('#selCount').textContent = $$('.sel:checked').length; }
+/* ===== 선택 수 표시 ===== */
+function updateSelCount(){
+  $('#selCount').textContent = $$('.sel:checked').length;
+}
 
+/* ===== 이벤트 바인딩 ===== */
 document.addEventListener('DOMContentLoaded', async ()=>{
-  if (!(await ensureSecret())) return;
+  if (!ensureSecret()) return;
   await loadList();
 
   $('#btnReload').addEventListener('click', loadList);
   $('#btnLogout').addEventListener('click', ()=>{
     if(confirm('로그아웃 하시겠습니까?')){
       localStorage.removeItem(STORAGE_KEY);
-      location.href = 'index.html';
+      location.reload();
     }
   });
 
   $('#search').addEventListener('input', render);
   $('#statusFilter').addEventListener('change', render);
-  $('#tbody').addEventListener('change', (e)=>{
-    if(e.target.classList.contains('sel')) updateSelCount();
-  });
 
-  // 상태 변경
   $('#tbody').addEventListener('change', async (e)=>{
     const sel = e.target.closest('.status'); if(!sel) return;
     const id = sel.dataset.id, status = sel.value;
-    await adminCall({ action:'updateStatus', id, status });
+    const res = await adminCall({ action:'updateStatus', id, status });
+    if(res.status==='error') return;
     const p = POSTS.find(x=>String(x.id)===String(id)); if(p) p.status=status;
   });
 
-  // 답변/견적/삭제
   $('#tbody').addEventListener('click', async (e)=>{
     const replyBtn = e.target.closest('.reply');
     const quoteBtn = e.target.closest('.quote');
@@ -214,42 +215,58 @@ document.addEventListener('DOMContentLoaded', async ()=>{
 
     if (replyBtn){
       const id = replyBtn.dataset.id;
-      const content = prompt('답변 내용을 입력하세요.'); if(!content) return;
-      await adminCall({ action:'addReply', id, reply:{ content, ts: Date.now() } });
-      await loadList(); return;
+      const content = prompt('답변 내용을 입력하세요.');
+      if(!content) return;
+      const res = await adminCall({ action:'addReply', id, reply:{ content, ts: Date.now() } });
+      if(res.status==='error') return;
+      await loadList();
+      return;
     }
+
     if (quoteBtn){
       const id = quoteBtn.dataset.id;
-      const url = prompt('견적서 URL(예: 구글드라이브 공유 링크)을 입력하세요.'); if(!url) return;
-      await adminCall({ action:'setQuotationUrl', id, url });
-      await loadList(); return;
+      const url = prompt('견적서(파일/링크)의 URL을 입력하세요.');
+      if(!url) return;
+      const res = await adminCall({ action:'setQuotationUrl', id, url });
+      if(res.status==='error') return;
+      await loadList();
+      return;
     }
+
     if (delBtn){
       const id = delBtn.dataset.id;
       if(!confirm(`신청비번 ${id} 항목을 삭제할까요?`)) return;
-      await adminCall({ action:'delete', id });
-      await loadList(); return;
+      const res = await adminCall({ action:'delete', id });
+      if(res.status==='error') return;
+      await loadList();
+      return;
     }
   });
 
-  // 일괄 변경/삭제
   $('#btnBulkStatus').addEventListener('click', async ()=>{
     const ids = $$('.sel:checked').map(c=>c.dataset.id);
-    if(!ids.length) return alert('선택된 항목이 없습니다.');
-    const status = prompt(`상태를 입력하세요 (${STATUS_OPTIONS.join(', ')})`); if(!status) return;
-    if(!STATUS_OPTIONS.includes(status)) return alert('허용되지 않는 상태입니다.');
-    await adminCall({ action:'bulkUpdateStatus', ids, status });
-    await loadList();
-  });
-  $('#btnBulkDelete').addEventListener('click', async ()=>{
-    const ids = $$('.sel:checked').map(c=>c.dataset.id);
-    if(!ids.length) return alert('선택된 항목이 없습니다.');
-    if(!confirm(`${ids.length}개 항목을 삭제할까요?`)) return;
-    await adminCall({ action:'bulkDelete', ids });
+    if(ids.length===0){ alert('선택된 항목이 없습니다.'); return; }
+    const status = prompt(`상태를 입력하세요 (${STATUS_OPTIONS.join(', ')})`);
+    if(!status) return;
+    if(!STATUS_OPTIONS.includes(status)){ alert('허용되지 않는 상태입니다.'); return; }
+    const res = await adminCall({ action:'bulkUpdateStatus', ids, status });
+    if(res.status==='error') return;
     await loadList();
   });
 
-  // CSV
+  $('#btnBulkDelete').addEventListener('click', async ()=>{
+    const ids = $$('.sel:checked').map(c=>c.dataset.id);
+    if(ids.length===0){ alert('선택된 항목이 없습니다.'); return; }
+    if(!confirm(`${ids.length}개 항목을 삭제할까요?`)) return;
+    const res = await adminCall({ action:'bulkDelete', ids });
+    if(res.status==='error') return;
+    await loadList();
+  });
+
+  $('#tbody').addEventListener('change', (e)=>{
+    if(e.target.classList.contains('sel')) updateSelCount();
+  });
+
   $('#btnCsv').addEventListener('click', ()=>{
     const header = ["신청비번","신청일","도장명","관장명","연락처","신청항목","답변수","견적서URL","주소","최종상태","비고"];
     const lines = [header.join(',')];
