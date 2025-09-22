@@ -391,22 +391,58 @@
 </div>
 
 <script>
+<script>
+/** =========================
+ *  CONFIG & HELPERS
+ *  =======================*/
 const FORM_ID = "postForm";
 const FORM_MIN_SECONDS = 3;
 let pageLoadedAt = Date.now();
 
-// ✅ 사용 중인 GAS 웹앱 URL
+// ✅ 현재 배포 중인 GAS 웹앱 URL(관리자 페이지와 동일하게)
 const API_URL = "https://script.google.com/macros/s/AKfycbyN5VsZUeQbUGIJwBHS50K52KfE2Ku5dhGNJG5rlfKQxQzOqHkTOoX6cQObk9PE_EnE/exec";
+
+// 프리플라이트 회피용 헤더(백엔드도 text/plain 기준)
 const PLAIN_HEADERS = { 'Content-Type': 'text/plain;charset=utf-8' };
 
+// DOM helpers
 const $  = (s,el=document)=>el.querySelector(s);
 const $$ = (s,el=document)=>Array.from(el.querySelectorAll(s));
+
+// 출력 & 포매팅
 const esc= (s)=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]));
 const fmt =(ts)=>{ const d=new Date(Number(ts)); return isNaN(d.getTime())?'날짜 정보 없음':d.toLocaleString('ko-KR'); };
 
+// 마스킹
+function maskName(name=""){ const s=String(name).trim(); if(s.length<=1) return s; if(s.length===2) return s[0]+'*'; return s[0]+'*'.repeat(s.length-2)+s[s.length-1]; }
+const maskDojo = maskName;
+function maskContact(raw=""){
+  const digits=String(raw).replace(/\D/g,'');
+  if(digits.length>7) return `${digits.slice(0,3)}-****-${digits.slice(-4)}`;
+  if(String(raw).includes('@')){ const [a,b]=String(raw).split('@'); return `${a.slice(0,3)}***@${b}`;}
+  return "***-****-****";
+}
+
+// JSON 안전 파싱(+백엔드 status 체크)
+async function parseJson(res){
+  const text=await res.text();
+  let json;
+  try{ json=JSON.parse(text); }
+  catch{ throw new Error('API 응답 형식 오류'); }
+  if(!res.ok || json.status==='error') throw new Error(json.message||`HTTP ${res.status}`);
+  return json;
+}
+
+// 데이터 정규화
 function normalizeItems(raw = {}) {
   const items = raw.items || {};
-  return { sb30:+(items.sb30??raw.sb30??0)||0, sb35:+(items.sb35??raw.sb35??0)||0, sb45:+(items.sb45??raw.sb45??0)||0, sb55:+(items.sb55??raw.sb55??0)||0, sb65:+(items.sb65??raw.sb65??0)||0 };
+  return {
+    sb30:+(items.sb30??raw.sb30??0)||0,
+    sb35:+(items.sb35??raw.sb35??0)||0,
+    sb45:+(items.sb45??raw.sb45??0)||0,
+    sb55:+(items.sb55??raw.sb55??0)||0,
+    sb65:+(items.sb65??raw.sb65??0)||0
+  };
 }
 function computeTotalCount(items){ return Object.values(items).reduce((a,b)=>a+(+b||0),0); }
 function normalizePost(raw = {}) {
@@ -425,26 +461,35 @@ function normalizePost(raw = {}) {
     quotationUrl: raw.quotationUrl || ''
   };
 }
-function normalizeListResponse(data){ const arr = Array.isArray(data)?data:(data.items||data.data||[]); return arr.map(normalizePost); }
-
-function maskName(name=""){ const s=String(name).trim(); if(s.length<=1) return s; if(s.length===2) return s[0]+'*'; return s[0]+'*'.repeat(s.length-2)+s[s.length-1]; }
-const maskDojo = maskName;
-function maskContact(raw=""){ const digits=String(raw).replace(/\D/g,''); if(digits.length>7) return `${digits.slice(0,3)}-****-${digits.slice(-4)}`; if(String(raw).includes('@')){ const [a,b]=String(raw).split('@'); return `${a.slice(0,3)}***@${b}`;} return "***-****-****"; }
-
-async function parseJson(res){ const text=await res.text(); let json; try{ json=JSON.parse(text);}catch{ throw new Error('API 응답 형식 오류'); } if(!res.ok||json.status==='error') throw new Error(json.message||`HTTP ${res.status}`); return json; }
-
-// 🔁 목록 불러오기(POST publicList로 변경!)
-async function loadApplications() {
-  const res = await fetch(API_URL, {
-    method: 'POST',
-    headers: PLAIN_HEADERS,
-    body: JSON.stringify({ action: 'publicList' })
-  });
-  const json = await parseJson(res);
-  const arr = Array.isArray(json) ? json : (json.items || json.data || []);
-  return normalizeListResponse(arr);
+function normalizeListResponse(data){
+  const arr = Array.isArray(data)?data:(data.items||data.data||[]);
+  return arr.map(normalizePost);
 }
 
+/** =========================
+ *  API CALLS
+ *  =======================*/
+// 🔁 목록 불러오기: POST(publicList) 우선, 실패 시 GET?action=list 폴백
+async function loadApplications() {
+  try {
+    const r1 = await fetch(API_URL, {
+      method: 'POST',
+      headers: PLAIN_HEADERS,
+      body: JSON.stringify({ action: 'publicList' }),
+    });
+    const j1 = await parseJson(r1);
+    const arr1 = Array.isArray(j1) ? j1 : (j1.items || j1.data || []);
+    if (Array.isArray(arr1)) return normalizeListResponse(arr1);
+  } catch (e) {
+    console.warn('[loadApplications] POST publicList 실패, GET 폴백 시도:', e);
+  }
+  const r2 = await fetch(API_URL + '?action=list', { method:'GET', cache:'no-cache' });
+  const j2 = await parseJson(r2);
+  const arr2 = Array.isArray(j2) ? j2 : (j2.items || j2.data || []);
+  return normalizeListResponse(arr2);
+}
+
+// ▶ 신청 등록(create)
 async function submitApplication(applicationData) {
   const payload = { action:'create', data: { ...applicationData } };
   const res = await fetch(API_URL, { method:'POST', headers:PLAIN_HEADERS, body: JSON.stringify(payload) });
@@ -452,43 +497,126 @@ async function submitApplication(applicationData) {
   return normalizePost(json.data || applicationData);
 }
 
+// ▶ 글 상세 조회(getPost) — 비번은 id와 같게 저장되어 있음
 async function fetchPostDetails(id, pw) {
-  const res = await fetch(API_URL, { method:'POST', headers:PLAIN_HEADERS, body: JSON.stringify({ action:'getPost', id, pw }) });
+  const res = await fetch(API_URL, {
+    method:'POST',
+    headers:PLAIN_HEADERS,
+    body: JSON.stringify({ action:'getPost', id, pw })
+  });
   const json = await parseJson(res);
   return normalizePost(json.data || json);
 }
 
+/** =========================
+ *  RENDERING
+ *  =======================*/
 let posts = [];
-function cardHTML(p){ /* 그대로(생략) */ return `
-  <article class="p-5 rounded-2xl border border-slate-700/50 bg-slate-800/40" data-id="${esc(p.id)}">
-    <div class="grid md:grid-cols-2 gap-x-4 gap-y-2">
-      <div><div class="text-xs text-slate-400">도장명</div><div class="font-semibold">${esc(maskDojo(p.dojo))}</div></div>
-      <div><div class="text-xs text-slate-400">관장님</div><div class="font-semibold">${esc(maskName(p.master))}</div></div>
-      <div><div class="text-xs text-slate-400">연락처</div><div class="font-semibold">${esc(maskContact(p.contact))}</div></div>
-      <div><div class="text-xs text-slate-400">등록일</div><div class="font-semibold">${fmt(p.ts)}</div></div>
-      <div class="md:col-span-2"><div class="text-xs text-slate-400">신청 품목</div><div class="inline-flex items-center gap-2 text-slate-300"><span class="text-xs px-2 py-0.5 rounded bg-sky-500/10 text-sky-300 border border-sky-700/40">총 ${p.totalCount||0} 개</span><span class="text-slate-500 text-sm">(상세 내역은 비공개)</span></div></div>
-      <div class="md:col-span-2 flex flex-wrap gap-2 mt-2">
-        <button class="view-details px-3 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-sm">상세보기</button>
-        <span class="px-2 py-1 rounded-full text-xs bg-slate-700/70">${esc(p.status||'신규')}</span>
+
+function render(){
+  const list=$("#boardList");
+  if(!list) return;
+
+  if(!posts.length){
+    list.innerHTML = '<p class="text-slate-400 text-sm p-4 text-center">아직 등록된 신청이 없습니다.</p>';
+    return;
+  }
+
+  list.innerHTML = posts.map(p=>`
+    <article class="p-5 rounded-2xl shadow-lg bg-slate-800/70" data-id="${esc(p.id)}">
+      <div class="flex flex-col md:flex-row justify-between gap-4">
+        <div>
+          <p class="font-bold text-lg text-white">${esc(maskDojo(p.dojo))}</p>
+          <p class="text-slate-300">관장님: ${esc(maskName(p.master))}</p>
+          <p class="text-slate-400 text-sm">연락처: ${esc(maskContact(p.contact))}</p>
+          <p class="text-xs text-slate-500 mt-1">${fmt(p.ts)}</p>
+        </div>
+        <div class="flex items-center justify-end md:justify-start gap-3">
+          <span class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-700 text-slate-300">${esc(p.status||'신규')}</span>
+          <button class="view-details px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-sm">상세보기</button>
+        </div>
       </div>
-      <div id="details-${esc(p.id)}" class="hidden md:col-span-2 p-3 mt-2 rounded-lg bg-slate-900/40 border border-slate-800"><p class="text-center text-slate-400 p-4">상세 정보를 불러오는 중...</p></div>
+      <div id="details-${esc(p.id)}" class="hidden p-3 mt-3 rounded-lg bg-slate-900/40 border border-slate-800">
+        <p class="text-center text-slate-400 p-4">상세 정보를 불러오는 중...</p>
+      </div>
+    </article>
+  `).join("");
+
+  $$(".view-details").forEach(b=>b.addEventListener("click", onView));
+}
+
+function renderPostDetails(container, d){
+  const itemsLines = Object.entries(d.items||{})
+    .filter(([,v])=>(+v||0)>0)
+    .map(([k,v])=>{
+      const m={
+        sb30:'spoband 30 / 주니어용',
+        sb35:'spoband 35 / 2.5kg',
+        sb45:'spoband 45 / 5kg',
+        sb55:'spoband 55 / 10kg',
+        sb65:'spoband 65 / 15kg'
+      };
+      return `• ${esc(m[k]||k)} : ${v} 개`;
+    }).join('\n') || '-';
+
+  const repliesHTML=(d.replies||[]).map(r=>`
+    <div class="mt-2 p-2 rounded-lg bg-slate-800/40 border border-slate-700/50">
+      <div class="text-xs text-slate-400">${fmt(r.ts)}</div>
+      <div class="text-sky-300 font-semibold whitespace-pre-wrap">${esc(r.content||'')}</div>
+    </div>`).join('');
+
+  const quoteHTML=d.quotationUrl
+    ? `<a class="text-sky-300 underline" target="_blank" href="${esc(d.quotationUrl)}">견적서 보기</a>`
+    : '없음';
+
+  container.innerHTML = `
+    <div class="text-xs text-slate-400 mb-1">상세 정보</div>
+    <div class="text-sm text-slate-200 mb-2">
+      도장명: ${esc(d.dojo||'미입력')} / 관장님: ${esc(d.master||'미입력')}<br>
+      연락처: ${esc(d.contact||'미입력')}<br>
+      주소: ${esc(d.address||'미입력')}<br>
+      견적서: ${quoteHTML}
     </div>
-  </article>`; }
+    <div class="text-xs text-slate-400 mb-1">신청 품목(모델별)</div>
+    <div class="whitespace-pre-wrap">${itemsLines}</div>
+    ${repliesHTML?`<div class="mt-3"><div class="text-xs text-slate-400 mb-1">관리자 답변</div>${repliesHTML}</div>`:''}
+    <button class="btn-close mt-4 px-3 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-sm">닫기</button>
+  `;
+  container.querySelector('.btn-close')?.addEventListener('click', ()=>{
+    container.classList.add('hidden');
+    container.innerHTML=`<p class="text-center text-slate-400 p-4">상세 정보를 불러오는 중...</p>`;
+  });
+}
 
-function renderPostDetails(container, d){ /* 그대로(생략) – 너의 코드 사용 */ 
-  const itemsLines = Object.entries(d.items||{}).filter(([,v])=>(+v||0)>0).map(([k,v])=>{const m={sb30:'spoband 30 / 주니어용',sb35:'spoband 35 / 2.5kg',sb45:'spoband 45 / 5kg',sb55:'spoband 55 / 10kg',sb65:'spoband 65 / 15kg'}; return `• ${esc(m[k]||k)} : ${v} 개`;}).join('\n')||'-';
-  const repliesHTML=(d.replies||[]).map(r=>`<div class="mt-2 p-2 rounded-lg bg-slate-800/40 border border-slate-700/50"><div class="text-xs text-slate-400">${fmt(r.ts)}</div><div class="text-sky-300 font-semibold whitespace-pre-wrap">${esc(r.content||'')}</div></div>`).join('');
-  const quoteHTML=d.quotationUrl?`<a class="text-sky-300 underline" target="_blank" href="${esc(d.quotationUrl)}">견적서 보기</a>`:'없음';
-  container.innerHTML=`<div class="text-xs text-slate-400 mb-1">상세 정보</div><div class="text-sm text-slate-200 mb-2">도장명: ${esc(d.dojo||'미입력')} / 관장님: ${esc(d.master||'미입력')}<br>연락처: ${esc(d.contact||'미입력')}<br>주소: ${esc(d.address||'미입력')}<br>견적서: ${quoteHTML}</div><div class="text-xs text-slate-400 mb-1">신청 품목(모델별)</div><div class="whitespace-pre-wrap">${itemsLines}</div>${repliesHTML?`<div class="mt-3"><div class="text-xs text-slate-400 mb-1">관리자 답변</div>${repliesHTML}</div>`:''}<button class="btn-close mt-4 px-3 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-sm">닫기</button>`;
-  container.querySelector('.btn-close')?.addEventListener('click', ()=>{container.classList.add('hidden');container.innerHTML=`<p class="text-center text-slate-400 p-4">상세 정보를 불러오는 중...</p>`;});}
+/** =========================
+ *  EVENTS
+ *  =======================*/
+async function onView(e){
+  const article=e.currentTarget.closest("article");
+  const id=String(article.dataset.id);
+  const detailsContainer=$(`#details-${CSS.escape(id)}`) || article.querySelector(`#details-${CSS.escape(id)}`);
+  if(!detailsContainer) return;
 
-function render(){ const list=$("#boardList"); if(!list) return; list.innerHTML=posts.length?posts.map(p=>`<article class="p-5 rounded-2xl shadow-lg bg-slate-800/70" data-id="${esc(p.id)}"><div class="flex flex-col md:flex-row justify-between gap-4"><div><p class="font-bold text-lg text-white">${esc(maskDojo(p.dojo))}</p><p class="text-slate-300">관장님: ${esc(maskName(p.master))}</p><p class="text-slate-400 text-sm">연락처: ${esc(maskContact(p.contact))}</p><p class="text-xs text-slate-500 mt-1">${fmt(p.ts)}</p></div><div class="flex items-center justify-end md:justify-start gap-3"><span class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-700 text-slate-300">${esc(p.status||'신규')}</span><button class="view-details px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-sm">상세보기</button></div></div><div id="details-${esc(p.id)}" class="hidden p-3 mt-3 rounded-lg bg-slate-900/40 border border-slate-800"><p class="text-center text-slate-400 p-4">상세 정보를 불러오는 중...</p></div></article>`).join(""):'<p class="text-slate-400 text-sm p-4 text-center">아직 등록된 신청이 없습니다.</p>'; $$(".view-details").forEach(b=>b.addEventListener("click",onView)); }
+  const pw=prompt("작성 시 설정한 비밀번호를 입력하세요.");
+  if(pw===null) return;
 
-async function onView(e){ const article=e.currentTarget.closest("article"); const id=String(article.dataset.id); const detailsContainer=$(`#details-${CSS.escape(id)}`)||article.querySelector(`#details-${CSS.escape(id)}`); if(!detailsContainer) return; const pw=prompt("작성 시 설정한 비밀번호를 입력하세요."); if(pw===null) return; detailsContainer.classList.remove("hidden"); detailsContainer.scrollIntoView({behavior:"smooth",block:"center"}); try{ const d=await fetchPostDetails(id,pw); renderPostDetails(detailsContainer,d); }catch(err){ alert(err.message||'정보를 불러올 수 없습니다.'); detailsContainer.classList.add('hidden'); } }
+  detailsContainer.classList.remove("hidden");
+  detailsContainer.scrollIntoView({behavior:"smooth",block:"center"});
+
+  try{
+    const d=await fetchPostDetails(id,pw);
+    renderPostDetails(detailsContainer,d);
+  }catch(err){
+    alert(err.message||'정보를 불러올 수 없습니다.');
+    detailsContainer.classList.add('hidden');
+  }
+}
 
 document.addEventListener('DOMContentLoaded', async function () {
+  // 숨은 타임스탬프
   $('#ts').value = Date.now();
 
+  // 수량 합계 표시
   ["q_sb30","q_sb35","q_sb45","q_sb55","q_sb65"].forEach(id => {
     $(`#${id}`)?.addEventListener("input", ()=>{
       const n = id => Math.max(0, Number(($(`#${id}`)?.value || 0)) || 0);
@@ -498,17 +626,73 @@ document.addEventListener('DOMContentLoaded', async function () {
     });
   });
 
+  // 비밀번호 보기/숨김 토글
   const pwInput=$('#pw'), pwToggle=$('#pwToggle');
-  pwToggle?.addEventListener('click', ()=>{ const isHidden=pwInput.type==='password'; pwInput.type=isHidden?'text':'password'; $('#pwIconOpen')?.classList.toggle('hidden', !isHidden); $('#pwIconClosed')?.classList.toggle('hidden', isHidden); });
+  pwToggle?.addEventListener('click', ()=>{
+    const isHidden=pwInput.type==='password';
+    pwInput.type=isHidden?'text':'password';
+    $('#pwIconOpen')?.classList.toggle('hidden', !isHidden);
+    $('#pwIconClosed')?.classList.toggle('hidden', isHidden);
+  });
 
-  // 목록 로드
-  try { posts = await loadApplications(); } catch (e) { console.warn('초기 로드 오류:', e); $("#boardList").innerHTML = `<p class="text-slate-400 text-center p-4 rounded-lg bg-red-900/20 border border-red-500/30">${e.message || '불러오기 실패'} 잠시 후 새로고침 해주세요.</p>`; }
+  // ▶ 목록 초기 로드
+  try {
+    posts = await loadApplications();
+  } catch (e) {
+    console.warn('초기 로드 오류:', e);
+    $("#boardList").innerHTML =
+      `<p class="text-slate-400 text-center p-4 rounded-lg bg-red-900/20 border border-red-500/30">
+        ${esc(e.message || '불러오기 실패')} · 잠시 후 새로고침 해주세요.
+       </p>`;
+  }
   render();
 
-  // 동의 모달, 폼 제출(너의 코드 그대로) …
-  // (아래 폼 제출 로직은 네 코드 그대로 유지)
+  // ▶ 폼 제출(create)
+  const form = document.getElementById(FORM_ID);
+  form?.addEventListener('submit', async (ev)=>{
+    ev.preventDefault();
+
+    // 봇/너무 빠른 제출 방어
+    const hp = form.querySelector('input[name="hp_field"]')?.value || '';
+    if (hp.trim() !== '') { alert('제출에 실패했습니다.'); return; }
+    if ((Date.now() - pageLoadedAt)/1000 < FORM_MIN_SECONDS) {
+      alert('잠시 후 다시 시도해주세요.'); return;
+    }
+
+    const data = {
+      dojo: $('#dojo').value.trim(),
+      master: $('#master').value.trim(),
+      contact: $('#contact').value.trim(),
+      address: $('#address').value.trim(),
+      pw: $('#pw').value.trim(),
+      items: {
+        sb30: Number($('#q_sb30').value || 0) || 0,
+        sb35: Number($('#q_sb35').value || 0) || 0,
+        sb45: Number($('#q_sb45').value || 0) || 0,
+        sb55: Number($('#q_sb55').value || 0) || 0,
+        sb65: Number($('#q_sb65').value || 0) || 0,
+      }
+    };
+
+    const total = computeTotalCount(data.items);
+    if (total <= 0) { alert('수량을 1개 이상 입력해주세요.'); return; }
+
+    try{
+      const saved = await submitApplication(data);
+      alert(`신청이 등록되었습니다.\n신청 비번: ${saved.id}\n* 상세보기 비밀번호로 동일 사용`);
+      // 목록 갱신
+      posts = await loadApplications();
+      render();
+      form.reset();
+      $("#sumBoxes").textContent = "총 0 개";
+      $("#totalBoxes").value = "0";
+    }catch(err){
+      alert(err.message || '등록에 실패했습니다.');
+    }
+  });
 });
 </script>
+
 
 <!-- 파티클/배경/버튼 효과 스크립트 그대로 유지 -->
 <!-- …(생략: 네 코드 그대로)… -->
