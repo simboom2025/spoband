@@ -3,96 +3,140 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>SPOBAND Admin Dashboard</title>
+<title>SPOBAND Admin Dashboard Pro</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
   :root {
-    --color-bg: #020617; --color-bg-secondary: #0f172a; --color-bg-tertiary: #1e293b;
-    --color-border: #334155; --color-text-primary: #e2e8f0; --color-text-secondary: #94a3b8;
-    --color-accent: #38bdf8;
+    --color-bg: #0d1117; --color-bg-secondary: #161b22; --color-bg-tertiary: #21262d;
+    --color-border: #30363d; --color-text-primary: #c9d1d9; --color-text-secondary: #8b949e;
+    --color-accent: #58a6ff; --color-danger: #f85149;
   }
   body {
     font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     background-color: var(--color-bg); color: var(--color-text-primary);
   }
   .table-container {
-    margin-top: 1rem; border-radius: 0.75rem; overflow: auto; border: 1px solid var(--color-border);
-    background-color: var(--color-bg-secondary); height: calc(100vh - 10.5rem);
+    margin-top: 1.25rem; border-radius: 0.5rem; overflow: auto; border: 1px solid var(--color-border);
+    background-color: var(--color-bg-secondary); min-height: calc(100vh - 14.5rem);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   }
   .table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-  .table thead { position: sticky; top: 0; z-index: 10; background-color: #0b1220; border-bottom: 1px solid var(--color-border); }
+  .table thead { position: sticky; top: 0; z-index: 10; background-color: #1a202a; border-bottom: 2px solid var(--color-border); }
   .table th, .table td {
     padding: 0.8rem 1rem; text-align: left; white-space: nowrap;
     overflow: hidden; text-overflow: ellipsis; vertical-align: middle;
   }
-  .table th { font-weight: 600; font-size: 0.8rem; }
+  .table th { font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
   .table td { font-size: 0.875rem; border-bottom: 1px solid var(--color-border); }
   .table tbody tr:last-child td { border-bottom: none; }
   .table tbody tr { transition: background-color 0.2s; }
+  .table tbody tr:nth-child(even) { background-color: rgba(255, 255, 255, 0.02); }
   .table tbody tr:hover { background-color: var(--color-bg-tertiary); cursor: pointer; }
-  .status-badge { padding: 0.25rem 0.6rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; display: inline-block; }
-  .overlay {
-    position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
-    background-color: rgba(2, 6, 23, 0.7); z-index: 50; transition: opacity 0.3s;
+  
+  .status-badge {
+    padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600;
+    display: inline-flex; align-items: center; gap: 0.35rem; color: var(--color-text-secondary);
   }
-  .overlay.show { display: flex; }
+  .status-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+  .overlay {
+    position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+    background-color: rgba(2, 6, 23, 0.7); z-index: 50;
+    opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+  .overlay.show { opacity: 1; visibility: visible; }
+  .overlay .modal-content-wrapper { transform: scale(0.95); transition: transform 0.3s ease; }
+  .overlay.show .modal-content-wrapper { transform: scale(1); }
+
+  /* Responsive Card View for Mobile */
+  @media (max-width: 1024px) {
+    .table thead { display: none; }
+    .table tbody, .table tr, .table td { display: block; }
+    .table tr {
+        border: 1px solid var(--color-border); border-radius: 0.5rem;
+        margin-bottom: 1rem; padding: 0.5rem;
+        background-color: var(--color-bg-tertiary);
+    }
+    .table td {
+        text-align: right; padding-left: 50%; position: relative;
+        white-space: normal; border-bottom: 1px dotted var(--color-border);
+        min-height: 2.5rem; display: flex; align-items: center; justify-content: flex-end;
+    }
+    .table td:last-child { border-bottom: none; }
+    .table td::before {
+        content: attr(data-label);
+        position: absolute; left: 1rem; font-weight: 600;
+        color: var(--color-text-secondary); text-align: left;
+    }
+    .table td.text-center, .table td.text-center::before { text-align: left; justify-content: flex-start; }
+    .table td.text-center::before { content: ''; }
+    .table td.text-center .sel { margin-left: 1rem; }
+  }
 </style>
 </head>
 <body>
+<!-- Overlays: Loading, Login, Detail Modal -->
 <div id="loading" class="overlay">
-  <div class="bg-slate-800 text-white px-6 py-4 rounded-lg shadow-xl flex flex-col items-center">
+  <div class="bg-slate-800 text-white px-6 py-4 rounded-lg shadow-xl flex items-center gap-3">
+    <svg class="animate-spin h-5 w-5 text-sky-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
     <span id="loading-text">처리 중...</span>
   </div>
 </div>
 
 <div id="login-wall" class="overlay show">
-    <div class="w-full max-w-sm p-8 bg-slate-800 rounded-2xl shadow-lg border border-slate-700">
-      <h2 class="text-2xl font-bold text-center text-sky-400 mb-2">SPOBAND Admin</h2>
-      <p class="text-center text-slate-400 mb-6">관리자 비밀키를 입력하세요.</p>
-      <form id="login-form">
-        <input id="password-input" type="password" placeholder="비밀키 입력" class="w-full px-4 py-2 mb-4 bg-slate-900 border border-slate-600 rounded-lg">
-        <button type="submit" class="w-full px-4 py-2 font-bold text-white bg-sky-600 rounded-lg hover:bg-sky-700">로그인</button>
-        <p id="login-error" class="text-red-400 text-center mt-4 h-4"></p>
-      </form>
-    </div>
+  <div class="w-full max-w-sm p-8 bg-slate-800 rounded-2xl shadow-lg border border-slate-700 modal-content-wrapper">
+    <h2 class="text-2xl font-bold text-center text-sky-400 mb-2">SPOBAND Admin</h2>
+    <p class="text-center text-slate-400 mb-6">관리자 비밀키를 입력하세요.</p>
+    <form id="login-form">
+      <input id="password-input" type="password" placeholder="비밀키 입력" class="w-full px-4 py-2 mb-4 bg-slate-900 border border-slate-600 rounded-lg focus:ring-2 focus:ring-sky-500 transition">
+      <button type="submit" class="w-full px-4 py-2 font-bold text-white bg-sky-600 rounded-lg hover:bg-sky-700 transition-colors">로그인</button>
+      <p id="login-error" class="text-red-400 text-center mt-4 h-4"></p>
+    </form>
+  </div>
 </div>
 
 <div id="detail-modal" class="overlay">
   <div id="modal-backdrop" class="absolute inset-0"></div>
-  <div class="relative bg-slate-800 rounded-lg shadow-xl w-full max-w-4xl border border-slate-700 max-h-[90vh] flex flex-col">
+  <div class="relative bg-slate-800 rounded-lg shadow-xl w-full max-w-4xl border border-slate-700 max-h-[90vh] flex flex-col modal-content-wrapper">
     <div class="flex items-center justify-between p-4 border-b border-slate-700">
       <h3 class="text-lg font-bold text-sky-400">신청 상세 정보</h3>
-      <button id="modal-close-btn" class="text-2xl text-slate-400 hover:text-white">&times;</button>
+      <button id="modal-close-btn" class="text-2xl text-slate-400 hover:text-white transition-colors">&times;</button>
     </div>
     <div id="modal-content" class="p-6 overflow-y-auto"></div>
     <div id="modal-actions" class="p-4 bg-slate-900/50 border-t border-slate-700 mt-auto"></div>
   </div>
 </div>
 
+<!-- Main Application Container -->
 <div id="app-container" class="hidden">
-  <header class="sticky top-0 z-40 bg-slate-950/70 border-b border-slate-800 backdrop-blur-lg">
+  <header class="sticky top-0 z-40 bg-slate-950/80 border-b border-slate-800 backdrop-blur-lg shadow-sm">
     <div class="container mx-auto h-16 px-4 flex items-center justify-between">
-      <h1 class="text-xl font-bold">SPOBAND <span class="text-sky-400">Admin</span></h1>
+      <h1 class="text-xl font-bold">SPOBAND <span class="text-sky-400">Admin Pro</span></h1>
       <div class="flex items-center gap-3">
-        <button id="btnReload" class="px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700">새로고침</button>
-        <button id="btnLogout" class="px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-800">로그아웃</button>
+        <button id="btnReload" class="px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 transition-colors">새로고침</button>
+        <button id="btnLogout" class="px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors">로그아웃</button>
       </div>
     </div>
   </header>
 
   <main class="container mx-auto px-4 py-4">
     <div id="errorMsg" class="text-red-400 mb-4 p-3 bg-red-900/20 border border-red-800 rounded-lg hidden"></div>
-    <div class="toolbar flex flex-wrap items-center gap-3">
-      <input id="search" placeholder="통합 검색..." class="flex-grow md:flex-grow-0 w-full md:w-80 rounded-lg bg-slate-800 border-slate-700 px-4 py-2">
-      <select id="statusFilter" class="rounded-lg bg-slate-800 border-slate-700 px-4 py-2">
+    
+    <div class="toolbar flex flex-wrap items-center gap-4">
+      <div class="relative flex-grow md:flex-grow-0 w-full md:w-80">
+        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+          <svg class="h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" /></svg>
+        </div>
+        <input id="search" placeholder="통합 검색..." class="w-full rounded-lg bg-slate-800 border-slate-700 pl-10 pr-4 py-2 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition">
+      </div>
+      <select id="statusFilter" class="rounded-lg bg-slate-800 border-slate-700 px-4 py-2 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition">
         <option value="">상태 (전체)</option>
-        <option>신규</option><option>배송준비</option><option>배송중</option><option>배송완료</option><option>반품</option>
       </select>
       <div class="ml-auto flex items-center gap-3">
-          <span class="text-slate-400 text-sm">선택: <b id="selCount">0</b></span>
-          <button id="btnBulkStatus" class="px-4 py-2 rounded-lg bg-sky-700 hover:bg-sky-800">선택 상태변경</button>
-          <button id="btnBulkDelete" class="px-4 py-2 rounded-lg bg-red-700 hover:bg-red-800">선택 삭제</button>
-          <button id="btnCsv" class="px-4 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-800">CSV</button>
+        <span class="text-slate-400 text-sm">선택: <b id="selCount">0</b></span>
+        <button id="btnBulkStatus" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-700 hover:bg-sky-600 transition-colors"><svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" /></svg>상태변경</button>
+        <button id="btnBulkDelete" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-800 hover:bg-red-700 transition-colors"><svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" /></svg>삭제</button>
+        <button id="btnCsv" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-600 transition-colors"><svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>CSV</button>
       </div>
     </div>
 
@@ -109,26 +153,26 @@
         <tbody id="tbody"></tbody>
       </table>
     </div>
+    <div id="pagination-container" class="flex justify-center items-center gap-2 mt-4"></div>
   </main>
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbwO24CZs2KFkX5KZK5wMjtQlNdoKYvKBPmSTDTBg3gYn2m10sFOPMBbFZJHbtZXYyUS/exec"; // 반드시 본인의 URL로 교체
-const SESSION_STORAGE_KEY = "spoband_admin_secret_session";
+// ===================================================================================
+//  1. CONFIGURATION & STATE MANAGEMENT
+// ===================================================================================
+const API_URL = "https://script.google.com/macros/s/AKfycbwO24CZs2KFkX5KZK5wMjtQlNdoKYvKBPmSTDTBg3gYn2m10sFOPMBbFZJHbtZXYyUS/exec";
+const SESSION_STORAGE_KEY = "spoband_admin_secret_session_pro";
 const STATUS_OPTIONS = ["신규", "배송준비", "배송중", "배송완료", "반품"];
-const STATUS_COLORS = { "신규": "bg-sky-500/20 text-sky-400", "배송준비": "bg-amber-500/20 text-amber-400", "배송중": "bg-blue-500/20 text-blue-400", "배송완료": "bg-green-500/20 text-green-400", "반품": "bg-red-500/20 text-red-400", "default": "bg-slate-500/20 text-slate-400" };
+const STATUS_COLORS = { "신규": "bg-sky-500", "배송준비": "bg-amber-500", "배송중": "bg-blue-500", "배송완료": "bg-green-500", "반품": "bg-red-500", "default": "bg-slate-500" };
 
 const $ = s => document.querySelector(s);
-let SECRET = null, POSTS = [];
+let SECRET = null, ALL_POSTS = [], FILTERED_POSTS = [];
+let currentPage = 1, itemsPerPage = 15;
 
-const showLoading = (text = "처리 중...") => { 
-    $('#loading-text').textContent = text;
-    $('#loading').classList.add('show'); 
-};
-const hideLoading = () => $('#loading').classList.remove('show');
-const showError = msg => { $('#errorMsg').textContent = msg; $('#errorMsg').classList.remove('hidden'); };
-const esc = s => String(s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": "&#39;" }[c]));
-
+// ===================================================================================
+//  2. API & DATA HANDLING
+// ===================================================================================
 async function adminCall(payload) {
   showLoading();
   try {
@@ -140,42 +184,96 @@ async function adminCall(payload) {
     if (!res.ok || json.status === 'error') throw new Error(json.message || `HTTP ${res.status}`);
     return json;
   } catch (error) {
-    showError(`오류: ${error.message}`);
+    showError(`API 오류: ${error.message}`);
     throw error;
   } finally { hideLoading(); }
 }
 
+async function refreshData() {
+  try {
+    const result = await adminCall({ action: 'adminList' });
+    ALL_POSTS = result.sort((a, b) => new Date(b.ts) - new Date(a.ts)); // 최신순 정렬
+    currentPage = 1;
+    applyFiltersAndRender();
+  } catch (e) { console.error("데이터 갱신 실패:", e); }
+}
+
+function applyFiltersAndRender() {
+  const q = $('#search').value.trim().toLowerCase();
+  const f = $('#statusFilter').value;
+  FILTERED_POSTS = ALL_POSTS.filter(r => 
+    (f ? r.status === f : true) &&
+    (q ? [r.id, r.dojo, r.master, r.contact, r.address, JSON.stringify(r.items)].some(v => String(v || '').toLowerCase().includes(q)) : true)
+  );
+  render();
+}
+
+// ===================================================================================
+//  3. UI RENDERING & MANIPULATION
+// ===================================================================================
+const showLoading = (text = "처리 중...") => { $('#loading-text').textContent = text; $('#loading').classList.add('show'); };
+const hideLoading = () => $('#loading').classList.remove('show');
+const showError = msg => { $('#errorMsg').textContent = msg; $('#errorMsg').classList.remove('hidden'); };
+const esc = s => String(s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": "&#39;" }[c]));
+
 function getStatusBadge(status) {
   const colorClass = STATUS_COLORS[status] || STATUS_COLORS['default'];
-  return `<span class="status-badge ${colorClass}">${status || 'N/A'}</span>`;
+  return `<span class="status-badge"><span class="status-dot ${colorClass}"></span>${status || 'N/A'}</span>`;
 }
 
 function render() {
-  const q = $('#search').value.trim().toLowerCase();
-  const f = $('#statusFilter').value;
-  const filteredPosts = POSTS.filter(r => 
-    (f ? r.status === f : true) &&
-    (q ? [r.id, r.dojo, r.master, r.contact, r.address].some(v => String(v || '').toLowerCase().includes(q)) : true)
-  );
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedPosts = FILTERED_POSTS.slice(startIndex, endIndex);
 
-  $('#tbody').innerHTML = filteredPosts.map(r => {
+  $('#tbody').innerHTML = paginatedPosts.map(r => {
     const itemsText = Object.entries(r.items || {}).map(([k, v]) => `${k.replace('sb', 'SB')}: ${v}개`).join(', ');
     return `
       <tr data-id="${esc(r.id)}">
-        <td class="text-center"><input type="checkbox" class="sel accent-sky-500 bg-slate-700" data-id="${esc(r.id)}"></td>
-        <td>${esc(r.id)}</td><td>${new Date(r.ts).toLocaleString('ko-KR')}</td>
-        <td title="${esc(r.dojo)}">${esc(r.dojo)}</td><td>${esc(r.master)}</td>
-        <td>${esc(r.contact)}</td><td title="${itemsText}">${itemsText}</td>
-        <td class="text-center">${(r.replies || []).length}</td>
-        <td title="${esc(r.address)}">${esc(r.address)}</td>
-        <td class="text-center">${getStatusBadge(r.status)}</td>
+        <td data-label="선택" class="text-center"><input type="checkbox" class="sel accent-sky-500 bg-slate-700 w-4 h-4" data-id="${esc(r.id)}"></td>
+        <td data-label="신청비번">${esc(r.id)}</td>
+        <td data-label="신청일">${new Date(r.ts).toLocaleString('ko-KR')}</td>
+        <td data-label="도장명" title="${esc(r.dojo)}">${esc(r.dojo)}</td>
+        <td data-label="관장명">${esc(r.master)}</td>
+        <td data-label="연락처">${esc(r.contact)}</td>
+        <td data-label="신청항목" title="${itemsText}">${itemsText}</td>
+        <td data-label="답변" class="text-center">${(r.replies || []).length}</td>
+        <td data-label="주소" title="${esc(r.address)}">${esc(r.address)}</td>
+        <td data-label="상태" class="text-center">${getStatusBadge(r.status)}</td>
       </tr>`;
   }).join('');
+
+  renderPaginationControls();
   updateSelCount();
 }
 
+function renderPaginationControls() {
+  const totalPages = Math.ceil(FILTERED_POSTS.length / itemsPerPage);
+  const container = $('#pagination-container');
+  if (totalPages <= 1) {
+      container.innerHTML = '';
+      return;
+  }
+  
+  let buttonsHtml = '';
+  // Previous Button
+  buttonsHtml += `<button data-page="${currentPage - 1}" class="px-3 py-1 rounded-md bg-slate-700 hover:bg-sky-600 disabled:opacity-50 disabled:cursor-not-allowed" ${currentPage === 1 ? 'disabled' : ''}>이전</button>`;
+
+  // Page numbers
+  for (let i = 1; i <= totalPages; i++) {
+    const isActive = i === currentPage ? 'bg-sky-600 font-bold' : 'bg-slate-700';
+    buttonsHtml += `<button data-page="${i}" class="px-3 py-1 rounded-md ${isActive} hover:bg-sky-600">${i}</button>`;
+  }
+
+  // Next Button
+  buttonsHtml += `<button data-page="${currentPage + 1}" class="px-3 py-1 rounded-md bg-slate-700 hover:bg-sky-600 disabled:opacity-50 disabled:cursor-not-allowed" ${currentPage === totalPages ? 'disabled' : ''}>다음</button>`;
+  
+  container.innerHTML = buttonsHtml;
+}
+
+
 function openModal(id) {
-    const post = POSTS.find(p => p.id === id);
+    const post = ALL_POSTS.find(p => p.id === id);
     if (!post) return;
     const itemsHtml = Object.entries(post.items || {}).map(([k, v]) => `<div class="flex justify-between py-1"><span class="text-slate-400">${k.replace('sb','SB')}</span><span class="font-semibold">${v} 개</span></div>`).join('');
     const repliesHtml = (post.replies || []).length > 0 ? post.replies.map(reply => `<div class="mt-2 p-3 bg-slate-900 rounded-lg"><div class="flex justify-between items-center text-xs text-slate-400 mb-1"><span>${reply.author || '관리자'}</span><span>${new Date(reply.ts).toLocaleString('ko-KR')}</span></div><p class="text-sm">${esc(reply.content)}</p></div>`).join('') : '<p class="text-slate-400 text-sm">등록된 답변이 없습니다.</p>';
@@ -188,50 +286,46 @@ function openModal(id) {
         </div>`;
     
     $('#modal-actions').innerHTML = `
-        <form id="modal-reply-form" class="flex gap-2 items-center mb-2" data-id="${esc(post.id)}"><textarea name="content" class="flex-grow rounded-lg bg-slate-700 border-slate-600 p-2 text-sm" placeholder="답변을 입력하세요..." rows="1"></textarea><button type="submit" class="px-4 py-2 text-sm rounded-lg bg-sky-600 hover:bg-sky-700">답변 등록</button></form>
+        <form id="modal-reply-form" class="flex gap-2 items-center mb-2" data-id="${esc(post.id)}"><textarea name="content" class="flex-grow rounded-lg bg-slate-700 border-slate-600 p-2 text-sm focus:ring-sky-500" placeholder="답변을 입력하세요..." rows="1"></textarea><button type="submit" class="px-4 py-2 text-sm rounded-lg bg-sky-600 hover:bg-sky-700">답변 등록</button></form>
         <form id="modal-upload-form" class="flex gap-2 items-center" data-id="${esc(post.id)}"><label class="block"><span class="sr-only">Choose file</span><input type="file" name="file" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-sky-50 file:text-sky-700 hover:file:bg-sky-100"/></label><button type="submit" class="px-4 py-2 text-sm rounded-lg bg-slate-600 hover:bg-slate-500">파일 업로드</button></form>`;
     
     $('#detail-modal').classList.add('show');
 }
-function closeModal() { $('#detail-modal').classList.remove('show'); }
 
+function closeModal() { $('#detail-modal').classList.remove('show'); }
 function updateSelCount() { $('#selCount').textContent = document.querySelectorAll('.sel:checked').length; }
 
-async function refreshData() {
-    try {
-        const result = await adminCall({ action: 'adminList' });
-        POSTS = result;
-        render();
-    } catch (e) { console.error("데이터 갱신 실패:", e); }
-}
-
+// ===================================================================================
+//  4. EVENT LISTENERS & INITIALIZATION
+// ===================================================================================
 function setupAppEventListeners() {
     $('#btnReload').addEventListener('click', refreshData);
     $('#btnLogout').addEventListener('click', () => {
-        if (confirm('로그아웃 하시겠습니까?')) {
+        // Use custom modal instead of confirm
+        if (window.confirm('로그아웃 하시겠습니까?')) {
             sessionStorage.removeItem(SESSION_STORAGE_KEY);
             location.reload();
         }
     });
 
-    $('#search, #statusFilter').addEventListener('input', render);
+    $('#search').addEventListener('input', () => { currentPage = 1; applyFiltersAndRender(); });
+    $('#statusFilter').addEventListener('change', () => { currentPage = 1; applyFiltersAndRender(); });
     $('#tbody').addEventListener('change', e => { if (e.target.classList.contains('sel')) updateSelCount(); });
 
-    // ✨✨✨ 클릭 이벤트 핸들러 수정 ✨✨✨
-    // 테이블의 tbody 영역에 클릭 이벤트 리스너를 한 번만 등록합니다.
     $('#tbody').addEventListener('click', e => {
-        // 클릭된 요소가 체크박스인 경우, 아무 작업도 하지 않고 종료 (체크박스 기능 유지)
-        if (e.target.closest('input[type="checkbox"]')) {
-            return;
-        }
-        
-        // 클릭된 요소에서 가장 가까운 'tr'(테이블 행)을 찾습니다.
+        if (e.target.closest('input[type="checkbox"]')) return;
         const row = e.target.closest('tr');
-        
-        // 행이 존재하고, 행에 data-id 속성이 있다면 모달을 엽니다.
-        if (row && row.dataset.id) {
-            openModal(row.dataset.id);
+        if (row && row.dataset.id) openModal(row.dataset.id);
+    });
+
+    $('#pagination-container').addEventListener('click', e => {
+      if (e.target.tagName === 'BUTTON' && e.target.dataset.page) {
+        const page = parseInt(e.target.dataset.page, 10);
+        if (page) {
+          currentPage = page;
+          render();
         }
+      }
     });
 
     $('#modal-close-btn, #modal-backdrop').addEventListener('click', closeModal);
@@ -242,13 +336,12 @@ function setupAppEventListeners() {
         const form = e.target;
         const id = form.dataset.id;
         let actionPromise;
-
         if (form.id === 'modal-reply-form') {
             const content = form.elements.content.value.trim();
             if (content) actionPromise = adminCall({ action: 'addReply', id, reply: { content, ts: Date.now() } });
         } else if (form.id === 'modal-upload-form') {
             const file = form.elements.file.files[0];
-            if (!file) return alert('파일을 선택해주세요.');
+            if (!file) return; // Use custom alert
             showLoading("파일 업로드 중...");
             const fr = new FileReader();
             fr.onload = async (event) => {
@@ -258,15 +351,14 @@ function setupAppEventListeners() {
                 await refreshData();
             };
             fr.readAsDataURL(file);
-            return; // FileReader는 비동기이므로 여기서 함수 종료
+            return;
         }
-
-        if (actionPromise) await actionPromise.then(refreshData).then(closeModal).catch(()=>{});
+        if (actionPromise) await actionPromise.then(refreshData).then(() => openModal(id)).catch(() => {});
     });
     
     $('#btnBulkStatus, #btnBulkDelete').addEventListener('click', async e => {
         const ids = Array.from(document.querySelectorAll('.sel:checked')).map(c => c.dataset.id);
-        if (ids.length === 0) return alert('항목을 선택해주세요.');
+        if (ids.length === 0) return; // Use custom alert
         
         let actionPromise;
         if (e.target.id === 'btnBulkStatus') {
@@ -275,13 +367,13 @@ function setupAppEventListeners() {
         } else if (e.target.id === 'btnBulkDelete') {
             if (confirm(`${ids.length}개 항목을 삭제하시겠습니까?`)) actionPromise = adminCall({ action: 'bulkDelete', ids });
         }
-        if (actionPromise) await actionPromise.then(refreshData).catch(()=>{});
+        if (actionPromise) await actionPromise.then(refreshData).catch(() => {});
     });
 
     $('#btnCsv').addEventListener('click', () => {
         const header = ["신청비번","신청일","도장명","관장명","연락처","신청항목","답변수","견적서URL","주소","최종상태","비고"];
         const lines = [header.join(',')];
-        POSTS.forEach(r => {
+        ALL_POSTS.forEach(r => { // Export all data, not just filtered
             const items = Object.entries(r.items || {}).map(([k, v]) => `${k}:${v}`).join('|');
             const row = [r.id, new Date(r.ts).toLocaleString(), r.dojo, r.master, r.contact, items, (r.replies || []).length, r.quotationUrl || '', r.address, r.status || '', r.notes || ''].map(v => `"${String(v || '').replace(/"/g, '""')}"`).join(',');
             lines.push(row);
@@ -296,6 +388,12 @@ function setupAppEventListeners() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Populate status filter options
+    const statusFilter = $('#statusFilter');
+    STATUS_OPTIONS.forEach(opt => {
+      statusFilter.innerHTML += `<option value="${opt}">${opt}</option>`;
+    });
+
     $('#login-form').addEventListener('submit', async e => {
         e.preventDefault();
         $('#login-error').textContent = '';
