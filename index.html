@@ -358,14 +358,28 @@
       </div>
 
       <div class="flex items-center mt-4 flex-wrap">
-        <button type="submit" class="px-5 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-white">
-          신청 등록
-        </button>
+  <button type="submit" class="px-5 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-white">
+    신청 등록
+  </button>
 
-        <span class="ml-auto text-yellow-400 font-extrabold text-2xl tracking-wide drop-shadow">
-          ※ 문의: 스포밴드연구소 소장 / 010-5214-1492 / simboom@hanmail.net
-        </span>
-      </div>
+  <span class="ml-auto text-yellow-400 font-extrabold text-2xl tracking-wide drop-shadow">
+    ※ 문의: 스포밴드연구소 소장 / 010-5214-1492 / simboom@hanmail.net
+  </span>
+</div>
+
+<!-- 관리자 진입 고리 (눈에 거슬리지 않게, 접근성/보안 배려) -->
+<div class="w-full mt-3 text-right">
+  <a href="admin.html"
+     id="adminLink"
+     class="inline-flex items-center gap-1 text-slate-400 hover:text-sky-300 underline underline-offset-4 text-sm"
+     rel="nofollow noopener"
+     aria-label="관리자 로그인으로 이동">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/>
+    </svg>
+    관리자 로그인
+  </a>
+</div>
 
       <div aria-hidden="true"
            style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;">
