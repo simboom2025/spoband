@@ -174,19 +174,31 @@ let currentPage = 1, itemsPerPage = 15;
 //  2. API & DATA HANDLING
 // ===================================================================================
 async function adminCall(payload) {
+  // Hide previous error messages before new call
+  $('#errorMsg').classList.add('hidden');
   showLoading();
   try {
     const res = await fetch(API_URL, {
-      method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      method: 'POST', 
+      headers: { 'Content-Type': 'text/plain' }, // Keep it simple as per GAS recommendation
       body: JSON.stringify({ ...payload, secret: SECRET })
     });
-    const json = await res.json();
+    const resultText = await res.text();
+    const json = JSON.parse(resultText);
+
     if (!res.ok || json.status === 'error') throw new Error(json.message || `HTTP ${res.status}`);
-    return json;
+    
+    // For adminList, the data is directly the array
+    return (payload.action === 'adminList') ? json : json.data;
+
   } catch (error) {
-    showError(`API 오류: ${error.message}`);
+    // Distinguish between network errors and API errors
+    const errorMessage = error.name === 'SyntaxError' ? 'API 응답 형식 오류' : error.message;
+    showError(`API 오류: ${errorMessage}`);
     throw error;
-  } finally { hideLoading(); }
+  } finally { 
+    hideLoading(); 
+  }
 }
 
 async function refreshData() {
@@ -256,19 +268,13 @@ function renderPaginationControls() {
   }
   
   let buttonsHtml = '';
-  // Previous Button
   buttonsHtml += `<button data-page="${currentPage - 1}" class="px-3 py-1 rounded-md bg-slate-700 hover:bg-sky-600 disabled:opacity-50 disabled:cursor-not-allowed" ${currentPage === 1 ? 'disabled' : ''}>이전</button>`;
 
-  // Page numbers logic to show limited pages
   let startPage = Math.max(1, currentPage - 2);
   let endPage = Math.min(totalPages, currentPage + 2);
 
-  if (currentPage < 4) {
-      endPage = Math.min(5, totalPages);
-  }
-  if (currentPage > totalPages - 3) {
-      startPage = Math.max(1, totalPages - 4);
-  }
+  if (currentPage < 4) endPage = Math.min(5, totalPages);
+  if (currentPage > totalPages - 3) startPage = Math.max(1, totalPages - 4);
 
   if (startPage > 1) {
       buttonsHtml += `<button data-page="1" class="px-3 py-1 rounded-md bg-slate-700 hover:bg-sky-600">1</button>`;
@@ -285,16 +291,13 @@ function renderPaginationControls() {
       buttonsHtml += `<button data-page="${totalPages}" class="px-3 py-1 rounded-md bg-slate-700 hover:bg-sky-600">${totalPages}</button>`;
   }
 
-
-  // Next Button
   buttonsHtml += `<button data-page="${currentPage + 1}" class="px-3 py-1 rounded-md bg-slate-700 hover:bg-sky-600 disabled:opacity-50 disabled:cursor-not-allowed" ${currentPage === totalPages ? 'disabled' : ''}>다음</button>`;
-  
   container.innerHTML = buttonsHtml;
 }
 
 
 function openModal(id) {
-    const post = ALL_POSTS.find(p => p.id == id); // '==='를 '=='로 수정하여 데이터 타입에 관계없이 비교하도록 변경
+    const post = ALL_POSTS.find(p => p.id == id);
     if (!post) return;
     const itemsHtml = Object.entries(post.items || {}).map(([k, v]) => `<div class="flex justify-between py-1"><span class="text-slate-400">${k.replace('sb','SB')}</span><span class="font-semibold">${v} 개</span></div>`).join('');
     const repliesHtml = (post.replies || []).length > 0 
@@ -377,7 +380,9 @@ function setupAppEventListeners() {
       }
     });
 
-    $('#modal-close-btn, #modal-backdrop').addEventListener('click', closeModal);
+    // ✨✨✨ 버그 수정: 이벤트 리스너가 중복되지 않도록 구조 변경 ✨✨✨
+    document.getElementById('modal-close-btn').addEventListener('click', closeModal);
+    document.getElementById('modal-backdrop').addEventListener('click', closeModal);
     document.addEventListener('keydown', e => { if (e.key === "Escape") closeModal(); });
 
     $('#modal-actions').addEventListener('submit', async e => {
@@ -394,14 +399,24 @@ function setupAppEventListeners() {
             }
         } else if (form.id === 'modal-upload-form') {
             const file = form.elements.file.files[0];
-            if (!file) return;
-            showLoading("파일 업로드 중...");
+            if (!file) {
+                alert('파일을 선택해주세요.');
+                return;
+            }
+            
             const fr = new FileReader();
             fr.onload = async (event) => {
-                const [metadata, data] = event.target.result.split(',');
-                await adminCall({ action: 'uploadFile', id, fileName: file.name, mimeType: file.type, data });
-                await refreshData();
-                openModal(id);
+                try {
+                    showLoading("파일 업로드 중...");
+                    const [metadata, data] = event.target.result.split(',');
+                    await adminCall({ action: 'uploadFile', id, fileName: file.name, mimeType: file.type, data });
+                    await refreshData();
+                    openModal(id);
+                } catch(err) {
+                    console.error('Upload failed:', err);
+                } finally {
+                    hideLoading();
+                }
             };
             fr.readAsDataURL(file);
         }
@@ -472,5 +487,4 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
-
 
