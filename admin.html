@@ -48,7 +48,6 @@
   .overlay .modal-content-wrapper { transform: scale(0.95); transition: transform 0.3s ease; }
   .overlay.show .modal-content-wrapper { transform: scale(1); }
 
-  /* Responsive Card View for Mobile */
   @media (max-width: 1024px) {
     .table thead { display: none; }
     .table tbody, .table tr, .table td { display: block; }
@@ -124,7 +123,7 @@
     
     <div class="toolbar flex flex-wrap items-center gap-4">
       <div class="relative flex-grow md:flex-grow-0 w-full md:w-80">
-        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+        <div class="pointer-events-none absolute inset-y-0 left-0 flex itemscenter pl-3">
           <svg class="h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" /></svg>
         </div>
         <input id="search" placeholder="통합 검색..." class="w-full rounded-lg bg-slate-800 border-slate-700 pl-10 pr-4 py-2 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition">
@@ -134,9 +133,9 @@
       </select>
       <div class="ml-auto flex items-center gap-3">
         <span class="text-slate-400 text-sm">선택: <b id="selCount">0</b></span>
-        <button id="btnBulkStatus" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-700 hover:bg-sky-600 transition-colors"><svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" /></svg>상태변경</button>
-        <button id="btnBulkDelete" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-800 hover:bg-red-700 transition-colors"><svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" /></svg>삭제</button>
-        <button id="btnCsv" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-600 transition-colors"><svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>CSV</button>
+        <button id="btnBulkStatus" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-700 hover:bg-sky-600 transition-colors">상태변경</button>
+        <button id="btnBulkDelete" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-800 hover:bg-red-700 transition-colors">삭제</button>
+        <button id="btnCsv" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-600 transition-colors">CSV</button>
       </div>
     </div>
 
@@ -147,6 +146,7 @@
             <th style="width: 4%;">선택</th><th style="width: 9%;">신청비번</th><th style="width: 14%;">신청일</th>
             <th style="width: 13%;">도장명</th><th style="width: 9%;">관장명</th><th style="width: 12%;">연락처</th>
             <th style="width: 17%;">신청항목</th><th style="width: 5%;" class="text-center">답변</th><th>주소</th>
+            <th style="width: 8%;" class="text-center">견적서</th>
             <th style="width: 9%;" class="text-center">상태</th>
           </tr>
         </thead>
@@ -159,7 +159,7 @@
 
 <script>
 // ===================================================================================
-//  1. CONFIGURATION & STATE MANAGEMENT
+//  1. CONFIGURATION & STATE
 // ===================================================================================
 const API_URL = "https://script.google.com/macros/s/AKfycbwO24CZs2KFkX5KZK5wMjtQlNdoKYvKBPmSTDTBg3gYn2m10sFOPMBbFZJHbtZXYyUS/exec";
 const SESSION_STORAGE_KEY = "spoband_admin_secret_session_pro";
@@ -171,66 +171,72 @@ let SECRET = null, ALL_POSTS = [], FILTERED_POSTS = [];
 let currentPage = 1, itemsPerPage = 15;
 
 // ===================================================================================
-//  2. API & DATA HANDLING
+//  2. API
 // ===================================================================================
 async function adminCall(payload) {
-  // Hide previous error messages before new call
   $('#errorMsg').classList.add('hidden');
   showLoading();
   try {
     const res = await fetch(API_URL, {
-      method: 'POST', 
-      headers: { 'Content-Type': 'text/plain' }, // Keep it simple as per GAS recommendation
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({ ...payload, secret: SECRET })
     });
-    const resultText = await res.text();
-    const json = JSON.parse(resultText);
-
+    const text = await res.text();
+    const json = JSON.parse(text);
     if (!res.ok || json.status === 'error') throw new Error(json.message || `HTTP ${res.status}`);
-    
-    // For adminList, the data is directly the array
-    return (payload.action === 'adminList') ? json : json.data;
-
-  } catch (error) {
-    // Distinguish between network errors and API errors
-    const errorMessage = error.name === 'SyntaxError' ? 'API 응답 형식 오류' : error.message;
-    showError(`API 오류: ${errorMessage}`);
-    throw error;
-  } finally { 
-    hideLoading(); 
+    // adminList는 배열 그대로/혹은 {data: []} 모두 처리
+    if (payload.action === 'adminList') return Array.isArray(json) ? json : (json.data || []);
+    return json.data;
+  } catch (e) {
+    showError(`API 오류: ${e.name === 'SyntaxError' ? 'API 응답 형식 오류' : e.message}`);
+    throw e;
+  } finally {
+    hideLoading();
   }
 }
 
 async function refreshData() {
   try {
     const result = await adminCall({ action: 'adminList' });
-    ALL_POSTS = result.sort((a, b) => new Date(b.ts) - new Date(a.ts)); // 최신순 정렬
+    ALL_POSTS = result.sort((a, b) => new Date(b.ts) - new Date(a.ts));
     currentPage = 1;
     applyFiltersAndRender();
-  } catch (e) { console.error("데이터 갱신 실패:", e); }
+  } catch (e) { console.error(e); }
+}
+
+// ===================================================================================
+//  3. UI HELPERS
+// ===================================================================================
+const showLoading = (t = "처리 중...") => { $('#loading-text').textContent = t; $('#loading').classList.add('show'); };
+const hideLoading = () => $('#loading').classList.remove('show');
+const showError = msg => { $('#errorMsg').textContent = msg; $('#errorMsg').classList.remove('hidden'); };
+const esc = s => String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]) );
+
+function getStatusBadge(status) {
+  const colorClass = STATUS_COLORS[status] || STATUS_COLORS['default'];
+  return `<span class="status-badge"><span class="status-dot ${colorClass}"></span>${status || 'N/A'}</span>`;
+}
+function getFileBadge(url) {
+  if (url && String(url).trim() !== "") {
+    return `<a href="${esc(url)}" target="_blank" class="status-badge" title="견적서 열기">
+              <span class="status-dot bg-emerald-500"></span>보기
+            </a>`;
+  }
+  return `<span class="status-badge" title="업로드 없음">
+            <span class="status-dot bg-slate-500"></span>없음
+          </span>`;
 }
 
 function applyFiltersAndRender() {
   const q = $('#search').value.trim().toLowerCase();
   const f = $('#statusFilter').value;
-  FILTERED_POSTS = ALL_POSTS.filter(r => 
+  FILTERED_POSTS = ALL_POSTS.filter(r =>
     (f ? r.status === f : true) &&
-    (q ? [r.id, r.dojo, r.master, r.contact, r.address, JSON.stringify(r.items)].some(v => String(v || '').toLowerCase().includes(q)) : true)
+    (q ? [r.id, r.dojo, r.master, r.contact, r.address, JSON.stringify(r.items)]
+            .some(v => String(v || '').toLowerCase().includes(q)) : true)
   );
   render();
-}
-
-// ===================================================================================
-//  3. UI RENDERING & MANIPULATION
-// ===================================================================================
-const showLoading = (text = "처리 중...") => { $('#loading-text').textContent = text; $('#loading').classList.add('show'); };
-const hideLoading = () => $('#loading').classList.remove('show');
-const showError = msg => { $('#errorMsg').textContent = msg; $('#errorMsg').classList.remove('hidden'); };
-const esc = s => String(s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": "&#39;" }[c]));
-
-function getStatusBadge(status) {
-  const colorClass = STATUS_COLORS[status] || STATUS_COLORS['default'];
-  return `<span class="status-badge"><span class="status-dot ${colorClass}"></span>${status || 'N/A'}</span>`;
 }
 
 function render() {
@@ -239,7 +245,7 @@ function render() {
   const paginatedPosts = FILTERED_POSTS.slice(startIndex, endIndex);
 
   $('#tbody').innerHTML = paginatedPosts.map(r => {
-    const itemsText = Object.entries(r.items || {}).map(([k, v]) => `${k.replace('sb', 'SB')}: ${v}개`).join(', ');
+    const itemsText = Object.entries(r.items || {}).map(([k, v]) => `${k.replace('sb','SB')}: ${v}개`).join(', ');
     return `
       <tr data-id="${esc(r.id)}">
         <td data-label="선택" class="text-center"><input type="checkbox" class="sel accent-sky-500 bg-slate-700 w-4 h-4" data-id="${esc(r.id)}"></td>
@@ -251,6 +257,7 @@ function render() {
         <td data-label="신청항목" title="${itemsText}">${itemsText}</td>
         <td data-label="답변" class="text-center">${(r.replies || []).length}</td>
         <td data-label="주소" title="${esc(r.address)}">${esc(r.address)}</td>
+        <td data-label="견적서" class="text-center">${getFileBadge(r.quotationUrl)}</td>
         <td data-label="상태" class="text-center">${getStatusBadge(r.status)}</td>
       </tr>`;
   }).join('');
@@ -262,229 +269,211 @@ function render() {
 function renderPaginationControls() {
   const totalPages = Math.ceil(FILTERED_POSTS.length / itemsPerPage);
   const container = $('#pagination-container');
-  if (totalPages <= 1) {
-      container.innerHTML = '';
-      return;
-  }
-  
+  if (totalPages <= 1) { container.innerHTML = ''; return; }
+
   let buttonsHtml = '';
-  buttonsHtml += `<button data-page="${currentPage - 1}" class="px-3 py-1 rounded-md bg-slate-700 hover:bg-sky-600 disabled:opacity-50 disabled:cursor-not-allowed" ${currentPage === 1 ? 'disabled' : ''}>이전</button>`;
+  buttonsHtml += `<button data-page="${currentPage - 1}" class="px-3 py-1 rounded-md bg-slate-700 hover:bg-sky-600" ${currentPage === 1 ? 'disabled' : ''}>이전</button>`;
 
   let startPage = Math.max(1, currentPage - 2);
   let endPage = Math.min(totalPages, currentPage + 2);
-
   if (currentPage < 4) endPage = Math.min(5, totalPages);
   if (currentPage > totalPages - 3) startPage = Math.max(1, totalPages - 4);
 
   if (startPage > 1) {
-      buttonsHtml += `<button data-page="1" class="px-3 py-1 rounded-md bg-slate-700 hover:bg-sky-600">1</button>`;
-      if (startPage > 2) buttonsHtml += `<span class="px-3 py-1">...</span>`;
+    buttonsHtml += `<button data-page="1" class="px-3 py-1 rounded-md bg-slate-700 hover:bg-sky-600">1</button>`;
+    if (startPage > 2) buttonsHtml += `<span class="px-3 py-1">...</span>`;
   }
-
   for (let i = startPage; i <= endPage; i++) {
     const isActive = i === currentPage ? 'bg-sky-600 font-bold' : 'bg-slate-700';
     buttonsHtml += `<button data-page="${i}" class="px-3 py-1 rounded-md ${isActive} hover:bg-sky-600">${i}</button>`;
   }
-
   if (endPage < totalPages) {
-      if (endPage < totalPages - 1) buttonsHtml += `<span class="px-3 py-1">...</span>`;
-      buttonsHtml += `<button data-page="${totalPages}" class="px-3 py-1 rounded-md bg-slate-700 hover:bg-sky-600">${totalPages}</button>`;
+    if (endPage < totalPages - 1) buttonsHtml += `<span class="px-3 py-1">...</span>`;
+    buttonsHtml += `<button data-page="${totalPages}" class="px-3 py-1 rounded-md bg-slate-700 hover:bg-sky-600">${totalPages}</button>`;
   }
-
-  buttonsHtml += `<button data-page="${currentPage + 1}" class="px-3 py-1 rounded-md bg-slate-700 hover:bg-sky-600 disabled:opacity-50 disabled:cursor-not-allowed" ${currentPage === totalPages ? 'disabled' : ''}>다음</button>`;
+  buttonsHtml += `<button data-page="${currentPage + 1}" class="px-3 py-1 rounded-md bg-slate-700 hover:bg-sky-600" ${currentPage === totalPages ? 'disabled' : ''}>다음</button>`;
   container.innerHTML = buttonsHtml;
 }
 
-
 function openModal(id) {
-    const post = ALL_POSTS.find(p => p.id == id);
-    if (!post) return;
-    const itemsHtml = Object.entries(post.items || {}).map(([k, v]) => `<div class="flex justify-between py-1"><span class="text-slate-400">${k.replace('sb','SB')}</span><span class="font-semibold">${v} 개</span></div>`).join('');
-    const repliesHtml = (post.replies || []).length > 0 
-        ? post.replies.map(reply => `<div class="mt-2 p-3 bg-slate-900 rounded-lg"><div class="flex justify-between items-center text-xs text-slate-400 mb-1"><span>${reply.author || '관리자'}</span><span>${new Date(reply.ts).toLocaleString('ko-KR')}</span></div><p class="text-sm whitespace-pre-wrap">${esc(reply.content)}</p></div>`).join('') 
-        : '<p class="text-slate-400 text-sm">등록된 답변이 없습니다.</p>';
+  const post = ALL_POSTS.find(p => p.id == id);
+  if (!post) return;
+  const itemsHtml = Object.entries(post.items || {}).map(([k, v]) => `<div class="flex justify-between py-1"><span class="text-slate-400">${k.replace('sb','SB')}</span><span class="font-semibold">${v} 개</span></div>`).join('');
+  const repliesHtml = (post.replies || []).length > 0 
+    ? post.replies.map(reply => `<div class="mt-2 p-3 bg-slate-900 rounded-lg"><div class="flex justify-between items-center text-xs text-slate-400 mb-1"><span>${reply.author || '관리자'}</span><span>${new Date(reply.ts).toLocaleString('ko-KR')}</span></div><p class="text-sm whitespace-pre-wrap">${esc(reply.content)}</p></div>`).join('')
+    : '<p class="text-slate-400 text-sm">등록된 답변이 없습니다.</p>';
 
-    $('#modal-content').innerHTML = `
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-sm">
-            <div class="md:col-span-2 p-4 bg-slate-900 rounded-lg">
-                <h4 class="text-base font-bold mb-3 text-slate-300">신청 정보</h4>
-                <div class="grid grid-cols-2 gap-x-4 gap-y-2">
-                    <div><strong class="text-slate-400 w-20 inline-block">신청비번:</strong> ${esc(post.id)}</div>
-                    <div><strong class="text-slate-400 w-20 inline-block">상태:</strong> ${getStatusBadge(post.status)}</div>
-                    <div><strong class="text-slate-400 w-20 inline-block">신청일:</strong> ${new Date(post.ts).toLocaleString('ko-KR')}</div>
-                    <div><strong class="text-slate-400 w-20 inline-block">연락처:</strong> ${esc(post.contact)}</div>
-                    <div><strong class="text-slate-400 w-20 inline-block">도장명:</strong> ${esc(post.dojo)}</div>
-                    <div><strong class="text-slate-400 w-20 inline-block">관장명:</strong> ${esc(post.master)}</div>
-                    <div class="col-span-2"><strong class="text-slate-400 w-20 inline-block">주소:</strong> ${esc(post.address)}</div>
-                    <div class="col-span-2"><strong class="text-slate-400 w-20 inline-block">견적서:</strong> <a href="${esc(post.quotationUrl)}" target="_blank" class="text-sky-400 hover:underline break-all">${esc(post.quotationUrl) || '없음'}</a></div>
-                </div>
-            </div>
-            <div>
-                <h4 class="text-base font-bold mb-2 p-3 bg-slate-900 rounded-t-lg text-slate-300">신청 항목</h4>
-                <div class="p-4 bg-slate-900 rounded-b-lg">${itemsHtml}</div>
-            </div>
-            <div>
-                <h4 class="text-base font-bold mb-2 p-3 bg-slate-900 rounded-t-lg text-slate-300">답변 내역</h4>
-                <div class="p-4 bg-slate-900 rounded-b-lg max-h-48 overflow-y-auto">${repliesHtml}</div>
-            </div>
-        </div>`;
+  $('#modal-content').innerHTML = `
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-sm">
+      <div class="md:col-span-2 p-4 bg-slate-900 rounded-lg">
+        <h4 class="text-base font-bold mb-3 text-slate-300">신청 정보</h4>
+        <div class="grid grid-cols-2 gap-x-4 gap-y-2">
+          <div><strong class="text-slate-400 w-20 inline-block">신청비번:</strong> ${esc(post.id)}</div>
+          <div><strong class="text-slate-400 w-20 inline-block">상태:</strong> ${getStatusBadge(post.status)}</div>
+          <div><strong class="text-slate-400 w-20 inline-block">신청일:</strong> ${new Date(post.ts).toLocaleString('ko-KR')}</div>
+          <div><strong class="text-slate-400 w-20 inline-block">연락처:</strong> ${esc(post.contact)}</div>
+          <div><strong class="text-slate-400 w-20 inline-block">도장명:</strong> ${esc(post.dojo)}</div>
+          <div><strong class="text-slate-400 w-20 inline-block">관장명:</strong> ${esc(post.master)}</div>
+          <div class="col-span-2"><strong class="text-slate-400 w-20 inline-block">주소:</strong> ${esc(post.address)}</div>
+          <div class="col-span-2"><strong class="text-slate-400 w-20 inline-block">견적서:</strong> <a href="${esc(post.quotationUrl)}" target="_blank" class="text-sky-400 hover:underline break-all">${esc(post.quotationUrl) || '없음'}</a></div>
+        </div>
+      </div>
+      <div>
+        <h4 class="text-base font-bold mb-2 p-3 bg-slate-900 rounded-t-lg text-slate-300">신청 항목</h4>
+        <div class="p-4 bg-slate-900 rounded-b-lg">${itemsHtml}</div>
+      </div>
+      <div>
+        <h4 class="text-base font-bold mb-2 p-3 bg-slate-900 rounded-t-lg text-slate-300">답변 내역</h4>
+        <div class="p-4 bg-slate-900 rounded-b-lg max-h-48 overflow-y-auto">${repliesHtml}</div>
+      </div>
+    </div>`;
+
+  $('#modal-actions').innerHTML = `
+    <form id="modal-reply-form" class="flex gap-2 items-start mb-4" data-id="${esc(post.id)}">
+      <textarea name="content" class="flex-grow rounded-lg bg-slate-700 border-slate-600 p-2 text-sm focus:ring-sky-500 transition" placeholder="답변을 입력하세요..." rows="2"></textarea>
+      <button type="submit" class="px-4 py-2 text-sm rounded-lg bg-sky-600 hover:bg-sky-700 transition-colors h-full">답변 등록</button>
+    </form>
+    <form id="modal-upload-form" class="flex gap-2 items-center" data-id="${esc(post.id)}">
+      <label class="block flex-grow">
+        <span class="sr-only">Choose file</span>
+        <input type="file" name="file" class="block w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-sky-100 file:text-sky-700 hover:file:bg-sky-200 transition"/>
+      </label>
+      <button type="submit" class="px-4 py-2 text-sm rounded-lg bg-slate-600 hover:bg-slate-500 transition-colors">견적서 업로드</button>
+    </form>`;
     
-    $('#modal-actions').innerHTML = `
-        <form id="modal-reply-form" class="flex gap-2 items-start mb-4" data-id="${esc(post.id)}">
-            <textarea name="content" class="flex-grow rounded-lg bg-slate-700 border-slate-600 p-2 text-sm focus:ring-sky-500 transition" placeholder="답변을 입력하세요..." rows="2"></textarea>
-            <button type="submit" class="px-4 py-2 text-sm rounded-lg bg-sky-600 hover:bg-sky-700 transition-colors h-full">답변 등록</button>
-        </form>
-        <form id="modal-upload-form" class="flex gap-2 items-center" data-id="${esc(post.id)}">
-            <label class="block flex-grow">
-                <span class="sr-only">Choose file</span>
-                <input type="file" name="file" class="block w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-sky-100 file:text-sky-700 hover:file:bg-sky-200 transition"/>
-            </label>
-            <button type="submit" class="px-4 py-2 text-sm rounded-lg bg-slate-600 hover:bg-slate-500 transition-colors">견적서 업로드</button>
-        </form>`;
-    
-    $('#detail-modal').classList.add('show');
+  $('#detail-modal').classList.add('show');
 }
 
 function closeModal() { $('#detail-modal').classList.remove('show'); }
 function updateSelCount() { $('#selCount').textContent = document.querySelectorAll('.sel:checked').length; }
 
 // ===================================================================================
-//  4. EVENT LISTENERS & INITIALIZATION
+//  4. EVENTS & INIT
 // ===================================================================================
 function setupAppEventListeners() {
-    $('#btnReload').addEventListener('click', refreshData);
-    $('#btnLogout').addEventListener('click', () => {
-        if (confirm('로그아웃 하시겠습니까?')) {
-            sessionStorage.removeItem(SESSION_STORAGE_KEY);
-            location.reload();
-        }
-    });
+  $('#btnReload').addEventListener('click', refreshData);
+  $('#btnLogout').addEventListener('click', () => {
+    if (confirm('로그아웃 하시겠습니까?')) {
+      sessionStorage.removeItem(SESSION_STORAGE_KEY);
+      location.reload();
+    }
+  });
 
-    $('#search').addEventListener('input', () => { currentPage = 1; applyFiltersAndRender(); });
-    $('#statusFilter').addEventListener('change', () => { currentPage = 1; applyFiltersAndRender(); });
-    $('#tbody').addEventListener('change', e => { if (e.target.classList.contains('sel')) updateSelCount(); });
+  $('#search').addEventListener('input', () => { currentPage = 1; applyFiltersAndRender(); });
+  $('#statusFilter').addEventListener('change', () => { currentPage = 1; applyFiltersAndRender(); });
+  $('#tbody').addEventListener('change', e => { if (e.target.classList.contains('sel')) updateSelCount(); });
 
-    $('#tbody').addEventListener('click', e => {
-        if (e.target.closest('input[type="checkbox"]')) return;
-        const row = e.target.closest('tr');
-        if (row && row.dataset.id) openModal(row.dataset.id);
-    });
+  $('#tbody').addEventListener('click', e => {
+    if (e.target.closest('input[type="checkbox"]')) return;
+    const row = e.target.closest('tr');
+    if (row && row.dataset.id) openModal(row.dataset.id);
+  });
 
-    $('#pagination-container').addEventListener('click', e => {
-      if (e.target.tagName === 'BUTTON' && e.target.dataset.page) {
-        const page = parseInt(e.target.dataset.page, 10);
-        if (page) {
-          currentPage = page;
-          render();
-        }
+  $('#pagination-container').addEventListener('click', e => {
+    if (e.target.tagName === 'BUTTON' && e.target.dataset.page) {
+      const page = parseInt(e.target.dataset.page, 10);
+      if (page) { currentPage = page; render(); }
+    }
+  });
+
+  document.getElementById('modal-close-btn').addEventListener('click', closeModal);
+  document.getElementById('modal-backdrop').addEventListener('click', closeModal);
+  document.addEventListener('keydown', e => { if (e.key === "Escape") closeModal(); });
+
+  $('#modal-actions').addEventListener('submit', async e => {
+    e.preventDefault();
+    const form = e.target;
+    const id = form.dataset.id;
+
+    if (form.id === 'modal-reply-form') {
+      const content = form.elements.content.value.trim();
+      if (content) {
+        await adminCall({ action: 'addReply', id, reply: { content, ts: Date.now(), author: '관리자' } });
+        await refreshData();
+        openModal(id);
       }
-    });
-
-    // ✨✨✨ 버그 수정: 이벤트 리스너가 중복되지 않도록 구조 변경 ✨✨✨
-    document.getElementById('modal-close-btn').addEventListener('click', closeModal);
-    document.getElementById('modal-backdrop').addEventListener('click', closeModal);
-    document.addEventListener('keydown', e => { if (e.key === "Escape") closeModal(); });
-
-    $('#modal-actions').addEventListener('submit', async e => {
-        e.preventDefault();
-        const form = e.target;
-        const id = form.dataset.id;
-        
-        if (form.id === 'modal-reply-form') {
-            const content = form.elements.content.value.trim();
-            if (content) {
-                await adminCall({ action: 'addReply', id, reply: { content, ts: Date.now(), author: '관리자' } });
-                await refreshData();
-                openModal(id);
-            }
-        } else if (form.id === 'modal-upload-form') {
-            const file = form.elements.file.files[0];
-            if (!file) {
-                alert('파일을 선택해주세요.');
-                return;
-            }
-            
-            const fr = new FileReader();
-            fr.onload = async (event) => {
-                try {
-                    showLoading("파일 업로드 중...");
-                    const [metadata, data] = event.target.result.split(',');
-                    await adminCall({ action: 'uploadFile', id, fileName: file.name, mimeType: file.type, data });
-                    await refreshData();
-                    openModal(id);
-                } catch(err) {
-                    console.error('Upload failed:', err);
-                } finally {
-                    hideLoading();
-                }
-            };
-            fr.readAsDataURL(file);
+    } else if (form.id === 'modal-upload-form') {
+      const file = form.elements.file.files[0];
+      if (!file) { alert('파일을 선택해주세요.'); return; }
+      const fr = new FileReader();
+      fr.onload = async (event) => {
+        try {
+          showLoading("파일 업로드 중...");
+          const [, data] = event.target.result.split(',');
+          await adminCall({ action: 'uploadFile', id, fileName: file.name, mimeType: file.type, data });
+          await refreshData();
+          openModal(id);
+        } catch (err) {
+          console.error('Upload failed:', err);
+        } finally {
+          hideLoading();
         }
-    });
-    
-    $('#btnBulkStatus, #btnBulkDelete').addEventListener('click', async e => {
-        const ids = Array.from(document.querySelectorAll('.sel:checked')).map(c => c.dataset.id);
-        if (ids.length === 0) return;
-        
-        let actionPromise;
-        if (e.target.id === 'btnBulkStatus') {
-            const status = prompt(`변경할 상태 입력 (${STATUS_OPTIONS.join(', ')}):`);
-            if (status && STATUS_OPTIONS.includes(status)) actionPromise = adminCall({ action: 'bulkUpdateStatus', ids, status });
-        } else if (e.target.id === 'btnBulkDelete') {
-            if (confirm(`${ids.length}개 항목을 삭제하시겠습니까?`)) actionPromise = adminCall({ action: 'bulkDelete', ids });
-        }
-        if (actionPromise) await actionPromise.then(refreshData).catch(() => {});
-    });
+      };
+      fr.readAsDataURL(file);
+    }
+  });
 
-    $('#btnCsv').addEventListener('click', () => {
-        const header = ["신청비번","신청일","도장명","관장명","연락처","신청항목","답변수","견적서URL","주소","최종상태","비고"];
-        const lines = [header.join(',')];
-        ALL_POSTS.forEach(r => {
-            const items = Object.entries(r.items || {}).map(([k, v]) => `${k}:${v}`).join(' | ');
-            const row = [r.id, new Date(r.ts).toLocaleString(), r.dojo, r.master, r.contact, items, (r.replies || []).length, r.quotationUrl || '', r.address, r.status || '', r.notes || ''].map(v => `"${String(v || '').replace(/"/g, '""')}"`).join(',');
-            lines.push(row);
-        });
-        const blob = new Blob(['\uFEFF' + lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = `spoband_admin_${new Date().toISOString().slice(0,10)}.csv`;
-        a.click();
-        URL.revokeObjectURL(a.href);
+  $('#btnBulkStatus, #btnBulkDelete').addEventListener('click', async e => {
+    const ids = Array.from(document.querySelectorAll('.sel:checked')).map(c => c.dataset.id);
+    if (ids.length === 0) return;
+
+    let actionPromise;
+    if (e.target.id === 'btnBulkStatus') {
+      const status = prompt(`변경할 상태 입력 (${STATUS_OPTIONS.join(', ')}):`);
+      if (status && STATUS_OPTIONS.includes(status)) actionPromise = adminCall({ action: 'bulkUpdateStatus', ids, status });
+    } else if (e.target.id === 'btnBulkDelete') {
+      if (confirm(`${ids.length}개 항목을 삭제하시겠습니까?`)) actionPromise = adminCall({ action: 'bulkDelete', ids });
+    }
+    if (actionPromise) await actionPromise.then(refreshData).catch(() => {});
+  });
+
+  $('#btnCsv').addEventListener('click', () => {
+    const header = ["신청비번","신청일","도장명","관장명","연락처","신청항목","답변수","견적서URL","주소","최종상태","비고"];
+    const lines = [header.join(',')];
+    ALL_POSTS.forEach(r => {
+      const items = Object.entries(r.items || {}).map(([k, v]) => `${k}:${v}`).join(' | ');
+      const row = [r.id, new Date(r.ts).toLocaleString(), r.dojo, r.master, r.contact, items, (r.replies || []).length, r.quotationUrl || '', r.address, r.status || '', r.notes || '']
+                   .map(v => `"${String(v || '').replace(/"/g, '""')}"`).join(',');
+      lines.push(row);
     });
+    const blob = new Blob(['\uFEFF' + lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `spoband_admin_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const statusFilter = $('#statusFilter');
-    STATUS_OPTIONS.forEach(opt => {
-      statusFilter.innerHTML += `<option value="${opt}">${opt}</option>`;
-    });
+  const statusFilter = $('#statusFilter');
+  STATUS_OPTIONS.forEach(opt => { statusFilter.innerHTML += `<option value="${opt}">${opt}</option>`; });
 
-    $('#login-form').addEventListener('submit', async e => {
-        e.preventDefault();
-        $('#login-error').textContent = '';
-        const password = $('#password-input').value;
-        if (!password) return;
-        
-        SECRET = password;
-        try {
-            await adminCall({ action: 'authCheck' });
-            sessionStorage.setItem(SESSION_STORAGE_KEY, password);
-            $('#login-wall').classList.remove('show');
-            $('#app-container').classList.remove('hidden');
-            setupAppEventListeners();
-            await refreshData();
-        } catch (err) {
-            $('#login-error').textContent = '비밀키가 유효하지 않습니다.';
-        }
-    });
+  $('#login-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    $('#login-error').textContent = '';
+    const password = $('#password-input').value;
+    if (!password) return;
 
-    const sessionSecret = sessionStorage.getItem(SESSION_STORAGE_KEY);
-    if(sessionSecret) {
-        $('#password-input').value = sessionSecret;
-        $('#login-form').dispatchEvent(new Event('submit'));
+    SECRET = password;
+    try {
+      await adminCall({ action: 'authCheck' });
+      sessionStorage.setItem(SESSION_STORAGE_KEY, password);
+      $('#login-wall').classList.remove('show');
+      $('#app-container').classList.remove('hidden');
+      setupAppEventListeners();
+      await refreshData();
+    } catch (err) {
+      $('#login-error').textContent = '비밀키가 유효하지 않습니다.';
     }
+  });
+
+  const sessionSecret = sessionStorage.getItem(SESSION_STORAGE_KEY);
+  if (sessionSecret) {
+    $('#password-input').value = sessionSecret;
+    $('#login-form').dispatchEvent(new Event('submit'));
+  }
 });
 </script>
 </body>
 </html>
-
