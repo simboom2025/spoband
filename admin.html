@@ -259,11 +259,32 @@ function renderPaginationControls() {
   // Previous Button
   buttonsHtml += `<button data-page="${currentPage - 1}" class="px-3 py-1 rounded-md bg-slate-700 hover:bg-sky-600 disabled:opacity-50 disabled:cursor-not-allowed" ${currentPage === 1 ? 'disabled' : ''}>이전</button>`;
 
-  // Page numbers
-  for (let i = 1; i <= totalPages; i++) {
+  // Page numbers logic to show limited pages
+  let startPage = Math.max(1, currentPage - 2);
+  let endPage = Math.min(totalPages, currentPage + 2);
+
+  if (currentPage < 4) {
+      endPage = Math.min(5, totalPages);
+  }
+  if (currentPage > totalPages - 3) {
+      startPage = Math.max(1, totalPages - 4);
+  }
+
+  if (startPage > 1) {
+      buttonsHtml += `<button data-page="1" class="px-3 py-1 rounded-md bg-slate-700 hover:bg-sky-600">1</button>`;
+      if (startPage > 2) buttonsHtml += `<span class="px-3 py-1">...</span>`;
+  }
+
+  for (let i = startPage; i <= endPage; i++) {
     const isActive = i === currentPage ? 'bg-sky-600 font-bold' : 'bg-slate-700';
     buttonsHtml += `<button data-page="${i}" class="px-3 py-1 rounded-md ${isActive} hover:bg-sky-600">${i}</button>`;
   }
+
+  if (endPage < totalPages) {
+      if (endPage < totalPages - 1) buttonsHtml += `<span class="px-3 py-1">...</span>`;
+      buttonsHtml += `<button data-page="${totalPages}" class="px-3 py-1 rounded-md bg-slate-700 hover:bg-sky-600">${totalPages}</button>`;
+  }
+
 
   // Next Button
   buttonsHtml += `<button data-page="${currentPage + 1}" class="px-3 py-1 rounded-md bg-slate-700 hover:bg-sky-600 disabled:opacity-50 disabled:cursor-not-allowed" ${currentPage === totalPages ? 'disabled' : ''}>다음</button>`;
@@ -273,21 +294,50 @@ function renderPaginationControls() {
 
 
 function openModal(id) {
-    const post = ALL_POSTS.find(p => p.id === id);
+    const post = ALL_POSTS.find(p => p.id == id); // '==='를 '=='로 수정하여 데이터 타입에 관계없이 비교하도록 변경
     if (!post) return;
     const itemsHtml = Object.entries(post.items || {}).map(([k, v]) => `<div class="flex justify-between py-1"><span class="text-slate-400">${k.replace('sb','SB')}</span><span class="font-semibold">${v} 개</span></div>`).join('');
-    const repliesHtml = (post.replies || []).length > 0 ? post.replies.map(reply => `<div class="mt-2 p-3 bg-slate-900 rounded-lg"><div class="flex justify-between items-center text-xs text-slate-400 mb-1"><span>${reply.author || '관리자'}</span><span>${new Date(reply.ts).toLocaleString('ko-KR')}</span></div><p class="text-sm">${esc(reply.content)}</p></div>`).join('') : '<p class="text-slate-400 text-sm">등록된 답변이 없습니다.</p>';
+    const repliesHtml = (post.replies || []).length > 0 
+        ? post.replies.map(reply => `<div class="mt-2 p-3 bg-slate-900 rounded-lg"><div class="flex justify-between items-center text-xs text-slate-400 mb-1"><span>${reply.author || '관리자'}</span><span>${new Date(reply.ts).toLocaleString('ko-KR')}</span></div><p class="text-sm whitespace-pre-wrap">${esc(reply.content)}</p></div>`).join('') 
+        : '<p class="text-slate-400 text-sm">등록된 답변이 없습니다.</p>';
 
     $('#modal-content').innerHTML = `
         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-sm">
-            <div class="md:col-span-2 p-3 bg-slate-900 rounded-lg"><h4 class="text-base font-bold mb-2">신청 정보</h4><div class="grid grid-cols-2 gap-2"><div><strong class="text-slate-400 w-20 inline-block">신청비번:</strong> ${esc(post.id)}</div><div><strong class="text-slate-400 w-20 inline-block">상태:</strong> ${getStatusBadge(post.status)}</div><div><strong class="text-slate-400 w-20 inline-block">신청일:</strong> ${new Date(post.ts).toLocaleString('ko-KR')}</div><div><strong class="text-slate-400 w-20 inline-block">연락처:</strong> ${esc(post.contact)}</div><div><strong class="text-slate-400 w-20 inline-block">도장명:</strong> ${esc(post.dojo)}</div><div><strong class="text-slate-400 w-20 inline-block">관장명:</strong> ${esc(post.master)}</div><div class="col-span-2"><strong class="text-slate-400 w-20 inline-block">주소:</strong> ${esc(post.address)}</div><div class="col-span-2"><strong class="text-slate-400 w-20 inline-block">견적서:</strong> <a id="quotation-link" href="${esc(post.quotationUrl)}" target="_blank" class="text-sky-400 hover:underline">${esc(post.quotationUrl) || '없음'}</a></div></div></div>
-            <div><h4 class="text-base font-bold mb-2 p-3 bg-slate-900 rounded-lg">신청 항목</h4><div class="p-3">${itemsHtml}</div></div>
-            <div><h4 class="text-base font-bold mb-2 p-3 bg-slate-900 rounded-lg">답변 내역</h4><div class="p-3">${repliesHtml}</div></div>
+            <div class="md:col-span-2 p-4 bg-slate-900 rounded-lg">
+                <h4 class="text-base font-bold mb-3 text-slate-300">신청 정보</h4>
+                <div class="grid grid-cols-2 gap-x-4 gap-y-2">
+                    <div><strong class="text-slate-400 w-20 inline-block">신청비번:</strong> ${esc(post.id)}</div>
+                    <div><strong class="text-slate-400 w-20 inline-block">상태:</strong> ${getStatusBadge(post.status)}</div>
+                    <div><strong class="text-slate-400 w-20 inline-block">신청일:</strong> ${new Date(post.ts).toLocaleString('ko-KR')}</div>
+                    <div><strong class="text-slate-400 w-20 inline-block">연락처:</strong> ${esc(post.contact)}</div>
+                    <div><strong class="text-slate-400 w-20 inline-block">도장명:</strong> ${esc(post.dojo)}</div>
+                    <div><strong class="text-slate-400 w-20 inline-block">관장명:</strong> ${esc(post.master)}</div>
+                    <div class="col-span-2"><strong class="text-slate-400 w-20 inline-block">주소:</strong> ${esc(post.address)}</div>
+                    <div class="col-span-2"><strong class="text-slate-400 w-20 inline-block">견적서:</strong> <a href="${esc(post.quotationUrl)}" target="_blank" class="text-sky-400 hover:underline break-all">${esc(post.quotationUrl) || '없음'}</a></div>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-base font-bold mb-2 p-3 bg-slate-900 rounded-t-lg text-slate-300">신청 항목</h4>
+                <div class="p-4 bg-slate-900 rounded-b-lg">${itemsHtml}</div>
+            </div>
+            <div>
+                <h4 class="text-base font-bold mb-2 p-3 bg-slate-900 rounded-t-lg text-slate-300">답변 내역</h4>
+                <div class="p-4 bg-slate-900 rounded-b-lg max-h-48 overflow-y-auto">${repliesHtml}</div>
+            </div>
         </div>`;
     
     $('#modal-actions').innerHTML = `
-        <form id="modal-reply-form" class="flex gap-2 items-center mb-2" data-id="${esc(post.id)}"><textarea name="content" class="flex-grow rounded-lg bg-slate-700 border-slate-600 p-2 text-sm focus:ring-sky-500" placeholder="답변을 입력하세요..." rows="1"></textarea><button type="submit" class="px-4 py-2 text-sm rounded-lg bg-sky-600 hover:bg-sky-700">답변 등록</button></form>
-        <form id="modal-upload-form" class="flex gap-2 items-center" data-id="${esc(post.id)}"><label class="block"><span class="sr-only">Choose file</span><input type="file" name="file" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-sky-50 file:text-sky-700 hover:file:bg-sky-100"/></label><button type="submit" class="px-4 py-2 text-sm rounded-lg bg-slate-600 hover:bg-slate-500">파일 업로드</button></form>`;
+        <form id="modal-reply-form" class="flex gap-2 items-start mb-4" data-id="${esc(post.id)}">
+            <textarea name="content" class="flex-grow rounded-lg bg-slate-700 border-slate-600 p-2 text-sm focus:ring-sky-500 transition" placeholder="답변을 입력하세요..." rows="2"></textarea>
+            <button type="submit" class="px-4 py-2 text-sm rounded-lg bg-sky-600 hover:bg-sky-700 transition-colors h-full">답변 등록</button>
+        </form>
+        <form id="modal-upload-form" class="flex gap-2 items-center" data-id="${esc(post.id)}">
+            <label class="block flex-grow">
+                <span class="sr-only">Choose file</span>
+                <input type="file" name="file" class="block w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-sky-100 file:text-sky-700 hover:file:bg-sky-200 transition"/>
+            </label>
+            <button type="submit" class="px-4 py-2 text-sm rounded-lg bg-slate-600 hover:bg-slate-500 transition-colors">견적서 업로드</button>
+        </form>`;
     
     $('#detail-modal').classList.add('show');
 }
@@ -301,8 +351,7 @@ function updateSelCount() { $('#selCount').textContent = document.querySelectorA
 function setupAppEventListeners() {
     $('#btnReload').addEventListener('click', refreshData);
     $('#btnLogout').addEventListener('click', () => {
-        // Use custom modal instead of confirm
-        if (window.confirm('로그아웃 하시겠습니까?')) {
+        if (confirm('로그아웃 하시겠습니까?')) {
             sessionStorage.removeItem(SESSION_STORAGE_KEY);
             location.reload();
         }
@@ -335,30 +384,32 @@ function setupAppEventListeners() {
         e.preventDefault();
         const form = e.target;
         const id = form.dataset.id;
-        let actionPromise;
+        
         if (form.id === 'modal-reply-form') {
             const content = form.elements.content.value.trim();
-            if (content) actionPromise = adminCall({ action: 'addReply', id, reply: { content, ts: Date.now() } });
+            if (content) {
+                await adminCall({ action: 'addReply', id, reply: { content, ts: Date.now(), author: '관리자' } });
+                await refreshData();
+                openModal(id);
+            }
         } else if (form.id === 'modal-upload-form') {
             const file = form.elements.file.files[0];
-            if (!file) return; // Use custom alert
+            if (!file) return;
             showLoading("파일 업로드 중...");
             const fr = new FileReader();
             fr.onload = async (event) => {
                 const [metadata, data] = event.target.result.split(',');
                 await adminCall({ action: 'uploadFile', id, fileName: file.name, mimeType: file.type, data });
-                closeModal();
                 await refreshData();
+                openModal(id);
             };
             fr.readAsDataURL(file);
-            return;
         }
-        if (actionPromise) await actionPromise.then(refreshData).then(() => openModal(id)).catch(() => {});
     });
     
     $('#btnBulkStatus, #btnBulkDelete').addEventListener('click', async e => {
         const ids = Array.from(document.querySelectorAll('.sel:checked')).map(c => c.dataset.id);
-        if (ids.length === 0) return; // Use custom alert
+        if (ids.length === 0) return;
         
         let actionPromise;
         if (e.target.id === 'btnBulkStatus') {
@@ -373,22 +424,21 @@ function setupAppEventListeners() {
     $('#btnCsv').addEventListener('click', () => {
         const header = ["신청비번","신청일","도장명","관장명","연락처","신청항목","답변수","견적서URL","주소","최종상태","비고"];
         const lines = [header.join(',')];
-        ALL_POSTS.forEach(r => { // Export all data, not just filtered
-            const items = Object.entries(r.items || {}).map(([k, v]) => `${k}:${v}`).join('|');
+        ALL_POSTS.forEach(r => {
+            const items = Object.entries(r.items || {}).map(([k, v]) => `${k}:${v}`).join(' | ');
             const row = [r.id, new Date(r.ts).toLocaleString(), r.dojo, r.master, r.contact, items, (r.replies || []).length, r.quotationUrl || '', r.address, r.status || '', r.notes || ''].map(v => `"${String(v || '').replace(/"/g, '""')}"`).join(',');
             lines.push(row);
         });
         const blob = new Blob(['\uFEFF' + lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = `spoband_${new Date().toISOString().slice(0,10)}.csv`;
+        a.download = `spoband_admin_${new Date().toISOString().slice(0,10)}.csv`;
         a.click();
         URL.revokeObjectURL(a.href);
     });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Populate status filter options
     const statusFilter = $('#statusFilter');
     STATUS_OPTIONS.forEach(opt => {
       statusFilter.innerHTML += `<option value="${opt}">${opt}</option>`;
@@ -422,3 +472,5 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
+
