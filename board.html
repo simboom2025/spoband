@@ -30,7 +30,7 @@
 
 <script>
 /* ====== 설정 ====== */
-const API_URL = "여기에_웹앱_URL_붙여넣기";  // <-- 같은 URL을 index.html에도 사용
+const API_URL = "https://script.google.com/macros/s/AKfycbyN5VsZUeQbUGIJwBHS50K52KfE2Ku5dhGNJG5rlfKQxQzOqHkTOoX6cQObk9PE_EnE/exec";
 const PLAIN_HEADERS = { 'Content-Type': 'text/plain;charset=utf-8' };
 
 /* ====== DOM 헬퍼 ====== */
@@ -162,11 +162,31 @@ function renderPostDetails(container, d){
       return `${m[k]||k} ${v}`;
     }).join(' / ') || '-';
 
-  const repliesHTML=(d.replies||[]).map(r=>`
-    <div class="mt-1 p-2 rounded bg-slate-800/40 border border-slate-700/50">
-      <div class="text-xs text-slate-400">[${fmt(r.ts)}] ${r.author==='admin'?'관리자':'신청자'}</div>
-      <div class="whitespace-pre-wrap">${esc(r.content||'')}</div>
-    </div>`).join('');
+// 관리자 글은 노란색으로 하이라이트 (한글 '관리자', 과거 데이터까지 대응)
+const repliesHTML = (d.replies || []).map(r => {
+  const author  = String(r.author || '').trim();
+  const content = String(r.content || '').trim();
+  // author가 'admin' 또는 '관리자' 이거나, 내용이 '관리자:'로 시작하면 관리자 글로 간주
+  const isAdmin = author === 'admin' || author === '관리자' || /^관리자\s*:/i.test(content);
+
+  return `
+    <div class="mt-2 p-2 rounded-lg border
+                ${isAdmin ? 'bg-yellow-500/10 border-yellow-400/40' : 'bg-slate-800/40 border-slate-700/50'}">
+      <div class="flex items-center gap-2 text-xs text-slate-400">
+        <span>${fmt(r.ts)}</span>
+        <span class="${isAdmin ? 'bg-yellow-300 text-black' : 'bg-slate-600 text-white'}
+                     px-1.5 py-0.5 rounded-sm font-bold">
+          ${isAdmin ? '관리자' : '신청자'}
+        </span>
+      </div>
+      <div class="mt-1 whitespace-pre-wrap
+                  ${isAdmin ? 'text-yellow-300 font-semibold' : 'text-slate-200'}">
+        ${esc(content)}
+      </div>
+    </div>`;
+}).join('');
+
+
 
   const quoteHTML=d.quotationUrl
     ? `<a class="text-sky-300 underline" target="_blank" href="${esc(d.quotationUrl)}">열기</a>`
