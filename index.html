@@ -8,10 +8,8 @@
   <!-- GA -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-RTMS0KZWPX"></script>
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){ dataLayer.push(arguments); }
-    gtag('js', new Date());
-    gtag('config', 'G-RTMS0KZWPX');
+    window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
+    gtag('js',new Date()); gtag('config','G-RTMS0KZWPX');
   </script>
 
   <!-- libs -->
@@ -23,34 +21,22 @@
 
   <style>
     .text-balance { text-wrap: balance; }
-    body {
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto,
-                   "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-    }
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
     .container-narrow { max-width: 1100px; }
     .bg-hero {
       background:
-        radial-gradient(1200px 600px at 10% 10%, rgba(56, 189, 248, 0.1), transparent 60%),
-        radial-gradient(1000px 500px at 95% 5%, rgba(59,130,246,0.2), transparent 60%),
+        radial-gradient(1200px 600px at 10% 10%, rgba(56,189,248,.1), transparent 60%),
+        radial-gradient(1000px 500px at 95% 5%, rgba(59,130,246,.2), transparent 60%),
         linear-gradient(180deg, #020617 0%, #0f172a 100%);
     }
-    .nav-item { transition: color .2s ease; }
-    .nav-active { color:#7dd3fc !important; font-weight:600; }
-
-    input[type="number"]::-webkit-outer-spin-button,
-    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-    input[type="number"] { -moz-appearance: textfield; }
-
     .modal{ background:rgba(2,6,23,.75); backdrop-filter: blur(2px); }
     .modal-box{ width:min(1024px, 92vw); aspect-ratio:16/9; }
-    .yt-thumb img{ transition: transform .2s ease; }
-    .yt-thumb:hover img{ transform: scale(1.02); }
+    .yt-thumb img{ transition: transform .2s ease; } .yt-thumb:hover img{ transform: scale(1.02); }
+    .chip{display:inline-flex;align-items:center;gap:.35rem;padding:.42rem .8rem;border-radius:9999px;border:1px solid rgba(255,255,255,.15)}
   </style>
 </head>
 
-<body class="text-white bg-slate-900 bg-hero" id="enhanced-body">
-
-<canvas id="particles-canvas"></canvas>
+<body class="text-white bg-slate-900 bg-hero">
 
 <header class="sticky top-0 z-50 bg-slate-950/70 backdrop-blur border-b border-slate-800">
   <div class="container-narrow mx-auto px-4 md:px-6">
@@ -58,39 +44,30 @@
       <a href="/" class="flex items-center gap-2">
         <span class="text-white font-extrabold text-lg tracking-tight">SPOBAND <span class="text-sky-400">Pro</span></span>
       </a>
-
-      <nav class="hidden md:flex items-center gap-6">
-        <a href="pages/taekwondo-benefits.html" class="text-slate-100 hover:text-sky-400 text-base md:text-lg font-semibold" data-nav="benefits">운동효과</a>
-        <a href="pages/taekwondo-letter.html" class="text-slate-100 hover:text-sky-400 text-base md:text-lg font-semibold" data-nav="letter">“관장님께 드립니다”</a>
-        <a href="#kits" class="text-slate-100 hover:text-sky-400 text-base md:text-lg font-semibold" data-nav="kits">스포밴드</a>
-        <a href="#faq" class="text-slate-100 hover:text-sky-400 text-base md:text-lg font-semibold" data-nav="faq">참고영상 등</a>
+      <nav class="hidden md:flex items-center gap-3">
+        <a href="pages/taekwondo-benefits.html" class="text-slate-100 hover:text-sky-400 font-semibold">운동효과</a>
+        <a href="pages/taekwondo-letter.html" class="text-slate-100 hover:text-sky-400 font-semibold">“관장님께 드립니다”</a>
+        <a href="#kits" class="text-slate-100 hover:text-sky-400 font-semibold">스포밴드</a>
+        <a href="#faq" class="text-slate-100 hover:text-sky-400 font-semibold">참고영상 등</a>
+        <a href="#apply" class="chip hover:bg-white/10">신청하기</a>
+        <a href="board.html" class="chip hover:bg-white/10">신청목록</a>
+        <a href="admin.html" class="chip hover:bg-white/10" rel="nofollow noopener">관리자</a>
       </nav>
-
-      <div class="hidden md:block">
-        <a href="#apply" class="bg-sky-500 hover:bg-sky-600 text-white px-5 py-2 rounded-full font-semibold shadow">
-          관장님 전용 신청
-        </a>
-      </div>
-
-      <button type="button" aria-label="메뉴 열기"
-              class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-sky-500"
-              onclick="toggleNav()">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-200" fill="none" viewBox="0 0 24 24"
-             stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
-        </svg>
+      <button type="button" class="md:hidden w-10 h-10 rounded-lg hover:bg-white/10" onclick="document.getElementById('mobile-nav').classList.toggle('hidden')">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
       </button>
     </div>
-
     <div id="mobile-nav" class="md:hidden hidden border-t border-slate-800 py-3">
       <nav class="flex flex-col gap-2">
         <a href="pages/taekwondo-benefits.html" class="px-2 py-2 rounded-lg text-slate-200 hover:bg-white/10">운동효과</a>
         <a href="pages/taekwondo-letter.html" class="px-2 py-2 rounded-lg text-slate-200 hover:bg-white/10">“관장님께 드립니다”</a>
         <a href="#kits" class="px-2 py-2 rounded-lg text-slate-200 hover:bg-white/10">스포밴드</a>
         <a href="#faq" class="px-2 py-2 rounded-lg text-slate-200 hover:bg-white/10">참고영상 등</a>
-        <a href="#apply" class="mt-2 px-3 py-3 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-semibold text-center shadow">
-          관장님 전용 신청
-        </a>
+        <a href="#apply" class="mt-2 px-3 py-3 rounded-xl bg-sky-500 hover:bg-sky-600 text-white text-center">관장님 전용 신청</a>
+        <div class="grid grid-cols-2 gap-2 px-2">
+          <a href="board.html" class="px-3 py-2 rounded-xl bg-white/10 text-center">신청목록</a>
+          <a href="admin.html" class="px-3 py-2 rounded-xl bg-white/10 text-center" rel="nofollow noopener">관리자</a>
+        </div>
       </nav>
     </div>
   </div>
@@ -99,47 +76,31 @@
 <section class="relative">
   <div class="container mx-auto grid lg:grid-cols-2 items-center gap-10 lg:gap-16 px-6 py-16 lg:py-20">
     <div class="max-w-[760px]">
-      <span class="inline-block px-4 py-2 rounded-xl bg-sky-500/15 border border-sky-400 text-sky-200 font-bold">
-        태권도 관장님 전용 프로모션
-      </span>
-
-      <h1 class="mt-6 text-4xl md:text-6xl xl:text-7xl 2xl:text-8xl font-black leading-[1.1] text-white drop-shadow-[0_6px_24px_rgba(2,6,23,.4)] text-balance">
-        <span class="block">10분 루틴으로</span>
-        <span class="block mt-2 md:mt-3 xl:mt-4 text-transparent bg-clip-text bg-gradient-to-r from-sky-300 to-cyan-300">킥 속도 +</span>
-        <span class="block mt-2 md:mt-3 xl:mt-4 text-transparent bg-clip-text bg-gradient-to-r from-sky-300 to-cyan-300">정확도 +</span>
-        <span class="block mt-2 md:mt-3 xl:mt-4 text-transparent bg-clip-text bg-gradient-to-r from-sky-300 to-cyan-300">밸런스가</span>
-        <span class="block mt-2 md:mt-3 xl:mt-4">눈에 보입니다.</span>
-      </h1>
-
-      <p class="mt-5 md:mt-6 text-slate-300 md:text-xl leading-relaxed">
-        탄성 저항이라 안전하게. 초보도 단계별로.
-      </p>
-
+      <span class="inline-block px-4 py-2 rounded-xl bg-sky-500/15 border border-sky-400 text-sky-200 font-bold">태권도 관장님 전용 프로모션</span>
+      <h1 class="mt-6 text-4xl md:text-6xl xl:text-7xl 2xl:text-8xl font-black leading-[1.1]">10분 루틴으로<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-300 to-cyan-300">킥 속도 + 정확도 + 밸런스</span>가 눈에 보입니다.</h1>
+      <p class="mt-5 md:mt-6 text-slate-300 md:text-xl">탄성 저항이라 안전하게. 초보도 단계별로.</p>
       <div class="mt-8 flex flex-wrap gap-3">
         <a href="#apply" class="px-7 py-3.5 rounded-2xl bg-sky-500 hover:bg-sky-400 text-white font-bold shadow-lg shadow-sky-500/20">관장님 전용 신청</a>
-        <a href="#faq" class="px-7 py-3.5 rounded-2xl bg-slate-700/70 hover:bg-slate-600 text-white font-semibold">1분 소개 영상</a>
+        <a href="board.html" class="px-7 py-3.5 rounded-2xl bg-slate-700/70 hover:bg-slate-600 text-white font-semibold">신청목록</a>
+        <a href="admin.html" class="px-7 py-3.5 rounded-2xl bg-slate-700/70 hover:bg-slate-600 text-white font-semibold" rel="nofollow noopener">관리자</a>
       </div>
-
       <ul class="mt-6 space-y-1 text-slate-400 text-sm md:text-base">
-        <li>2주 전·후 영상 제공</li>
-        <li>전국 다수 도장 도입</li>
-        <li>단계별 강도</li>
+        <li>2주 전·후 영상 제공</li><li>전국 다수 도장 도입</li><li>단계별 강도</li>
       </ul>
     </div>
 
+    <!-- 히어로 썸네일 -->
     <figure id="heroVideoThumb" class="relative mx-auto w-full max-w-[820px] cursor-pointer" data-ytid="cVr-vf1aMR8">
-      <img src="https://i.ytimg.com/vi/cVr-vf1aMR8/hqdefault.jpg"
-           alt="스포밴드 태권도 훈련 영상"
-           class="w-full h-[260px] sm:h-[320px] md:h-[380px] lg:h-[520px] xl:h-[580px] rounded-2xl object-cover shadow-2xl"
-           loading="lazy" decoding="async" />
+      <img src="https://i.ytimg.com/vi/cVr-vf1aMR8/hqdefault.jpg" alt="스포밴드 태권도 훈련 영상"
+           class="w-full h-[260px] sm:h-[320px] md:h-[380px] lg:h-[520px] xl:h-[580px] rounded-2xl object-cover shadow-2xl" loading="lazy" decoding="async" />
       <div class="absolute inset-0 flex items-center justify-center">
         <span class="bg-white/85 text-black font-bold px-6 py-3 rounded-full shadow-lg">▶ 영상 보기</span>
       </div>
     </figure>
-
   </div>
 </section>
 
+<!-- 히어로 영상 모달 -->
 <div id="heroModal" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
   <div class="w-[min(960px,90vw)] aspect-video bg-black rounded-2xl overflow-hidden relative">
     <button id="heroClose" class="absolute top-2 right-2 bg-slate-800/80 text-white px-3 py-1.5 rounded-lg">닫기</button>
@@ -149,46 +110,35 @@
   </div>
 </div>
 
+<!-- 제품구성/참고영상 섹션(생략 없이 유지) -->
 <section id="kits" class="py-20">
   <div class="mx-auto container-narrow px-5">
     <h2 class="text-3xl font-extrabold">스포밴드(제품구성)</h2>
     <p class="mt-2 text-slate-300">모델별 이미지와 간단 스펙을 확인하세요. 상세 스펙 이미지는 새 창으로 열립니다.</p>
-
     <div class="mt-6 grid md:grid-cols-2 gap-6">
       <article class="rounded-2xl border border-slate-700/50 bg-slate-800/30 overflow-hidden">
         <img src="img/35_model.JPG" alt="SPOBAND 35" class="w-full object-cover" loading="lazy" decoding="async">
-        <div class="p-5">
-          <h3 class="text-xl font-bold">SPOBAND 35 <span class="text-slate-400 text-base">/ 모레주머니(아령) 2.5kg 운동부하량</span></h3>
+        <div class="p-5"><h3 class="text-xl font-bold">SPOBAND 35 <span class="text-slate-400 text-base">/ 2.5kg</span></h3>
           <p class="mt-1 text-slate-300 text-sm">길이 1,000mm · 폭 20mm · 두께 5mm</p>
-          <a href="img/35_spec.JPG" target="_blank" class="inline-block mt-3 text-sky-300 underline underline-offset-4">상세 스펙 이미지 보기</a>
-        </div>
+          <a href="img/35_spec.JPG" target="_blank" class="inline-block mt-3 text-sky-300 underline underline-offset-4">상세 스펙 이미지</a></div>
       </article>
-
       <article class="rounded-2xl border border-slate-700/50 bg-slate-800/30 overflow-hidden">
         <img src="img/45_model.JPG" alt="SPOBAND 45" class="w-full object-cover" loading="lazy" decoding="async">
-        <div class="p-5">
-          <h3 class="text-xl font-bold">SPOBAND 45 <span class="text-slate-400 text-base">/ 모레주머니(아령) 5kg 운동부하량</span></h3>
+        <div class="p-5"><h3 class="text-xl font-bold">SPOBAND 45 <span class="text-slate-400 text-base">/ 5kg</span></h3>
           <p class="mt-1 text-slate-300 text-sm">길이 1,100mm · 폭 45mm · 두께 5mm</p>
-          <a href="img/45_spec.JPG" target="_blank" class="inline-block mt-3 text-sky-300 underline underline-offset-4">상세 스펙 이미지 보기</a>
-        </div>
+          <a href="img/45_spec.JPG" target="_blank" class="inline-block mt-3 text-sky-300 underline underline-offset-4">상세 스펙 이미지</a></div>
       </article>
-
       <article class="rounded-2xl border border-slate-700/50 bg-slate-800/30 overflow-hidden">
         <img src="img/55_model.JPG" alt="SPOBAND 55" class="w-full object-cover" loading="lazy" decoding="async">
-        <div class="p-5">
-          <h3 class="text-xl font-bold">SPOBAND 55 <span class="text-slate-400 text-base">/ 모레주머니(아령)10kg 운동부하량</span></h3>
+        <div class="p-5"><h3 class="text-xl font-bold">SPOBAND 55 <span class="text-slate-400 text-base">/ 10kg</span></h3>
           <p class="mt-1 text-slate-300 text-sm">길이 1,100mm · 폭 55mm · 두께 5mm</p>
-          <a href="img/55_spec.JPG" target="_blank" class="inline-block mt-3 text-sky-300 underline underline-offset-4">상세 스펙 이미지 보기</a>
-        </div>
+          <a href="img/55_spec.JPG" target="_blank" class="inline-block mt-3 text-sky-300 underline underline-offset-4">상세 스펙 이미지</a></div>
       </article>
-
       <article class="rounded-2xl border border-slate-700/50 bg-slate-800/30 overflow-hidden">
         <img src="img/65_model.jpg" alt="SPOBAND 65" class="w-full object-cover" loading="lazy" decoding="async">
-        <div class="p-5">
-          <h3 class="text-xl font-bold">SPOBAND 65 <span class="text-slate-400 text-base">/ 모레주머니(아령)15kg 운동부하량</span></h3>
+        <div class="p-5"><h3 class="text-xl font-bold">SPOBAND 65 <span class="text-slate-400 text-base">/ 15kg</span></h3>
           <p class="mt-1 text-slate-300 text-sm">길이 1,300mm · 폭 65mm · 두께 5mm</p>
-          <a href="img/65_spec.jpg" target="_blank" class="inline-block mt-3 text-sky-300 underline underline-offset-4">상세 스펙 이미지 보기</a>
-        </div>
+          <a href="img/65_spec.jpg" target="_blank" class="inline-block mt-3 text-sky-300 underline underline-offset-4">상세 스펙 이미지</a></div>
       </article>
     </div>
   </div>
@@ -197,37 +147,38 @@
 <section id="faq" class="py-20">
   <div class="mx-auto container-narrow px-5">
     <h2 class="text-3xl font-extrabold">참고영상 등</h2>
-    <p class="mt-2 text-slate-300">소개·활용 예시 영상 6개를 모았습니다. 썸네일을 클릭하면 큰 화면으로 재생됩니다.</p>
+    <p class="mt-2 text-slate-300">썸네일 클릭 시 큰 화면으로 재생.</p>
 
     <div class="mt-6 grid md:grid-cols-2 xl:grid-cols-3 gap-5">
       <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="PaXW4TzsQyE">
-        <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/PaXW4TzsQyE/hqdefault.jpg" alt="스포밴드 영상1" loading="lazy" decoding="async">
+        <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/PaXW4TzsQyE/hqdefault.jpg" alt="영상1" loading="lazy" decoding="async">
         <div class="px-4 py-2 text-sm">스포밴드 소개 영상 1</div>
       </div>
       <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="C2G_9G88ahw">
-        <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/C2G_9G88ahw/hqdefault.jpg" alt="스포밴드 영상2" loading="lazy" decoding="async">
+        <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/C2G_9G88ahw/hqdefault.jpg" alt="영상2" loading="lazy" decoding="async">
         <div class="px-4 py-2 text-sm">스포밴드 소개 영상 2</div>
       </div>
       <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="LWnO0hubiyw">
-        <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/LWnO0hubiyw/hqdefault.jpg" alt="스포밴드 영상3" loading="lazy" decoding="async">
+        <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/LWnO0hubiyw/hqdefault.jpg" alt="영상3" loading="lazy" decoding="async">
         <div class="px-4 py-2 text-sm">스포밴드 소개 영상 3</div>
       </div>
       <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="JnEyJ9K5EF4">
-        <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/JnEyJ9K5EF4/hqdefault.jpg" alt="스포밴드 영상4" loading="lazy" decoding="async">
+        <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/JnEyJ9K5EF4/hqdefault.jpg" alt="영상4" loading="lazy" decoding="async">
         <div class="px-4 py-2 text-sm">스포밴드 소개 영상 4</div>
       </div>
       <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="QV8ma9aEiNM">
-        <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/QV8ma9aEiNM/hqdefault.jpg" alt="스포밴드 영상5" loading="lazy" decoding="async">
+        <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/QV8ma9aEiNM/hqdefault.jpg" alt="영상5" loading="lazy" decoding="async">
         <div class="px-4 py-2 text-sm">스포밴드 소개 영상 5</div>
       </div>
       <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="QVhHzYYkqbQ">
-        <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/QVhHzYYkqbQ/hqdefault.jpg" alt="스포밴드 영상6" loading="lazy" decoding="async">
+        <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/QVhHzYYkqbQ/hqdefault.jpg" alt="영상6" loading="lazy" decoding="async">
         <div class="px-4 py-2 text-sm">스포밴드 소개 영상 6</div>
       </div>
     </div>
   </div>
 
-  <div id="ytModal" class="modal fixed inset-0 hidden items-center justify-center p-4">
+  <!-- 참고영상 모달 -->
+  <div id="ytModal" class="modal fixed inset-0 hidden items-center justify-center p-4 z-50">
     <div class="modal-box rounded-2xl overflow-hidden border border-slate-700 bg-black relative">
       <button id="ytClose" class="absolute top-2 right-2 z-10 px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-sm">닫기</button>
       <iframe id="ytPlayer" class="w-full h-full" src="" title="YouTube video player"
@@ -237,6 +188,7 @@
   </div>
 </section>
 
+<!-- 신청 폼 -->
 <section id="apply" class="py-20">
   <div class="mx-auto container-narrow px-5">
     <h2 class="text-3xl md:text-4xl font-extrabold">태권도관장님 특별구매 게시판</h2>
@@ -244,29 +196,20 @@
 
     <form id="postForm" class="mt-8 grid gap-5 p-6 rounded-2xl border border-slate-700/50 bg-slate-800/40" autocomplete="off">
       <div class="grid md:grid-cols-2 gap-5">
-        <div>
-          <label class="block text-sm mb-1" for="dojo">태권도장 명</label>
-          <input id="dojo" required class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
-        </div>
-        <div>
-          <label class="block text-sm mb-1" for="master">관장님 성함</label>
-          <input id="master" required class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
-        </div>
-        <div>
-          <label class="block text-sm mb-1" for="contact">연락처(전화/카톡/이메일)</label>
+        <div><label class="block text-sm mb-1" for="dojo">태권도장 명</label>
+          <input id="dojo" required class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></div>
+        <div><label class="block text-sm mb-1" for="master">관장님 성함</label>
+          <input id="master" required class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></div>
+        <div><label class="block text-sm mb-1" for="contact">연락처(전화/카톡/이메일)</label>
           <input id="contact" required placeholder="예: 010-1234-5678 / dojo@naver.com"
-                 class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
-        </div>
-
+                 class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></div>
         <div>
           <label class="block text-sm mb-1" for="pw">비밀번호(열람/삭제용)</label>
           <div class="relative">
-            <input id="pw" type="password" minlength="4" required
+            <input id="pw" type="password" minlength="4"
                    class="w-full pr-12 px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
-            <button type="button" id="pwToggle" aria-label="비밀번호 표시/숨김 전환"
-                    class="absolute inset-y-0 right-2 my-auto h-8 w-8 grid place-items-center rounded-md hover:bg-white/10">
-              <!-- 아이콘 오류는 무시 가능 -->
-              <svg id="pwIconClosed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5 text-slate-300"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3l18 18" /></svg>
+            <button type="button" id="pwToggle" class="absolute inset-y-0 right-2 my-auto h-8 w-8 grid place-items-center rounded-md hover:bg-white/10">
+              <svg id="pwIconClosed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5 text-slate-300"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3l18 18"/></svg>
               <svg id="pwIconOpen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5 text-slate-300 hidden"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12s3.75 7.5 9.75 7.5 9.75-7.5 9.75-7.5-3.75-7.5-9.75-7.5S2.25 12 2.25 12z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
           </div>
@@ -276,8 +219,7 @@
 
       <div>
         <label class="block text-sm mb-1" for="address">택배 주소지 또는 태권도장 소재지</label>
-        <textarea id="address" rows="2" required
-                  class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></textarea>
+        <textarea id="address" rows="2" required class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></textarea>
       </div>
 
       <div>
@@ -285,417 +227,97 @@
           <label class="block text-sm">구매 희망 품목</label>
           <div class="flex items-center gap-3">
             <small class="text-slate-400">단위: 개 (수량)</small>
-            <span id="sumBoxes"
-                  class="inline-flex items-center px-2 py-1 rounded-lg bg-sky-500/10 text-sky-300 text-xs font-semibold">
-              총 0 개
-            </span>
+            <span id="sumBoxes" class="inline-flex items-center px-2 py-1 rounded-lg bg-sky-500/10 text-sky-300 text-xs font-semibold">총 0 개</span>
           </div>
         </div>
 
         <div class="mt-3 overflow-hidden rounded-xl border border-slate-700/60">
           <div class="grid grid-cols-12 bg-slate-900/40 px-4 py-3">
-            <div class="col-span-8 md:col-span-9 text-[16px] md:text-lg font-semibold text-slate-100">모델 / (운동부하량)</div>
-            <div class="col-span-4 md:col-span-3 text-right pr-1 text-[16px] md:text-lg font-semibold text-slate-100">신 청 개 수</div>
+            <div class="col-span-8 md:col-span-9 font-semibold">모델 / (운동부하량)</div>
+            <div class="col-span-4 md:col-span-3 text-right pr-1 font-semibold">신 청 개 수</div>
           </div>
-
           <div class="divide-y divide-slate-700/50 bg-slate-800/20">
-            <div class="grid grid-cols-12 items-center px-4 py-3">
-              <div class="col-span-8 md:col-span-9">spoband 30 / (주니어용)</div>
-              <div class="col-span-4 md:col-span-3">
-                <input id="q_sb30" type="number" min="0" value="0"
-                       class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
-              </div>
-            </div>
-            <div class="grid grid-cols-12 items-center px-4 py-3">
-              <div class="col-span-8 md:col-span-9">spoband 35 / (운동부하량:아령 또는 모레주머니 2.5kg)</div>
-              <div class="col-span-4 md:col-span-3">
-                <input id="q_sb35" type="number" min="0" value="0"
-                       class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
-              </div>
-            </div>
-            <div class="grid grid-cols-12 items-center px-4 py-3">
-              <div class="col-span-8 md:col-span-9">spoband 45 / (운동부하량:아령 또는 모레주머니 5kg)</div>
-              <div class="col-span-4 md:col-span-3">
-                <input id="q_sb45" type="number" min="0" value="0"
-                       class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
-              </div>
-            </div>
-            <div class="grid grid-cols-12 items-center px-4 py-3">
-              <div class="col-span-8 md:col-span-9">spoband 55 / (운동부하량:아령 또는 모레주머니 10kg)</div>
-              <div class="col-span-4 md:col-span-3">
-                <input id="q_sb55" type="number" min="0" value="0"
-                       class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
-              </div>
-            </div>
-            <div class="grid grid-cols-12 items-center px-4 py-3">
-              <div class="col-span-8 md:col-span-9">spoband 65 / (운동부하량:아령 또는 모레주머니 15kg)</div>
-              <div class="col-span-4 md:col-span-3">
-                <input id="q_sb65" type="number" min="0" value="0"
-                       class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
-              </div>
-            </div>
-
+            <div class="grid grid-cols-12 items-center px-4 py-3"><div class="col-span-8 md:col-span-9">spoband 30 / (주니어용)</div><div class="col-span-4 md:col-span-3"><input id="q_sb30" type="number" min="0" value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></div></div>
+            <div class="grid grid-cols-12 items-center px-4 py-3"><div class="col-span-8 md:col-span-9">spoband 35 / (2.5kg)</div><div class="col-span-4 md:col-span-3"><input id="q_sb35" type="number" min="0" value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></div></div>
+            <div class="grid grid-cols-12 items-center px-4 py-3"><div class="col-span-8 md:col-span-9">spoband 45 / (5kg)</div><div class="col-span-4 md:col-span-3"><input id="q_sb45" type="number" min="0" value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></div></div>
+            <div class="grid grid-cols-12 items-center px-4 py-3"><div class="col-span-8 md:col-span-9">spoband 55 / (10kg)</div><div class="col-span-4 md:col-span-3"><input id="q_sb55" type="number" min="0" value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></div></div>
+            <div class="grid grid-cols-12 items-center px-4 py-3"><div class="col-span-8 md:col-span-9">spoband 65 / (15kg)</div><div class="col-span-4 md:col-span-3"><input id="q_sb65" type="number" min="0" value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></div></div>
             <div class="grid grid-cols-12 items-center px-4 py-3 bg-slate-900/40 border-t border-slate-800/60">
-              <div class="col-span-8 md:col-span-9 text-right pr-4">
-                <span class="text-sm md:text-base font-semibold text-slate-100">총 신청개수</span>
-              </div>
-              <div class="col-span-4 md:col-span-3">
-                <input id="totalBoxes" type="text" inputmode="numeric" readonly value="0"
-                       class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-0">
-              </div>
+              <div class="col-span-8 md:col-span-9 text-right pr-4"><span class="text-sm font-semibold">총 신청개수</span></div>
+              <div class="col-span-4 md:col-span-3"><input id="totalBoxes" type="text" readonly value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700"></div>
             </div>
           </div>
         </div>
       </div>
 
       <div class="flex items-center mt-4 flex-wrap">
-        <button type="submit" class="px-5 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-white">
-          신청 등록
-        </button>
-
-        <span class="ml-auto text-yellow-400 font-extrabold text-2xl tracking-wide drop-shadow">
-          ※ 문의: 스포밴드연구소 소장 / 010-5214-1492 / simboom@hanmail.net
-        </span>
+        <button type="submit" class="px-5 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-white">신청 등록</button>
+        <a href="board.html" class="ml-3 underline underline-offset-4 text-sky-300">제출 후 신청목록 보기</a>
+        <span class="ml-auto text-yellow-400 font-extrabold text-2xl tracking-wide drop-shadow">※ 문의: 스포밴드연구소 소장 / 010-5214-1492 / simboom@hanmail.net</span>
       </div>
 
       <div class="w-full mt-3 text-right">
-        <a href="admin.html" id="adminLink" class="inline-flex items-center gap-1 text-slate-400 hover:text-sky-300 underline underline-offset-4 text-sm" rel="nofollow noopener" aria-label="관리자 로그인으로 이동">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
-          관리자 로그인
-        </a>
+        <a href="admin.html" class="inline-flex items-center gap-1 text-slate-400 hover:text-sky-300 underline underline-offset-4 text-sm" rel="nofollow noopener">관리자 로그인</a>
       </div>
 
       <div aria-hidden="true" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;">
-        <label>Leave this field empty</label>
-        <input type="text" name="hp_field" tabindex="-1" autocomplete="new-password" inputmode="none" />
+        <label>Leave this field empty</label><input type="text" name="hp_field" tabindex="-1" autocomplete="new-password" inputmode="none" />
       </div>
-
       <input type="hidden" name="ts" id="ts">
     </form>
-
-    <div class="mt-10">
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="text-2xl font-extrabold">신청 목록</h3>
-        <p class="text-yellow-300 font-semibold text-sm md:text-base"></p>
-      </div>
-
-      <div id="boardTop"></div>
-      <div id="boardList" class="mx-auto max-w-4xl flex flex-col gap-6"></div>
-    </div>
-
   </div>
 </section>
 
-<div id="consentModal" class="fixed inset-0 z-[999] hidden items-center justify-center bg-black/60 backdrop-blur-sm">
-  <!-- …(동의 모달 그대로)… -->
-</div>
-
+<!-- ===== 스크립트 ===== -->
 <script>
-<script>
-/** =========================
- *  CONFIG & HELPERS
- *  =======================*/
-const FORM_ID = "postForm";
-const FORM_MIN_SECONDS = 3;
-let pageLoadedAt = Date.now();
+const $ = (s,el=document)=>el.querySelector(s);
 
-// ✅ 현재 배포 중인 GAS 웹앱 URL(관리자 페이지와 동일하게)
-const API_URL = "https://script.google.com/macros/s/AKfycbyN5VsZUeQbUGIJwBHS50K52KfE2Ku5dhGNJG5rlfKQxQzOqHkTOoX6cQObk9PE_EnE/exec";
+/* 히어로 영상 */
+const thumb=document.getElementById('heroVideoThumb'), modal=document.getElementById('heroModal');
+const player=document.getElementById('heroPlayer'), heroClose=document.getElementById('heroClose');
+function openHero(){ const id=thumb?.dataset.ytid||'cVr-vf1aMR8';
+  player.src=`https://www.youtube.com/embed/${id}?autoplay=1&modestbranding=1&rel=0&playsinline=1`;
+  modal.classList.remove('hidden'); modal.classList.add('flex'); }
+function closeHero(){ player.src=''; modal.classList.remove('flex'); modal.classList.add('hidden'); }
+thumb?.addEventListener('click',openHero); heroClose?.addEventListener('click',closeHero);
+modal?.addEventListener('click',e=>{ if(e.target===modal) closeHero(); }); window.addEventListener('keydown',e=>{ if(e.key==='Escape') closeHero(); });
 
-// 프리플라이트 회피용 헤더(백엔드도 text/plain 기준)
-const PLAIN_HEADERS = { 'Content-Type': 'text/plain;charset=utf-8' };
+/* 참고영상 모달 */
+const ytm=document.getElementById('ytModal'), ytp=document.getElementById('ytPlayer'), ytc=document.getElementById('ytClose');
+document.querySelectorAll('.yt-thumb').forEach(el=>el.addEventListener('click',()=>{ ytp.src=`https://www.youtube.com/embed/${el.dataset.vid}?autoplay=1&modestbranding=1&rel=0&playsinline=1`; ytm.classList.remove('hidden'); ytm.classList.add('flex'); }));
+function closeYt(){ ytp.src=''; ytm.classList.remove('flex'); ytm.classList.add('hidden'); }
+ytc?.addEventListener('click',closeYt); ytm?.addEventListener('click',e=>{ if(e.target===ytm) closeYt(); }); window.addEventListener('keydown',e=>{ if(e.key==='Escape') closeYt(); });
 
-// DOM helpers
-const $  = (s,el=document)=>el.querySelector(s);
-const $$ = (s,el=document)=>Array.from(el.querySelectorAll(s));
-
-// 출력 & 포매팅
-const esc= (s)=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]));
-const fmt =(ts)=>{ const d=new Date(Number(ts)); return isNaN(d.getTime())?'날짜 정보 없음':d.toLocaleString('ko-KR'); };
-
-// 마스킹
-function maskName(name=""){ const s=String(name).trim(); if(s.length<=1) return s; if(s.length===2) return s[0]+'*'; return s[0]+'*'.repeat(s.length-2)+s[s.length-1]; }
-const maskDojo = maskName;
-function maskContact(raw=""){
-  const digits=String(raw).replace(/\D/g,'');
-  if(digits.length>7) return `${digits.slice(0,3)}-****-${digits.slice(-4)}`;
-  if(String(raw).includes('@')){ const [a,b]=String(raw).split('@'); return `${a.slice(0,3)}***@${b}`;}
-  return "***-****-****";
-}
-
-// JSON 안전 파싱(+백엔드 status 체크)
-async function parseJson(res){
-  const text=await res.text();
-  let json;
-  try{ json=JSON.parse(text); }
-  catch{ throw new Error('API 응답 형식 오류'); }
-  if(!res.ok || json.status==='error') throw new Error(json.message||`HTTP ${res.status}`);
-  return json;
-}
-
-// 데이터 정규화
-function normalizeItems(raw = {}) {
-  const items = raw.items || {};
-  return {
-    sb30:+(items.sb30??raw.sb30??0)||0,
-    sb35:+(items.sb35??raw.sb35??0)||0,
-    sb45:+(items.sb45??raw.sb45??0)||0,
-    sb55:+(items.sb55??raw.sb55??0)||0,
-    sb65:+(items.sb65??raw.sb65??0)||0
-  };
-}
-function computeTotalCount(items){ return Object.values(items).reduce((a,b)=>a+(+b||0),0); }
-function normalizePost(raw = {}) {
-  const items = normalizeItems(raw);
-  return {
-    id: String(raw.id ?? raw._id ?? raw.ID ?? raw.rowId ?? ''),
-    dojo: String(raw.dojo ?? raw.dojoName ?? raw.dojo_name ?? raw.gym ?? ''),
-    master: String(raw.master ?? raw.masterName ?? raw.owner ?? ''),
-    contact: String(raw.contact ?? raw.phone ?? raw.contact_info ?? ''),
-    address: String(raw.address ?? raw.addr ?? ''),
-    pw: String(raw.pw ?? raw.password ?? ''),
-    ts: raw.ts ?? raw.timestamp ?? raw.createdAt ?? raw.created_at ?? '',
-    items, totalCount: computeTotalCount(items),
-    status: raw.status || '신규',
-    replies: Array.isArray(raw.replies) ? raw.replies : [],
-    quotationUrl: raw.quotationUrl || ''
-  };
-}
-function normalizeListResponse(data){
-  const arr = Array.isArray(data)?data:(data.items||data.data||[]);
-  return arr.map(normalizePost);
-}
-
-/** =========================
- *  API CALLS
- *  =======================*/
-// 🔁 목록 불러오기: POST(publicList) 우선, 실패 시 GET?action=list 폴백
-async function loadApplications() {
-  try {
-    const r1 = await fetch(API_URL, {
-      method: 'POST',
-      headers: PLAIN_HEADERS,
-      body: JSON.stringify({ action: 'publicList' }),
-    });
-    const j1 = await parseJson(r1);
-    const arr1 = Array.isArray(j1) ? j1 : (j1.items || j1.data || []);
-    if (Array.isArray(arr1)) return normalizeListResponse(arr1);
-  } catch (e) {
-    console.warn('[loadApplications] POST publicList 실패, GET 폴백 시도:', e);
-  }
-  const r2 = await fetch(API_URL + '?action=list', { method:'GET', cache:'no-cache' });
-  const j2 = await parseJson(r2);
-  const arr2 = Array.isArray(j2) ? j2 : (j2.items || j2.data || []);
-  return normalizeListResponse(arr2);
-}
-
-// ▶ 신청 등록(create)
-async function submitApplication(applicationData) {
-  const payload = { action:'create', data: { ...applicationData } };
-  const res = await fetch(API_URL, { method:'POST', headers:PLAIN_HEADERS, body: JSON.stringify(payload) });
-  const json = await parseJson(res);
-  return normalizePost(json.data || applicationData);
-}
-
-// ▶ 글 상세 조회(getPost) — 비번은 id와 같게 저장되어 있음
-async function fetchPostDetails(id, pw) {
-  const res = await fetch(API_URL, {
-    method:'POST',
-    headers:PLAIN_HEADERS,
-    body: JSON.stringify({ action:'getPost', id, pw })
-  });
-  const json = await parseJson(res);
-  return normalizePost(json.data || json);
-}
-
-/** =========================
- *  RENDERING
- *  =======================*/
-let posts = [];
-
-function render(){
-  const list=$("#boardList");
-  if(!list) return;
-
-  if(!posts.length){
-    list.innerHTML = '<p class="text-slate-400 text-sm p-4 text-center">아직 등록된 신청이 없습니다.</p>';
-    return;
-  }
-
-  list.innerHTML = posts.map(p=>`
-    <article class="p-5 rounded-2xl shadow-lg bg-slate-800/70" data-id="${esc(p.id)}">
-      <div class="flex flex-col md:flex-row justify-between gap-4">
-        <div>
-          <p class="font-bold text-lg text-white">${esc(maskDojo(p.dojo))}</p>
-          <p class="text-slate-300">관장님: ${esc(maskName(p.master))}</p>
-          <p class="text-slate-400 text-sm">연락처: ${esc(maskContact(p.contact))}</p>
-          <p class="text-xs text-slate-500 mt-1">${fmt(p.ts)}</p>
-        </div>
-        <div class="flex items-center justify-end md:justify-start gap-3">
-          <span class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-700 text-slate-300">${esc(p.status||'신규')}</span>
-          <button class="view-details px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-sm">상세보기</button>
-        </div>
-      </div>
-      <div id="details-${esc(p.id)}" class="hidden p-3 mt-3 rounded-lg bg-slate-900/40 border border-slate-800">
-        <p class="text-center text-slate-400 p-4">상세 정보를 불러오는 중...</p>
-      </div>
-    </article>
-  `).join("");
-
-  $$(".view-details").forEach(b=>b.addEventListener("click", onView));
-}
-
-function renderPostDetails(container, d){
-  const itemsLines = Object.entries(d.items||{})
-    .filter(([,v])=>(+v||0)>0)
-    .map(([k,v])=>{
-      const m={
-        sb30:'spoband 30 / 주니어용',
-        sb35:'spoband 35 / 2.5kg',
-        sb45:'spoband 45 / 5kg',
-        sb55:'spoband 55 / 10kg',
-        sb65:'spoband 65 / 15kg'
-      };
-      return `• ${esc(m[k]||k)} : ${v} 개`;
-    }).join('\n') || '-';
-
-  const repliesHTML=(d.replies||[]).map(r=>`
-    <div class="mt-2 p-2 rounded-lg bg-slate-800/40 border border-slate-700/50">
-      <div class="text-xs text-slate-400">${fmt(r.ts)}</div>
-      <div class="text-sky-300 font-semibold whitespace-pre-wrap">${esc(r.content||'')}</div>
-    </div>`).join('');
-
-  const quoteHTML=d.quotationUrl
-    ? `<a class="text-sky-300 underline" target="_blank" href="${esc(d.quotationUrl)}">견적서 보기</a>`
-    : '없음';
-
-  container.innerHTML = `
-    <div class="text-xs text-slate-400 mb-1">상세 정보</div>
-    <div class="text-sm text-slate-200 mb-2">
-      도장명: ${esc(d.dojo||'미입력')} / 관장님: ${esc(d.master||'미입력')}<br>
-      연락처: ${esc(d.contact||'미입력')}<br>
-      주소: ${esc(d.address||'미입력')}<br>
-      견적서: ${quoteHTML}
-    </div>
-    <div class="text-xs text-slate-400 mb-1">신청 품목(모델별)</div>
-    <div class="whitespace-pre-wrap">${itemsLines}</div>
-    ${repliesHTML?`<div class="mt-3"><div class="text-xs text-slate-400 mb-1">관리자 답변</div>${repliesHTML}</div>`:''}
-    <button class="btn-close mt-4 px-3 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-sm">닫기</button>
-  `;
-  container.querySelector('.btn-close')?.addEventListener('click', ()=>{
-    container.classList.add('hidden');
-    container.innerHTML=`<p class="text-center text-slate-400 p-4">상세 정보를 불러오는 중...</p>`;
-  });
-}
-
-/** =========================
- *  EVENTS
- *  =======================*/
-async function onView(e){
-  const article=e.currentTarget.closest("article");
-  const id=String(article.dataset.id);
-  const detailsContainer=$(`#details-${CSS.escape(id)}`) || article.querySelector(`#details-${CSS.escape(id)}`);
-  if(!detailsContainer) return;
-
-  const pw=prompt("작성 시 설정한 비밀번호를 입력하세요.");
-  if(pw===null) return;
-
-  detailsContainer.classList.remove("hidden");
-  detailsContainer.scrollIntoView({behavior:"smooth",block:"center"});
-
-  try{
-    const d=await fetchPostDetails(id,pw);
-    renderPostDetails(detailsContainer,d);
-  }catch(err){
-    alert(err.message||'정보를 불러올 수 없습니다.');
-    detailsContainer.classList.add('hidden');
-  }
-}
-
-document.addEventListener('DOMContentLoaded', async function () {
-  // 숨은 타임스탬프
-  $('#ts').value = Date.now();
-
-  // 수량 합계 표시
-  ["q_sb30","q_sb35","q_sb45","q_sb55","q_sb65"].forEach(id => {
-    $(`#${id}`)?.addEventListener("input", ()=>{
-      const n = id => Math.max(0, Number(($(`#${id}`)?.value || 0)) || 0);
-      const total = n("q_sb30")+n("q_sb35")+n("q_sb45")+n("q_sb55")+n("q_sb65");
-      $("#sumBoxes").textContent = `총 ${total} 개`;
-      $("#totalBoxes").value = String(total);
-    });
-  });
-
-  // 비밀번호 보기/숨김 토글
-  const pwInput=$('#pw'), pwToggle=$('#pwToggle');
-  pwToggle?.addEventListener('click', ()=>{
-    const isHidden=pwInput.type==='password';
-    pwInput.type=isHidden?'text':'password';
-    $('#pwIconOpen')?.classList.toggle('hidden', !isHidden);
-    $('#pwIconClosed')?.classList.toggle('hidden', isHidden);
-  });
-
-  // ▶ 목록 초기 로드
-  try {
-    posts = await loadApplications();
-  } catch (e) {
-    console.warn('초기 로드 오류:', e);
-    $("#boardList").innerHTML =
-      `<p class="text-slate-400 text-center p-4 rounded-lg bg-red-900/20 border border-red-500/30">
-        ${esc(e.message || '불러오기 실패')} · 잠시 후 새로고침 해주세요.
-       </p>`;
-  }
-  render();
-
-  // ▶ 폼 제출(create)
-  const form = document.getElementById(FORM_ID);
-  form?.addEventListener('submit', async (ev)=>{
+/* 신청 등록 */
+const API_URL="https://script.google.com/macros/s/AKfycbyN5VsZUeQbUGIJwBHS50K52KfE2Ku5dhGNJG5rlfKQxQzOqHkTOoX6cQObk9PE_EnE/exec";
+const PLAIN={'Content-Type':'text/plain;charset=utf-8'};
+const SECRET=""; // 서버가 실수로 secret 요구 시 여기에 설정하면 자동 재시도
+const FORM_MIN_SECONDS=3; let pageLoadedAt=Date.now();
+function n(v){ return Math.max(0,Number(v||0)||0); }
+function updateTotal(){ const ids=["q_sb30","q_sb35","q_sb45","q_sb55","q_sb65"]; const total=ids.reduce((a,id)=>a+n($('#'+id)?.value),0); $("#sumBoxes").textContent=`총 ${total} 개`; $("#totalBoxes").value=String(total); }
+document.addEventListener('DOMContentLoaded',()=>{
+  $('#ts').value=Date.now(); ["q_sb30","q_sb35","q_sb45","q_sb55","q_sb65"].forEach(id=>$('#'+id)?.addEventListener('input',updateTotal)); updateTotal();
+  const pwInput=$('#pw'), pwToggle=$('#pwToggle'); pwToggle?.addEventListener('click',()=>{ const hidden=pwInput.type==='password'; pwInput.type=hidden?'text':'password'; $('#pwIconOpen')?.classList.toggle('hidden',!hidden); $('#pwIconClosed')?.classList.toggle('hidden',hidden); });
+  const form=document.getElementById('postForm');
+  form?.addEventListener('submit',async(ev)=>{
     ev.preventDefault();
+    const hp=form.querySelector('input[name="hp_field"]')?.value||''; if(hp.trim()!==''){ alert('제출에 실패했습니다.'); return; }
+    if((Date.now()-pageLoadedAt)/1000<FORM_MIN_SECONDS){ alert('잠시 후 다시 시도해주세요.'); return; }
+    const data={ dojo:$('#dojo').value.trim(), master:$('#master').value.trim(), contact:$('#contact').value.trim(), address:$('#address').value.trim(), pw:($('#pw')?.value||'').trim(),
+      items:{ sb30:n($('#q_sb30').value), sb35:n($('#q_sb35').value), sb45:n($('#q_sb45').value), sb55:n($('#q_sb55').value), sb65:n($('#q_sb65').value) } };
+    const total=Object.values(data.items).reduce((a,b)=>a+(+b||0),0); if(total<=0){ alert('수량을 1개 이상 입력해주세요.'); return; }
 
-    // 봇/너무 빠른 제출 방어
-    const hp = form.querySelector('input[name="hp_field"]')?.value || '';
-    if (hp.trim() !== '') { alert('제출에 실패했습니다.'); return; }
-    if ((Date.now() - pageLoadedAt)/1000 < FORM_MIN_SECONDS) {
-      alert('잠시 후 다시 시도해주세요.'); return;
+    async function attempt(withSecret){
+      const payload = withSecret && SECRET ? {action:'create', data, secret:SECRET} : {action:'create', data};
+      const res=await fetch(API_URL,{method:'POST',headers:PLAIN,body:JSON.stringify(payload)}); const txt=await res.text(); let j; try{ j=JSON.parse(txt);}catch(_){ throw new Error('API 응답 오류'); }
+      if(j.status!=='success') throw new Error(j.message||'등록 실패'); return j.data;
     }
-
-    const data = {
-      dojo: $('#dojo').value.trim(),
-      master: $('#master').value.trim(),
-      contact: $('#contact').value.trim(),
-      address: $('#address').value.trim(),
-      pw: $('#pw').value.trim(),
-      items: {
-        sb30: Number($('#q_sb30').value || 0) || 0,
-        sb35: Number($('#q_sb35').value || 0) || 0,
-        sb45: Number($('#q_sb45').value || 0) || 0,
-        sb55: Number($('#q_sb55').value || 0) || 0,
-        sb65: Number($('#q_sb65').value || 0) || 0,
-      }
-    };
-
-    const total = computeTotalCount(data.items);
-    if (total <= 0) { alert('수량을 1개 이상 입력해주세요.'); return; }
-
     try{
-      const saved = await submitApplication(data);
-      alert(`신청이 등록되었습니다.\n신청 비번: ${saved.id}\n* 상세보기 비밀번호로 동일 사용`);
-      // 목록 갱신
-      posts = await loadApplications();
-      render();
-      form.reset();
-      $("#sumBoxes").textContent = "총 0 개";
-      $("#totalBoxes").value = "0";
-    }catch(err){
-      alert(err.message || '등록에 실패했습니다.');
-    }
+      let saved; try{ saved=await attempt(false); } catch(e){ if(String(e.message).includes('인증 실패') && SECRET){ saved=await attempt(true); } else { throw e; } }
+      alert(`신청이 등록되었습니다.\n신청 비번(ID): ${saved.id}\n(조회 비밀번호 동일)`); form.reset(); updateTotal(); location.href='board.html';
+    }catch(err){ alert(err.message||'등록에 실패했습니다.'); }
   });
 });
 </script>
-
-
-<!-- 파티클/배경/버튼 효과 스크립트 그대로 유지 -->
-<!-- …(생략: 네 코드 그대로)… -->
-
 </body>
 </html>
