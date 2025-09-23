@@ -162,6 +162,7 @@ function renderPostDetails(container, d){
       return `${m[k]||k} ${v}`;
     }).join(' / ') || '-';
 
+// 관리자 글은 노란색으로 하이라이트
 // 관리자 글은 노란색으로 하이라이트 (한글 '관리자', 과거 데이터까지 대응)
 const repliesHTML = (d.replies || []).map(r => {
   const author  = String(r.author || '').trim();
