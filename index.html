@@ -25,29 +25,61 @@
     .container-narrow { max-width: 1100px; }
     .bg-hero {
       background:
-        radial-gradient(1200px 600px at 10% 10%, rgba(56,189,248,.08), transparent 60%),
-        radial-gradient(1000px 500px at 95% 5%, rgba(59,130,246,.15), transparent 60%),
+        radial-gradient(1200px 600px at 10% 10%, rgba(56,189,248,.1), transparent 60%),
+        radial-gradient(1000px 500px at 95% 5%, rgba(59,130,246,.2), transparent 60%),
         linear-gradient(180deg, #020617 0%, #0f172a 100%);
     }
     .modal{ background:rgba(2,6,23,.75); backdrop-filter: blur(2px); }
     .modal-box{ width:min(1024px, 92vw); aspect-ratio:16/9; }
     .yt-thumb img{ transition: transform .2s ease; } .yt-thumb:hover img{ transform: scale(1.02); }
     .chip{display:inline-flex;align-items:center;gap:.35rem;padding:.42rem .8rem;border-radius:9999px;border:1px solid rgba(255,255,255,.15)}
-    .badge{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem .75rem;border-radius:9999px;background:rgba(2,6,23,.6);border:1px solid rgba(148,163,184,.25)}
-    .section { padding-block: clamp(56px, 8vw, 96px); }
-    .lead { font-size: clamp(1.05rem, 2.2vw, 1.25rem); line-height: 1.6; }
-    .shadow-sky { box-shadow: 0 10px 30px rgba(56,189,248,.18); }
-    .glass { background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03)); border:1px solid rgba(148,163,184,.25); }
-    .sticky-cta { position: fixed; left:0; right:0; bottom:0; z-index:60; transform: translateY(110%); transition: transform .25s ease; }
-    .sticky-cta.show { transform: translateY(0%); }
+
+    /* ===== 가독성 보강(히어로 전용) ===== */
+    .break-keep { word-break: keep-all; }           /* 한글 단어 분리 방지 */
+    .h1-fluid {                                     /* 유동 H1: 36~64 */
+      font-size: clamp(36px, 5.2vw, 64px);
+      line-height: 1.12; letter-spacing: -0.02em;
+    }
+    .lead-fluid {                                   /* 유동 리드: 16~20 */
+      font-size: clamp(16px, 1.6vw, 20px);
+      line-height: 1.6;
+    }
+    .max-ch { max-width: 26ch; }                    /* 줄 길이 제한 */
+    .kicker {
+      display:inline-flex; align-items:center; gap:.5rem;
+      padding:.45rem .8rem; border-radius:9999px;
+      background:rgba(56,189,248,.10); border:1px solid rgba(56,189,248,.35);
+      color:#bae6fd; font-weight:700; font-size:.92rem;
+    }
+    .hl-grad {
+      background: linear-gradient(90deg,#7dd3fc 0%, #a5f3fc 100%);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .btn-hero { padding:.85rem 1.15rem; border-radius:14px; font-weight:800; }
+    .btn-hero-primary{ background:#0ea5e9; color:#fff; box-shadow:0 12px 28px rgba(14,165,233,.28); }
+    .btn-hero-primary:hover{ background:#38bdf8; transform:translateY(-1px); }
+    .btn-hero-ghost{ background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); color:#e5e7eb; }
+    .btn-hero-ghost:hover{ background:rgba(255,255,255,.12); }
+    .badge-soft{ display:inline-flex; align-items:center; padding:.38rem .7rem; border-radius:9999px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); color:#cbd5e1; font-weight:700; font-size:.86rem; }
+
+    /* === 히어로 키워드 하이라이트(노란 계열) === */
+    .hl-amber {
+      color: #fde047;                       /* amber-300 */
+      text-shadow: 0 1px 0 rgba(0,0,0,.35);
+    }
+    @media (min-width:1024px){
+      .hl-amber { -webkit-text-stroke: .6px rgba(2,6,23,.55); }
+    }
+    /* 옵션: 그라데이션 버전 */
+    .hl-amber-grad{
+      background: linear-gradient(180deg,#fde047 0%, #f59e0b 85%);
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+      text-shadow: 0 1px 0 rgba(0,0,0,.35);
+    }
   </style>
 </head>
 
 <body class="text-white bg-slate-900 bg-hero">
-<!-- 상단 혜택 배너(긴급성/FOMO) -->
-<div class="text-center text-sm bg-gradient-to-r from-sky-600 to-cyan-600 py-2">
-  <strong>9월 한정</strong> · 도입 도장 <b>선착순 50곳</b> 무료 가이드(2주전·후 비교 영상 템플릿 + 세팅 체크리스트) 제공
-</div>
 
 <header class="sticky top-0 z-50 bg-slate-950/70 backdrop-blur border-b border-slate-800">
   <div class="container-narrow mx-auto px-4 md:px-6">
@@ -55,25 +87,27 @@
       <a href="/" class="flex items-center gap-2">
         <span class="text-white font-extrabold text-lg tracking-tight">SPOBAND <span class="text-sky-400">Pro</span></span>
       </a>
+      <!-- 데스크톱 네비 -->
       <nav class="hidden md:flex items-center gap-3">
-        <a href="#why" class="text-slate-100 hover:text-sky-400 font-semibold">왜 스포밴드인가</a>
-        <a href="#result" class="text-slate-100 hover:text-sky-400 font-semibold">도입효과</a>
-        <a href="#kits" class="text-slate-100 hover:text-sky-400 font-semibold">제품구성</a>
+        <a href="pages/taekwondo-benefits.html" class="text-slate-100 hover:text-sky-400 font-semibold">운동효과</a>
+        <a href="pages/taekwondo-letter.html" class="text-slate-100 hover:text-sky-400 font-semibold">“관장님께 드립니다”</a>
+        <a href="#kits" class="text-slate-100 hover:text-sky-400 font-semibold">스포밴드</a>
         <a href="#faq" class="text-slate-100 hover:text-sky-400 font-semibold">영상·FAQ</a>
-        <a href="#apply" class="chip hover:bg-white/10">관장님 신청</a>
+        <a href="#apply" class="chip hover:bg-white/10">신청하기</a>
         <a href="board.html" class="chip hover:bg-white/10">신청목록</a>
         <a href="admin.html" class="chip hover:bg-white/10" rel="nofollow noopener">관리자</a>
       </nav>
-      <button type="button" class="md:hidden w-10 h-10 rounded-lg hover:bg-white/10" aria-label="모바일 메뉴 열기"
-              onclick="document.getElementById('mobile-nav').classList.toggle('hidden')">
+      <!-- 모바일 토글 -->
+      <button type="button" class="md:hidden w-10 h-10 rounded-lg hover:bg-white/10" onclick="document.getElementById('mobile-nav').classList.toggle('hidden')">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
       </button>
     </div>
+    <!-- 모바일 네비 -->
     <div id="mobile-nav" class="md:hidden hidden border-t border-slate-800 py-3">
       <nav class="flex flex-col gap-2">
-        <a href="#why" class="px-2 py-2 rounded-lg text-slate-200 hover:bg-white/10">왜 스포밴드인가</a>
-        <a href="#result" class="px-2 py-2 rounded-lg text-slate-200 hover:bg-white/10">도입효과</a>
-        <a href="#kits" class="px-2 py-2 rounded-lg text-slate-200 hover:bg-white/10">제품구성</a>
+        <a href="pages/taekwondo-benefits.html" class="px-2 py-2 rounded-lg text-slate-200 hover:bg-white/10">운동효과</a>
+        <a href="pages/taekwondo-letter.html" class="px-2 py-2 rounded-lg text-slate-200 hover:bg-white/10">“관장님께 드립니다”</a>
+        <a href="#kits" class="px-2 py-2 rounded-lg text-slate-200 hover:bg-white/10">스포밴드</a>
         <a href="#faq" class="px-2 py-2 rounded-lg text-slate-200 hover:bg-white/10">영상·FAQ</a>
         <a href="#apply" class="mt-2 px-3 py-3 rounded-xl bg-sky-500 hover:bg-sky-600 text-white text-center">관장님 전용 신청</a>
         <div class="grid grid-cols-2 gap-2 px-2">
@@ -85,191 +119,62 @@
   </div>
 </header>
 
-<!-- HERO -->
-<section class="section">
-  <div class="container mx-auto grid lg:grid-cols-2 items-center gap-10 lg:gap-16 px-6">
-    <div class="max-w-[760px]">
-      <span class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-sky-500/15 border border-sky-400 text-sky-200 font-bold">
-        태권도 관장님 전용 · 도입 가이드 제공
-      </span>
-      <h1 class="mt-6 text-4xl md:text-6xl xl:text-7xl font-black leading-[1.08] text-balance">
-        <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-300 to-cyan-300">10분 루틴</span>으로
-        <br class="hidden md:block">킥 <b>속도·정확도·밸런스</b>가
-        <span class="whitespace-nowrap">눈에 보이게 달라집니다.</span>
+<!-- 히어로 -->
+<section class="relative">
+  <div class="container mx-auto grid lg:grid-cols-2 items-center gap-10 lg:gap-16 px-6 py-16 lg:py-20">
+    <!-- 텍스트 -->
+    <div class="max-w-[760px] break-keep">
+      <span class="kicker">태권도 관장님 전용 · 도입 가이드 제공</span>
+
+      <h1 class="mt-5 h1-fluid font-black text-balance max-ch">
+        <span class="hl-grad">10분 루틴</span>으로<br/>
+        <span class="hl-amber">킥 속도·정확도·밸런스</span>가<br/>
+        눈에 보이게 달라집니다
       </h1>
-      <p class="mt-5 lead text-slate-300">
-        탄성 저항이라 <b>안전</b>하고, 초보도 <b>단계별</b>로 바로 적용.
-        도장 운영에 맞춘 <b>PT·그룹·게임형</b> 커리큘럼까지 포함됩니다.
+
+      <p class="mt-5 lead-fluid text-slate-300">
+        탄성 저항이라 <b class="text-sky-200">안전</b>하고, 초보도 <b class="text-sky-200">단계별</b>로 바로 적용.
+        도장 운영에 맞춘 <b class="text-sky-200">PT·그룹</b> 커리큘럼까지 포함됩니다.
       </p>
 
-      <div class="mt-6 flex flex-wrap items-center gap-3 text-slate-300">
-        <span class="badge">전국 다수 도장 도입</span>
-        <span class="badge">2주 전·후 비교 영상 제공</span>
-        <span class="badge">도입 세팅 체크리스트</span>
+      <div class="mt-6 flex flex-wrap gap-2">
+        <span class="badge-soft">전국 다수 도장 도입</span>
+        <span class="badge-soft">2주 전·후 비교 영상 제공</span>
+        <span class="badge-soft">도입 세팅 체크리스트</span>
       </div>
 
       <div class="mt-8 flex flex-wrap gap-3">
-        <a href="#apply" class="px-7 py-3.5 rounded-2xl bg-sky-500 hover:bg-sky-400 text-white font-bold shadow-sky">관장님 전용 신청</a>
-        <a href="#why" class="px-7 py-3.5 rounded-2xl bg-slate-700/70 hover:bg-slate-600 text-white font-semibold">도입 이유 보기</a>
-        <a href="board.html" class="px-7 py-3.5 rounded-2xl bg-slate-800/70 hover:bg-slate-700 text-white font-semibold">신청목록</a>
+        <a href="#apply" class="btn-hero btn-hero-primary">관장님 전용 신청</a>
+        <a href="pages/taekwondo-benefits.html" class="btn-hero btn-hero-ghost">도입 이유 보기</a>
+        <a href="board.html" class="btn-hero btn-hero-ghost">신청목록</a>
       </div>
     </div>
 
     <!-- 히어로 썸네일 -->
-    <figure id="heroVideoThumb" class="relative mx-auto w-full max-w-[820px] cursor-pointer" data-ytid="cVr-vf1aMR8" aria-label="소개 영상 보기">
+    <figure id="heroVideoThumb" class="relative mx-auto w-full max-w-[820px] cursor-pointer" data-ytid="cVr-vf1aMR8" aria-label="스포밴드 태권도 훈련 영상 보기">
       <img src="https://i.ytimg.com/vi/cVr-vf1aMR8/hqdefault.jpg" alt="스포밴드 태권도 훈련 영상"
            class="w-full h-[260px] sm:h-[320px] md:h-[380px] lg:h-[520px] xl:h-[580px] rounded-2xl object-cover shadow-2xl" loading="lazy" decoding="async" />
       <div class="absolute inset-0 flex items-center justify-center">
-        <span class="bg-white/90 text-black font-bold px-6 py-3 rounded-full shadow-lg">▶ 영상 보기</span>
+        <span class="bg-white/85 text-black font-bold px-6 py-3 rounded-full shadow-lg">▶ 영상 보기</span>
       </div>
-      <!-- 제안 문구 -->
-      <figcaption class="mt-3 text-sm text-slate-300">* 3가지 루틴 데모를 보시고, 바로 도입해 보세요.</figcaption>
     </figure>
   </div>
 </section>
 
-<!-- 신뢰구역: 성과 KPI -->
-<section id="result" class="section bg-slate-900/50 border-y border-slate-800">
-  <div class="container-narrow mx-auto px-5">
-    <h2 class="text-3xl md:text-4xl font-extrabold">도입하면, 무엇이 달라지나요?</h2>
-    <p class="mt-2 text-slate-300">실전 수업에서 즉시 체감되는 **3가지 핵심 지표**</p>
-    <div class="mt-8 grid sm:grid-cols-3 gap-4">
-      <div class="glass rounded-2xl p-6 text-center">
-        <div class="text-4xl md:text-5xl font-black text-sky-300">↑ 속도</div>
-        <p class="mt-2 text-slate-300">킥 반응속도·회전 속도 향상</p>
-      </div>
-      <div class="glass rounded-2xl p-6 text-center">
-        <div class="text-4xl md:text-5xl font-black text-cyan-300">↑ 정확도</div>
-        <p class="mt-2 text-slate-300">타점 일관성·자세 안정</p>
-      </div>
-      <div class="glass rounded-2xl p-6 text-center">
-        <div class="text-4xl md:text-5xl font-black text-teal-300">↑ 밸런스</div>
-        <p class="mt-2 text-slate-300">축 안정·체간 협응 강화</p>
-      </div>
-    </div>
+<!-- 히어로 영상 모달 -->
+<div id="heroModal" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
+  <div class="w-[min(960px,90vw)] aspect-video bg-black rounded-2xl overflow-hidden relative">
+    <button id="heroClose" class="absolute top-2 right-2 bg-slate-800/80 text-white px-3 py-1.5 rounded-lg">닫기</button>
+    <iframe id="heroPlayer" class="w-full h-full" src="" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen loading="lazy"></iframe>
   </div>
-</section>
+</div>
 
-<!-- 왜 스포밴드인가: 가치 제안 -->
-<section id="why" class="section">
-  <div class="container-narrow mx-auto px-5">
-    <h2 class="text-3xl md:text-4xl font-extrabold">왜 <span class="text-sky-300">스포밴드</span>인가</h2>
-    <p class="mt-2 text-slate-300">도장 운영 관점에서 **안전·효율·재미**를 동시에 잡습니다.</p>
-
-    <div class="mt-8 grid md:grid-cols-3 gap-5">
-      <div class="glass rounded-2xl p-6">
-        <h3 class="text-xl font-bold">안전한 탄성 저항</h3>
-        <p class="mt-2 text-slate-300">관절 부담↓, 초보도 실패 없이 동작 학습.</p>
-      </div>
-      <div class="glass rounded-2xl p-6">
-        <h3 class="text-xl font-bold">바로 수업 적용</h3>
-        <p class="mt-2 text-slate-300">PT/그룹/게임형 루틴 템플릿 제공. 준비물 최소화.</p>
-      </div>
-      <div class="glass rounded-2xl p-6">
-        <h3 class="text-xl font-bold">재방문을 부르는 재미</h3>
-        <p class="mt-2 text-slate-300">점수·미션 시스템으로 참여도↑, 이탈률↓.</p>
-      </div>
-      <div class="glass rounded-2xl p-6">
-        <h3 class="text-xl font-bold">운영비 절감</h3>
-        <p class="mt-2 text-slate-300">내구성↑, 관리 간단, 소모품/보수 부담 적음.</p>
-      </div>
-      <div class="glass rounded-2xl p-6">
-        <h3 class="text-xl font-bold">2주 전·후 비교</h3>
-        <p class="mt-2 text-slate-300">영상 템플릿으로 성과를 눈으로 보여 영업자산화.</p>
-      </div>
-      <div class="glass rounded-2xl p-6">
-        <h3 class="text-xl font-bold">전국 도장 확산</h3>
-        <p class="mt-2 text-slate-300">다수 도장 도입 검증. 시행착오 없이 온보딩.</p>
-      </div>
-    </div>
-
-    <!-- 1-2-3 루틴 -->
-    <div class="mt-10 grid md:grid-cols-3 gap-5">
-      <div class="rounded-2xl p-6 border border-slate-800 bg-slate-900/40">
-        <div class="text-sm text-slate-400">STEP 1</div>
-        <h4 class="text-lg font-semibold mt-1">워밍업 · 밸런스</h4>
-        <p class="mt-2 text-slate-300">축 안정·발목/둔근 활성화, 준비운동 3분.</p>
-      </div>
-      <div class="rounded-2xl p-6 border border-slate-800 bg-slate-900/40">
-        <div class="text-sm text-slate-400">STEP 2</div>
-        <h4 class="text-lg font-semibold mt-1">킥 속도 · 정확도</h4>
-        <p class="mt-2 text-slate-300">밴드 저항으로 궤도 통제·반응속도 향상 5분.</p>
-      </div>
-      <div class="rounded-2xl p-6 border border-slate-800 bg-slate-900/40">
-        <div class="text-sm text-slate-400">STEP 3</div>
-        <h4 class="text-lg font-semibold mt-1">게임형 마무리</h4>
-        <p class="mt-2 text-slate-300">점수제 미션 2분. 재미와 몰입으로 기억 강화.</p>
-      </div>
-    </div>
-
-    <div class="mt-8">
-      <a href="#apply" class="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-sky-500 hover:bg-sky-400 font-bold shadow-sky">우리 도장에 맞게 도입 상담 받기</a>
-    </div>
-  </div>
-</section>
-
-<!-- 후기(신뢰) -->
-<section class="section bg-slate-900/40 border-y border-slate-800">
-  <div class="container-narrow mx-auto px-5">
-    <h2 class="text-3xl md:text-4xl font-extrabold">도입 후기</h2>
-    <p class="mt-2 text-slate-300">관장님들의 실제 운영 코멘트</p>
-    <div class="mt-8 grid md:grid-cols-3 gap-5">
-      <blockquote class="glass rounded-2xl p-6">“밸런스가 먼저 잡히니 킥 궤도가 안정됐습니다. 초보 수업이 확 달라졌어요.”<div class="mt-3 text-slate-400 text-sm">— 부산 ○○도장</div></blockquote>
-      <blockquote class="glass rounded-2xl p-6">“게임형 루틴으로 참여도가 높아져 재등록 문의가 늘었습니다.”<div class="mt-3 text-slate-400 text-sm">— 성남 △△도장</div></blockquote>
-      <blockquote class="glass rounded-2xl p-6">“준비물/세팅이 간단해서 바로 수업에 넣기 좋습니다.”<div class="mt-3 text-slate-400 text-sm">— 대전 ◇◇도장</div></blockquote>
-    </div>
-  </div>
-</section>
-
-<!-- 참고영상 -->
-<section id="faq" class="section">
+<!-- 제품구성/참고영상 섹션(원본 유지) -->
+<section id="kits" class="py-20">
   <div class="mx-auto container-narrow px-5">
-    <h2 class="text-3xl md:text-4xl font-extrabold">참고영상</h2>
-    <p class="mt-2 text-slate-300">썸네일 클릭 시 큰 화면으로 재생됩니다.</p>
-
-    <div class="mt-6 grid md:grid-cols-2 xl:grid-cols-3 gap-5">
-      <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="PaXW4TzsQyE" aria-label="영상1">
-        <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/PaXW4TzsQyE/hqdefault.jpg" alt="영상1" loading="lazy" decoding="async">
-        <div class="px-4 py-2 text-sm">스포밴드 소개 영상 1</div>
-      </div>
-      <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="C2G_9G88ahw" aria-label="영상2">
-        <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/C2G_9G88ahw/hqdefault.jpg" alt="영상2" loading="lazy" decoding="async">
-        <div class="px-4 py-2 text-sm">스포밴드 소개 영상 2</div>
-      </div>
-      <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="LWnO0hubiyw" aria-label="영상3">
-        <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/LWnO0hubiyw/hqdefault.jpg" alt="영상3" loading="lazy" decoding="async">
-        <div class="px-4 py-2 text-sm">스포밴드 소개 영상 3</div>
-      </div>
-      <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="JnEyJ9K5EF4" aria-label="영상4">
-        <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/JnEyJ9K5EF4/hqdefault.jpg" alt="영상4" loading="lazy" decoding="async">
-        <div class="px-4 py-2 text-sm">스포밴드 소개 영상 4</div>
-      </div>
-      <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="QV8ma9aEiNM" aria-label="영상5">
-        <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/QV8ma9aEiNM/hqdefault.jpg" alt="영상5" loading="lazy" decoding="async">
-        <div class="px-4 py-2 text-sm">스포밴드 소개 영상 5</div>
-      </div>
-      <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="QVhHzYYkqbQ" aria-label="영상6">
-        <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/QVhHzYYkqbQ/hqdefault.jpg" alt="영상6" loading="lazy" decoding="async">
-        <div class="px-4 py-2 text-sm">스포밴드 소개 영상 6</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 참고영상 모달 -->
-  <div id="ytModal" class="modal fixed inset-0 hidden items-center justify-center p-4 z-50" role="dialog" aria-modal="true" aria-label="영상 재생">
-    <div class="modal-box rounded-2xl overflow-hidden border border-slate-700 bg-black relative">
-      <button id="ytClose" class="absolute top-2 right-2 z-10 px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-sm">닫기</button>
-      <iframe id="ytPlayer" class="w-full h-full" src="" title="YouTube video player"
-              frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen loading="lazy"></iframe>
-    </div>
-  </div>
-</section>
-
-<!-- 제품구성 -->
-<section id="kits" class="section">
-  <div class="mx-auto container-narrow px-5">
-    <h2 class="text-3xl md:text-4xl font-extrabold">스포밴드(제품구성)</h2>
+    <h2 class="text-3xl font-extrabold">스포밴드(제품구성)</h2>
     <p class="mt-2 text-slate-300">모델별 이미지와 간단 스펙을 확인하세요. 상세 스펙 이미지는 새 창으로 열립니다.</p>
     <div class="mt-6 grid md:grid-cols-2 gap-6">
       <article class="rounded-2xl border border-slate-700/50 bg-slate-800/30 overflow-hidden">
@@ -300,29 +205,52 @@
   </div>
 </section>
 
-<!-- FAQ(간단) -->
-<section class="section bg-slate-900/40 border-y border-slate-800">
-  <div class="container-narrow mx-auto px-5">
-    <h2 class="text-3xl md:text-4xl font-extrabold">자주 묻는 질문</h2>
-    <div class="mt-6 space-y-3">
-      <details class="rounded-xl border border-slate-800 bg-slate-900/40 p-4">
-        <summary class="cursor-pointer font-semibold">초보도 가능한가요?</summary>
-        <p class="mt-2 text-slate-300">네. 탄성 저항 특성상 안전하게 강도 조절이 쉬워, 초보/유소년 수업에 특히 효과적입니다.</p>
-      </details>
-      <details class="rounded-xl border border-slate-800 bg-slate-900/40 p-4">
-        <summary class="cursor-pointer font-semibold">도입 준비물은 무엇인가요?</summary>
-        <p class="mt-2 text-slate-300">스포밴드와 기본 고정 포인트만 있으면 됩니다. 도입 체크리스트를 함께 드립니다.</p>
-      </details>
-      <details class="rounded-xl border border-slate-800 bg-slate-900/40 p-4">
-        <summary class="cursor-pointer font-semibold">도입 효과는 어떻게 확인하나요?</summary>
-        <p class="mt-2 text-slate-300">2주 전·후 비교 영상 템플릿을 제공하여, 속도·정확도·밸런스 변화를 시각화합니다.</p>
-      </details>
+<section id="faq" class="py-20">
+  <div class="mx-auto container-narrow px-5">
+    <h2 class="text-3xl font-extrabold">참고영상 등</h2>
+    <p class="mt-2 text-slate-300">썸네일 클릭 시 큰 화면으로 재생.</p>
+
+    <div class="mt-6 grid md:grid-cols-2 xl:grid-cols-3 gap-5">
+      <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="PaXW4TzsQyE">
+        <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/PaXW4TzsQyE/hqdefault.jpg" alt="영상1" loading="lazy" decoding="async">
+        <div class="px-4 py-2 text-sm">스포밴드 소개 영상 1</div>
+      </div>
+      <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="C2G_9G88ahw">
+        <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/C2G_9G88ahw/hqdefault.jpg" alt="영상2" loading="lazy" decoding="async">
+        <div class="px-4 py-2 text-sm">스포밴드 소개 영상 2</div>
+      </div>
+      <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="LWnO0hubiyw">
+        <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/LWnO0hubiyw/hqdefault.jpg" alt="영상3" loading="lazy" decoding="async">
+        <div class="px-4 py-2 text-sm">스포밴드 소개 영상 3</div>
+      </div>
+      <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="JnEyJ9K5EF4">
+        <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/JnEyJ9K5EF4/hqdefault.jpg" alt="영상4" loading="lazy" decoding="async">
+        <div class="px-4 py-2 text-sm">스포밴드 소개 영상 4</div>
+      </div>
+      <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="QV8ma9aEiNM">
+        <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/QV8ma9aEiNM/hqdefault.jpg" alt="영상5" loading="lazy" decoding="async">
+        <div class="px-4 py-2 text-sm">스포밴드 소개 영상 5</div>
+      </div>
+      <div class="yt-thumb rounded-xl overflow-hidden border border-slate-700/50 bg-slate-800/40 cursor-pointer" data-vid="QVhHzYYkqbQ">
+        <img class="w-full h-[200px] object-cover" src="https://img.youtube.com/vi/QVhHzYYkqbQ/hqdefault.jpg" alt="영상6" loading="lazy" decoding="async">
+        <div class="px-4 py-2 text-sm">스포밴드 소개 영상 6</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 참고영상 모달 -->
+  <div id="ytModal" class="modal fixed inset-0 hidden items-center justify-center p-4 z-50">
+    <div class="modal-box rounded-2xl overflow-hidden border border-slate-700 bg-black relative">
+      <button id="ytClose" class="absolute top-2 right-2 z-10 px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-sm">닫기</button>
+      <iframe id="ytPlayer" class="w-full h-full" src="" title="YouTube video player"
+              frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen loading="lazy"></iframe>
     </div>
   </div>
 </section>
 
 <!-- 신청 폼 -->
-<section id="apply" class="section">
+<section id="apply" class="py-20">
   <div class="mx-auto container-narrow px-5">
     <h2 class="text-3xl md:text-4xl font-extrabold">태권도관장님 특별구매 게시판</h2>
     <p class="mt-2 text-slate-300">견적서는 <b>연락처</b>로 보내드립니다! (신청글은 비밀번호로 열람/삭제)</p>
@@ -330,18 +258,18 @@
     <form id="postForm" class="mt-8 grid gap-5 p-6 rounded-2xl border border-slate-700/50 bg-slate-800/40" autocomplete="off">
       <div class="grid md:grid-cols-2 gap-5">
         <div><label class="block text-sm mb-1" for="dojo">태권도장 명</label>
-          <input id="dojo" required class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500" placeholder="예) 서울 OO 태권도"></div>
+          <input id="dojo" required class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></div>
         <div><label class="block text-sm mb-1" for="master">관장님 성함</label>
-          <input id="master" required class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500" placeholder="예) 홍길동 관장"></div>
+          <input id="master" required class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></div>
         <div><label class="block text-sm mb-1" for="contact">연락처(전화/카톡/이메일)</label>
           <input id="contact" required placeholder="예: 010-1234-5678 / dojo@naver.com"
                  class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></div>
         <div>
           <label class="block text-sm mb-1" for="pw">비밀번호(열람/삭제용)</label>
           <div class="relative">
-            <input id="pw" type="password" minlength="4" placeholder="최소 4자"
+            <input id="pw" type="password" minlength="4"
                    class="w-full pr-12 px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500">
-            <button type="button" id="pwToggle" class="absolute inset-y-0 right-2 my-auto h-8 w-8 grid place-items-center rounded-md hover:bg-white/10" aria-label="비밀번호 보기 전환">
+            <button type="button" id="pwToggle" class="absolute inset-y-0 right-2 my-auto h-8 w-8 grid place-items-center rounded-md hover:bg-white/10">
               <svg id="pwIconClosed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5 text-slate-300"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3l18 18"/></svg>
               <svg id="pwIconOpen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5 text-slate-300 hidden"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12s3.75 7.5 9.75 7.5 9.75-7.5 9.75-7.5-3.75-7.5-9.75-7.5S2.25 12 2.25 12z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
@@ -352,7 +280,7 @@
 
       <div>
         <label class="block text-sm mb-1" for="address">택배 주소지 또는 태권도장 소재지</label>
-        <textarea id="address" rows="2" required class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500" placeholder="(우편번호) 주소 상세"></textarea>
+        <textarea id="address" rows="2" required class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></textarea>
       </div>
 
       <div>
@@ -371,10 +299,10 @@
           </div>
           <div class="divide-y divide-slate-700/50 bg-slate-800/20">
             <div class="grid grid-cols-12 items-center px-4 py-3"><div class="col-span-8 md:col-span-9">spoband 30 / (주니어용)</div><div class="col-span-4 md:col-span-3"><input id="q_sb30" type="number" min="0" value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></div></div>
-            <div class="grid grid-cols-12 items-center px-4 py-3"><div class="col-span-8 md:col-span-9">spoband 35 / (운동부하량 아령 또는 모래주머니 2.5kg)</div><div class="col-span-4 md:col-span-3"><input id="q_sb35" type="number" min="0" value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></div></div>
-            <div class="grid grid-cols-12 items-center px-4 py-3"><div class="col-span-8 md:col-span-9">spoband 45 / (운동부하량 아령 또는 모래주머니 5kg)</div><div class="col-span-4 md:col-span-3"><input id="q_sb45" type="number" min="0" value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></div></div>
-            <div class="grid grid-cols-12 items-center px-4 py-3"><div class="col-span-8 md:col-span-9">spoband 55 / (운동부하량 아령 또는 모래주머니 10kg)</div><div class="col-span-4 md:col-span-3"><input id="q_sb55" type="number" min="0" value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></div></div>
-            <div class="grid grid-cols-12 items-center px-4 py-3"><div class="col-span-8 md:col-span-9">spoband 65 / (운동부하량 아령 또는 모래주머니 15kg)</div><div class="col-span-4 md:col-span-3"><input id="q_sb65" type="number" min="0" value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></div></div>
+            <div class="grid grid-cols-12 items-center px-4 py-3"><div class="col-span-8 md:col-span-9">spoband 35 / (2.5kg)</div><div class="col-span-4 md:col-span-3"><input id="q_sb35" type="number" min="0" value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></div></div>
+            <div class="grid grid-cols-12 items-center px-4 py-3"><div class="col-span-8 md:col-span-9">spoband 45 / (5kg)</div><div class="col-span-4 md:col-span-3"><input id="q_sb45" type="number" min="0" value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></div></div>
+            <div class="grid grid-cols-12 items-center px-4 py-3"><div class="col-span-8 md:col-span-9">spoband 55 / (10kg)</div><div class="col-span-4 md:col-span-3"><input id="q_sb55" type="number" min="0" value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></div></div>
+            <div class="grid grid-cols-12 items-center px-4 py-3"><div class="col-span-8 md:col-span-9">spoband 65 / (15kg)</div><div class="col-span-4 md:col-span-3"><input id="q_sb65" type="number" min="0" value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></div></div>
             <div class="grid grid-cols-12 items-center px-4 py-3 bg-slate-900/40 border-t border-slate-800/60">
               <div class="col-span-8 md:col-span-9 text-right pr-4"><span class="text-sm font-semibold">총 신청개수</span></div>
               <div class="col-span-4 md:col-span-3"><input id="totalBoxes" type="text" readonly value="0" class="w-full text-right px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700"></div>
@@ -383,16 +311,10 @@
         </div>
       </div>
 
-      <div class="flex items-center mt-2">
-        <label class="inline-flex items-center gap-2 text-sm text-slate-300">
-          <input id="agree" type="checkbox" class="accent-sky-500"> 도입 가이드(영상 템플릿·체크리스트) 수신에 동의합니다.
-        </label>
-      </div>
-
       <div class="flex items-center mt-4 flex-wrap">
         <button type="submit" class="px-5 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-white">신청 등록</button>
         <a href="board.html" class="ml-3 underline underline-offset-4 text-sky-300">제출 후 신청목록 보기</a>
-        <span class="ml-auto text-yellow-400 font-extrabold text-xl md:text-2xl tracking-wide drop-shadow">문의: 010-5214-1492 · simboom@hanmail.net</span>
+        <span class="ml-auto text-yellow-400 font-extrabold text-2xl tracking-wide drop-shadow">※ 문의: 스포밴드연구소 소장 / 010-5214-1492 / simboom@hanmail.net</span>
       </div>
 
       <div class="w-full mt-3 text-right">
@@ -407,39 +329,9 @@
   </div>
 </section>
 
-<!-- HERO 영상 모달 -->
-<div id="heroModal" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50" role="dialog" aria-modal="true" aria-label="히어로 영상">
-  <div class="w-[min(960px,90vw)] aspect-video bg-black rounded-2xl overflow-hidden relative">
-    <button id="heroClose" class="absolute top-2 right-2 bg-slate-800/80 text-white px-3 py-1.5 rounded-lg">닫기</button>
-    <iframe id="heroPlayer" class="w-full h-full" src="" frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen loading="lazy"></iframe>
-  </div>
-</div>
-
-<!-- 모바일 스티키 CTA -->
-<div id="stickyCta" class="sticky-cta md:hidden">
-  <div class="mx-auto max-w-screen-sm">
-    <div class="m-3 rounded-2xl bg-slate-900/85 border border-slate-700/70 backdrop-blur p-3 flex items-center justify-between">
-      <div class="text-sm text-slate-200">도입 가이드 · 전용 상담 받기</div>
-      <a href="#apply" class="px-4 py-2 rounded-xl bg-sky-500 text-white font-bold">신청</a>
-    </div>
-  </div>
-</div>
-
 <!-- ===== 스크립트 ===== -->
 <script>
 const $ = (s,el=document)=>el.querySelector(s);
-
-/* 스티키 CTA: 스크롤 후 노출 */
-(function(){
-  const bar = $('#stickyCta'); if(!bar) return;
-  let shown=false;
-  window.addEventListener('scroll', ()=>{
-    const y=window.scrollY||document.documentElement.scrollTop;
-    if(y>400 && !shown){ bar.classList.add('show'); shown=true; }
-  }, {passive:true});
-})();
 
 /* 히어로 영상 */
 const thumb=document.getElementById('heroVideoThumb'), modal=document.getElementById('heroModal');
@@ -473,9 +365,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     const hp=form.querySelector('input[name="hp_field"]')?.value||''; if(hp.trim()!==''){ alert('제출에 실패했습니다.'); return; }
     if((Date.now()-pageLoadedAt)/1000<FORM_MIN_SECONDS){ alert('잠시 후 다시 시도해주세요.'); return; }
     const data={ dojo:$('#dojo').value.trim(), master:$('#master').value.trim(), contact:$('#contact').value.trim(), address:$('#address').value.trim(), pw:($('#pw')?.value||'').trim(),
-      items:{ sb30:n($('#q_sb30').value), sb35:n($('#q_sb35').value), sb45:n($('#q_sb45').value), sb55:n($('#q_sb55').value), sb65:n($('#q_sb65').value) },
-      agree: $('#agree')?.checked ? 1 : 0
-    };
+      items:{ sb30:n($('#q_sb30').value), sb35:n($('#q_sb35').value), sb45:n($('#q_sb45').value), sb55:n($('#q_sb55').value), sb65:n($('#q_sb65').value) } };
     const total=Object.values(data.items).reduce((a,b)=>a+(+b||0),0); if(total<=0){ alert('수량을 1개 이상 입력해주세요.'); return; }
 
     async function attempt(withSecret){
