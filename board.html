@@ -6,7 +6,7 @@
   <title>SPOBAND Pro | 신청자 목록</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body{ font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", sans-serif; }
+    body{ font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
     .container-narrow{ max-width: 1100px; }
   </style>
 </head>
@@ -30,7 +30,7 @@
 
 <script>
 /* ====== 설정 ====== */
-const API_URL = "https://script.google.com/macros/s/AKfycbyN5VsZUeQbUGIJwBHS50K52KfE2Ku5dhGNJG5rlfKQxQzOqHkTOoX6cQObk9PE_EnE/exec";
+const API_URL="https://script.google.com/macros/s/AKfycbz8vdAVzlGyYooriC1ro2ymPrXT7v24-12B3Nwi63x2QpPc-UeAv4Rp0mQRj4Vgij5Q/exec";
 const PLAIN_HEADERS = { 'Content-Type': 'text/plain;charset=utf-8' };
 
 /* ====== DOM 헬퍼 ====== */
@@ -124,7 +124,7 @@ async function addUserReply(id, pw, content){
 let posts = [];
 const pwCache = {};  // { [id]: pw }
 
-/* ====== 렌더링 ====== */
+/* ====== 렌더링: 리스트 ====== */
 function render(){
   const list=$("#boardList");
   if(!posts.length){
@@ -154,6 +154,7 @@ function render(){
   $$(".view-details").forEach(b=>b.addEventListener("click", onView));
 }
 
+/* ====== 렌더링: 상세 (견적서 노란 강조) ====== */
 function renderPostDetails(container, d){
   const itemsLines = Object.entries(d.items||{})
     .filter(([,v])=>(+v||0)>0)
@@ -162,36 +163,42 @@ function renderPostDetails(container, d){
       return `${m[k]||k} ${v}`;
     }).join(' / ') || '-';
 
-// 관리자 글은 노란색으로 하이라이트
-// 관리자 글은 노란색으로 하이라이트 (한글 '관리자', 과거 데이터까지 대응)
-const repliesHTML = (d.replies || []).map(r => {
-  const author  = String(r.author || '').trim();
-  const content = String(r.content || '').trim();
-  // author가 'admin' 또는 '관리자' 이거나, 내용이 '관리자:'로 시작하면 관리자 글로 간주
-  const isAdmin = author === 'admin' || author === '관리자' || /^관리자\s*:/i.test(content);
+  // 관리자/신청자 답글 하이라이트
+  const repliesHTML = (d.replies || []).map(r => {
+    const author  = String(r.author || '').trim();
+    const content = String(r.content || '').trim();
+    const isAdmin = author.toLowerCase()==='admin' || author==='관리자' || /^관리자\s*:/i.test(content);
+    return `
+      <div class="mt-2 p-2 rounded-lg border
+                  ${isAdmin ? 'bg-yellow-500/10 border-yellow-400/40' : 'bg-slate-800/40 border-slate-700/50'}">
+        <div class="flex items-center gap-2 text-xs text-slate-400">
+          <span>${fmt(r.ts)}</span>
+          <span class="${isAdmin ? 'bg-yellow-300 text-black' : 'bg-slate-600 text-white'}
+                       px-1.5 py-0.5 rounded-sm font-bold">
+            ${isAdmin ? '관리자' : '신청자'}
+          </span>
+        </div>
+        <div class="mt-1 whitespace-pre-wrap
+                    ${isAdmin ? 'text-yellow-300 font-semibold' : 'text-slate-200'}">
+          ${esc(content)}
+        </div>
+      </div>`;
+  }).join('');
 
-  return `
-    <div class="mt-2 p-2 rounded-lg border
-                ${isAdmin ? 'bg-yellow-500/10 border-yellow-400/40' : 'bg-slate-800/40 border-slate-700/50'}">
-      <div class="flex items-center gap-2 text-xs text-slate-400">
-        <span>${fmt(r.ts)}</span>
-        <span class="${isAdmin ? 'bg-yellow-300 text-black' : 'bg-slate-600 text-white'}
-                     px-1.5 py-0.5 rounded-sm font-bold">
-          ${isAdmin ? '관리자' : '신청자'}
-        </span>
-      </div>
-      <div class="mt-1 whitespace-pre-wrap
-                  ${isAdmin ? 'text-yellow-300 font-semibold' : 'text-slate-200'}">
-        ${esc(content)}
-      </div>
-    </div>`;
-}).join('');
-
-
-
-  const quoteHTML=d.quotationUrl
-    ? `<a class="text-sky-300 underline" target="_blank" href="${esc(d.quotationUrl)}">열기</a>`
-    : '없음';
+  // 견적서 UI (항상 노란 강조)
+  const quoteValue = d.quotationUrl && String(d.quotationUrl).trim()
+    ? `<a target="_blank" href="${esc(d.quotationUrl)}"
+          class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg
+                 bg-yellow-500/10 text-yellow-200 hover:text-yellow-100
+                 hover:bg-yellow-500/20 text-lg font-extrabold
+                 underline underline-offset-4">
+         견적서 열기 ↗
+       </a>`
+    : `<span class="inline-flex items-center px-2 py-1 rounded-lg
+                   bg-yellow-500/10 border border-yellow-500/30
+                   text-yellow-300 text-lg font-extrabold">
+         없음
+       </span>`;
 
   const noteBoxId = `note-${d.id}`;
 
@@ -203,13 +210,19 @@ const repliesHTML = (d.replies || []).map(r => {
       <div class="text-slate-400"><b>주소</b> · ${esc(d.address||'-')}</div>
       <div class="mt-1"><span class="px-2 py-0.5 text-xs rounded bg-slate-700">${esc(d.status||'신규')}</span></div>
     </div>
+
     <hr class="my-3 border-slate-800">
+
     <div class="text-sm"><b>항목</b>: ${itemsLines} (합계 ${d.totalCount})</div>
-    <div class="mt-2 text-sm"><b>견적서</b>: ${quoteHTML}</div>
 
-    ${repliesHTML?`<div class="mt-3"><div class="text-xs text-slate-400 mb-1">관리자/신청자 대화</div>${repliesHTML}</div>`:''}
+    <div class="mt-3 flex items-center gap-3">
+      <span class="text-yellow-300 text-lg font-extrabold select-none">견적서</span>
+      ${quoteValue}
+    </div>
 
-    <div class="mt-3 p-3 rounded-lg bg-slate-800/30 border border-slate-700/50">
+    ${repliesHTML?`<div class="mt-4"><div class="text-xs text-slate-400 mb-1">관리자/신청자 대화</div>${repliesHTML}</div>`:''}
+
+    <div class="mt-4 p-3 rounded-lg bg-slate-800/30 border border-slate-700/50">
       <div class="text-xs text-slate-400 mb-1">내 추가 메모/문의</div>
       <textarea id="${noteBoxId}" rows="2"
         class="w-full px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"
@@ -235,6 +248,7 @@ const repliesHTML = (d.replies || []).map(r => {
     }catch(err){ alert(err.message || '등록에 실패했습니다.'); }
   });
 
+  // 닫기
   container.querySelector('.btn-close')?.addEventListener('click', ()=>{
     container.classList.add('hidden');
     container.innerHTML = `<p class="text-center text-slate-400 p-4">상세 정보를 불러오는 중...</p>`;
