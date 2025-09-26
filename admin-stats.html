@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SPOBAND Admin – 접속 통계</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<style>
+  body{background:#0f172a;color:#e5e7eb;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+  .card{background:#0b1220;border:1px solid #243145;border-radius:14px;padding:16px}
+</style>
+</head>
+<body>
+<header class="sticky top-0 z-40 bg-slate-950/80 border-b border-slate-800 backdrop-blur flex items-center justify-between h-14 px-4">
+  <h1 class="font-bold">SPOBAND <span class="text-sky-400">접속 통계</span></h1>
+  <div class="flex gap-2">
+    <button id="btnRefresh" class="px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500">새로고침</button>
+    <button id="btnLogout" class="px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600">로그아웃</button>
+  </div>
+</header>
+
+<main class="max-w-6xl mx-auto p-4">
+  <div id="error" class="hidden mb-3 px-3 py-2 rounded bg-red-900/30 border border-red-700 text-red-200 text-sm"></div>
+
+  <div id="login" class="card max-w-sm mx-auto mt-8">
+    <h2 class="font-bold text-lg mb-2 text-sky-300">관리자 로그인</h2>
+    <p class="text-slate-400 text-sm mb-4">비밀키를 입력하세요.</p>
+    <form id="loginForm" class="flex gap-2">
+      <input id="pw" type="password" class="flex-1 px-3 py-2 rounded bg-slate-900 border border-slate-700" placeholder="ADMIN_SECRET">
+      <button class="px-3 py-2 rounded bg-sky-600 hover:bg-sky-500">확인</button>
+    </form>
+  </div>
+
+  <section id="app" class="hidden">
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="card"><h3 class="font-bold mb-2">페이지 TOP</h3><canvas id="chartPage" height="160"></canvas></div>
+      <div class="card"><h3 class="font-bold mb-2">국가 TOP</h3><canvas id="chartCountry" height="160"></canvas></div>
+      <div class="card"><h3 class="font-bold mb-2">도시 TOP</h3><canvas id="chartCity" height="160"></canvas></div>
+      <div class="card"><h3 class="font-bold mb-2">기기 유형</h3><canvas id="chartDevice" height="160"></canvas></div>
+    </div>
+
+    <div class="card mt-4">
+      <h3 class="font-bold mb-2">요약</h3>
+      <div id="summary" class="text-sm text-slate-300"></div>
+    </div>
+  </section>
+</main>
+
+<script>
+const API_URL="https://script.google.com/macros/s/AKfycbwPaUHrIs7Y7zUyXvwUQNSSaN8bx_pU0zTP53OGfPDv8nGmybw3JiUMS4w7SFxHMO6C/exec";
+const SES_KEY="spoband_admin_secret_session_pro";
+
+const $ = (s)=>document.querySelector(s);
+const showErr=(m)=>{ const e=$("#error"); e.textContent=m; e.classList.remove("hidden"); };
+const hideErr=()=> $("#error").classList.add("hidden");
+
+async function post(payload){
+  hideErr();
+  const res = await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain"},body:JSON.stringify(payload)});
+  const t = await res.text();
+  let j; try{ j=JSON.parse(t);}catch(_){ throw new Error("API 응답 형식 오류"); }
+  if (!res.ok || j.status==="error") throw new Error(j.message || `HTTP ${res.status}`);
+  return j;
+}
+
+function mkBar(ctxSel, pairs, label){
+  const ctx = document.querySelector(ctxSel);
+  if (!ctx) return null;
+  const labels = pairs.map(x=>x[0]);
+  const data = pairs.map(x=>x[1]);
+  return new Chart(ctx, {
+    type:"bar",
+    data:{labels, datasets:[{label, data}]},
+    options:{
+      responsive:true,
+      plugins:{legend:{display:false}},
+      scales:{x:{ticks:{color:"#9ca3af"}}, y:{ticks:{color:"#9ca3af"}}}
+    }
+  });
+}
+
+let chartPage, chartCountry, chartCity, chartDevice;
+
+async function loadStats(){
+  const secret = sessionStorage.getItem(SES_KEY)||"";
+  if (!secret) return;
+
+  const auth = await post({action:"authCheck", secret});
+  if (auth.status!=="success") throw new Error("인증 실패");
+
+  const r = await post({action:"visitStats"});
+  const st = r.status==="success" ? r : {data:{}};
+  const S = st;
+
+  // charts
+  if (chartPage) chartPage.destroy();
+  if (chartCountry) chartCountry.destroy();
+  if (chartCity) chartCity.destroy();
+  if (chartDevice) chartDevice.destroy();
+
+  chartPage   = mkBar("#chartPage",   S.byPage    || [], "페이지");
+  chartCountry= mkBar("#chartCountry",S.byCountry || [], "국가");
+  chartCity   = mkBar("#chartCity",   S.byCity    || [], "도시");
+  chartDevice = mkBar("#chartDevice", S.byDevice  || [], "기기");
+
+  const tt = S.totals || {enter:0,leave:0,users:0};
+  $("#summary").innerHTML = `
+    <div class="grid md:grid-cols-3 gap-4">
+      <div class="p-3 rounded bg-slate-900 border border-slate-700">
+        <div class="text-slate-400 text-xs">Unique Users</div>
+        <div class="text-xl font-extrabold">${tt.users||0}</div>
+      </div>
+      <div class="p-3 rounded bg-slate-900 border border-slate-700">
+        <div class="text-slate-400 text-xs">Enter</div>
+        <div class="text-xl font-extrabold">${tt.enter||0}</div>
+      </div>
+      <div class="p-3 rounded bg-slate-900 border border-slate-700">
+        <div class="text-slate-400 text-xs">Leave</div>
+        <div class="text-xl font-extrabold">${tt.leave||0}</div>
+      </div>
+    </div>`;
+}
+
+document.addEventListener("DOMContentLoaded", ()=>{
+  $("#btnRefresh").addEventListener("click", loadStats);
+  $("#btnLogout").addEventListener("click", ()=>{ sessionStorage.removeItem(SES_KEY); location.reload(); });
+
+  $("#loginForm").addEventListener("submit", async (e)=>{
+    e.preventDefault();
+    hideErr();
+    const secret = $("#pw").value.trim();
+    if (!secret) return;
+    try{
+      const r = await post({action:"authCheck", secret});
+      if (r.status!=="success") throw new Error("비밀키가 유효하지 않습니다.");
+      sessionStorage.setItem(SES_KEY, secret);
+      $("#login").classList.add("hidden");
+      $("#app").classList.remove("hidden");
+      await loadStats();
+    }catch(ex){ showErr(ex.message); }
+  });
+
+  const saved = sessionStorage.getItem(SES_KEY);
+  if (saved){
+    $("#login").classList.add("hidden");
+    $("#app").classList.remove("hidden");
+    loadStats().catch(e=>showErr(e.message));
+  }
+});
+</script>
+</body>
+</html>
