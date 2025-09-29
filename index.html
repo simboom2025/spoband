@@ -36,14 +36,8 @@
 
     /* ===== 가독성 보강(히어로 전용) ===== */
     .break-keep { word-break: keep-all; }
-    .h1-fluid {
-      font-size: clamp(36px, 5.2vw, 64px);
-      line-height: 1.12; letter-spacing: -0.02em;
-    }
-    .lead-fluid {
-      font-size: clamp(16px, 1.6vw, 20px);
-      line-height: 1.6;
-    }
+    .h1-fluid { font-size: clamp(36px, 5.2vw, 64px); line-height: 1.12; letter-spacing: -0.02em; }
+    .lead-fluid { font-size: clamp(16px, 1.6vw, 20px); line-height: 1.6; }
     .max-ch { max-width: 26ch; }
     .kicker {
       display:inline-flex; align-items:center; gap:.5rem;
@@ -171,7 +165,7 @@
 <!-- 제품구성/참고영상 섹션(원본 유지) -->
 <section id="kits" class="py-20">
   <div class="mx-auto container-narrow px-5">
-    <h2 class="text-3xl font-extrabold">스포밴드(제품구성)</h2>
+    <h2 class="text-3리 font-extrabold">스포밴드(제품구성)</h2>
     <p class="mt-2 text-slate-300">모델별 이미지와 간단 스펙을 확인하세요. 상세 스펙 이미지는 새 창으로 열립니다.</p>
     <div class="mt-6 grid md:grid-cols-2 gap-6">
       <article class="rounded-2xl border border-slate-700/50 bg-slate-800/30 overflow-hidden">
@@ -301,7 +295,6 @@
         <label class="block text-sm mb-1" for="address">택배 주소지 또는 태권도장 소재지</label>
         <textarea id="address" rows="2" required class="w-full px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700 focus:ring-2 focus:ring-sky-500"></textarea>
       </div>
-
 
       <div>
         <div class="flex items-end justify-between">
@@ -461,10 +454,11 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 </script>
 
-<!-- ▼▼▼ 방문 추적 스니펫 (업데이트: 지역/디바이스/체류시간 + GA 이벤트) ▼▼▼ -->
+<!-- ▼▼▼ 방문 추적 스니펫 (수정: TRACK_URL → API_URL, text/plain 전송) ▼▼▼ -->
 <script>
 (() => {
-const API_URL="https://script.google.com/macros/s/AKfycbwPaUHrIs7Y7zUyXvwUQNSSaN8bx_pU0zTP53OGfPDv8nGmybw3JiUMS4w7SFxHMO6C/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbwPaUHrIs7Y7zUyXvwUQNSSaN8bx_pU0zTP53OGfPDv8nGmybw3JiUMS4w7SFxHMO6C/exec";
+
   function getSid(){
     const K="sb_sid_v2";
     let v=localStorage.getItem(K);
@@ -510,31 +504,38 @@ const API_URL="https://script.google.com/macros/s/AKfycbwPaUHrIs7Y7zUyXvwUQNSSaN
     }catch(_){ return {}; }
   }
 
-  function send(data){
+  function sendJsonPlain(data){
     const body = JSON.stringify(data);
+    // 우선 sendBeacon (Blob + text/plain)
     try{
-      const ok = navigator.sendBeacon && navigator.sendBeacon(
-        TRACK_URL, new Blob([body], {type:"application/json"})
-      );
-      if (!ok) throw 0;
-    }catch{
-      fetch(TRACK_URL, {method:"POST", headers:{"Content-Type":"application/json"}, body, keepalive:true});
-    }
+      if (navigator.sendBeacon) {
+        const ok = navigator.sendBeacon(API_URL, new Blob([body], { type: "text/plain;charset=utf-8" }));
+        if (ok) return;
+      }
+    }catch(_){ /* fallthrough */ }
+    // fetch keepalive 대체
+    fetch(API_URL, {
+      method:"POST",
+      headers: { "Content-Type":"text/plain;charset=utf-8" },
+      body,
+      keepalive: true,
+      mode: "cors",
+      credentials: "omit"
+    }).catch(()=>{ /* ignore */ });
   }
 
-  // enter 즉시 전송(지역정보 포함)
+  // enter: 지역정보 합쳐서 전송
   (async () => {
     const geo = await getGeo();
-    send({ ...base, type: "enter", ts: Date.now(), ...geo });
+    sendJsonPlain({ ...base, type:"enter", ts: Date.now(), ...geo });
   })();
 
-  // leave 1회 전송 + GA 이벤트
+  // leave: 1회 전송 + GA 이벤트
   let sentLeave=false;
   function leaveOnce(){
     if (sentLeave) return; sentLeave=true;
     const dwell = Date.now() - startedAt;
-    send({ ...base, type: "leave", ts: Date.now(), dwell });
-
+    sendJsonPlain({ ...base, type:"leave", ts: Date.now(), dwell });
     if (typeof gtag === "function") {
       gtag('event', 'sb_leave', { page_path: base.page, dwell_ms: dwell });
     }
