@@ -387,7 +387,8 @@ function closeYt(){ ytp.src=''; ytm.classList.remove('flex'); ytm.classList.add(
 ytc?.addEventListener('click',closeYt); ytm?.addEventListener('click',e=>{ if(e.target===ytm) closeYt(); }); window.addEventListener('keydown',e=>{ if(e.key==='Escape') closeYt(); });
 
 /* 신청 등록 */
-const API_URL="https://script.google.com/macros/s/AKfycbwPaUHrIs7Y7zUyXvwUQNSSaN8bx_pU0zTP53OGfPDv8nGmybw3JiUMS4w7SFxHMO6C/exec";
+const API_URL="https://script.google.com/macros/s/AKfycbxLE_foK3xXKDLDYQJ6c5iBnrGyeeVKiIXcTZedYLJa9212OKFwXmdADaqStV_2rSjj/exec";
+          
 const PLAIN={'Content-Type':'text/plain;charset=utf-8'};
 const SECRET=""; // 서버가 실수로 secret 요구 시 여기에 설정하면 자동 재시도
 const FORM_MIN_SECONDS=3; let pageLoadedAt=Date.now();
